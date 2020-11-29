@@ -21,6 +21,13 @@
     <mvc:annotation-driven/>
     <!-- 静态资源默认servlet配置 -->
     <mvc:default-servlet-handler/>
+    <!-- 解析web-inf目录下视图 -->
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/page/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
     <!-- spring+mybatis 配置数据库 -->
     <import resource="mybatis/db.xml"/>
 
