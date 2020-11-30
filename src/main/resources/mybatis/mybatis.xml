@@ -4,10 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <typeAliases>
-        <package name="dao"/>
+        <package name="dao.entity"/>
     </typeAliases>
-    <!--<mappers>
-        &lt;!&ndash;<mapper resource="\com\yye\mapper\UserMapper.xml" />&ndash;&gt;
-        <mapper resource="mapper\UserMapper.xml" />
-    </mappers>-->
 </configuration>

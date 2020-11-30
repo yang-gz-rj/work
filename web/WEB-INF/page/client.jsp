@@ -9,66 +9,66 @@
 <html>
 <head>
     <title>user</title>
-    <link rel="stylesheet" href="layui/css/layui.css" media="all"/>
-    <script src="layui/layui.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all"/>
+    <script src="/layui/layui.js" charset="utf-8"></script>
 </head>
 <body>
     <form class="layui-form" action="#" method="post"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
         <div class="layui-form-item">
             <label class="layui-form-label">用户名</label>
             <div class="layui-input-block">
-                <input type="text" name="username" value="${username}" readonly autocomplete="off" class="layui-input">
+                <input type="text" name="client_user" value="${client.client_user}" readonly autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">密码</label>
             <div class="layui-input-block">
-                <input type="password" name="password" value="${password}" autocomplete="off" class="layui-input">
+                <input type="password" name="client_password" value="${client.client_password}" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">姓名</label>
             <div class="layui-input-block">
-                <input type="text" name="name" value="${name}" readonly autocomplete="off" class="layui-input">
+                <input type="text" name="client_name" value="${client.client_name}" readonly autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">性别</label>
             <div class="layui-input-block">
-                <input type="radio" name="sex" value="男" title="男" checked="">
-                <input type="radio" name="sex" value="女" title="女">
-                <input type="radio" name="sex" value="禁" title="禁用" disabled="">
+                <input type="radio" id="boy" name="client_gender" value="男" title="男" >
+                <input type="radio" id="girl" name="client_gender" value="女" title="女" >
             </div>
+            <script>
+                var client_gender = '${client.client_gender}';
+                if(client_gender == '男'){
+                    document.getElementById('boy').setAttribute('checked','');
+                }else{
+                    document.getElementById('girl').setAttribute('checked','');
+                }
+            </script>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">年龄</label>
             <div class="layui-input-block">
-                <select name="age" lay-filter="aihao">
-                    <option value=""></option>
-                    <option value="0">1</option>
-                    <option value="1" selected="">2</option>
-                    <option value="2">3</option>
-                    <option value="3">4</option>
-                    <option value="4">5</option>
-                </select>
+                <input type="tel" name="client_age" value="${client.client_age}" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">手机号码</label>
             <div class="layui-input-block">
-                <input type="tel" name="phone" value="${phone}" autocomplete="off" class="layui-input">
+                <input type="tel" name="client_phone" value="${client.client_phone}" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">家庭地址</label>
             <div class="layui-input-block">
-                <input type="text" name="address" value="${address}" autocomplete="off" class="layui-input">
+                <input type="text" name="client_address" value="${client.client_address}" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">余额</label>
             <div class="layui-input-block">
-                <input type="text" name="money" value="${money}" readonly autocomplete="off" class="layui-input">
+                <input type="text" name="client_money" value="${client.client_money}" readonly autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -81,10 +81,7 @@
     <script>
         layui.use('form', function(){
             var form = layui.form;
-            //监听提交
-            form.on('submit(btn_submit)', function(data){
-                // return false;
-            });
+            form.render();
         });
     </script>
 </body>

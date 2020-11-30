@@ -21,8 +21,8 @@
         <!-- 指定Mybatis全局配置文件的位置 -->
         <property name="configLocation" value="classpath:mybatis/mybatis.xml"></property>
         <property name="dataSource" ref="dataSource"></property>
-        <!--TODO 配置对应实体映射-->
-        <!--<property name="mapperLocations" value="classpath:mybatis/mapper/*.xml"/>-->
+         <!-- 配置对应实体映射 -->
+        <property name="mapperLocations" value="classpath:mybatis/mapper/*.xml"/>
     </bean>
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="dao" />
