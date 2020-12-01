@@ -34,4 +34,13 @@ public class DeviceService {
     public Integer delete(String device_number){
         return deviceDao.delete(device_number);
     }
+
+    /**
+     * 插入device
+     * @param device
+     * @return
+     */
+    public Integer insert(Device device){
+        return deviceDao.insert(device);
+    }
 }

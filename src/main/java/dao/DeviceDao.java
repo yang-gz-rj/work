@@ -22,4 +22,11 @@ public interface DeviceDao {
      * @return
      */
     public Integer delete(@Param("device_number") String device_number);
+
+    /**
+     * 插入device
+     * @param device
+     * @return
+     */
+    public Integer insert(@Param("device") Device device);
 }
