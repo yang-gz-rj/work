@@ -33,4 +33,13 @@ public class ClientService {
     public Integer insertClient(Client client){
         return clientDao.insert(client);
     }
+
+    /**
+     * 更新client
+     * @param client
+     * @return
+     */
+    public Integer updateClient(Client client){
+        return clientDao.update(client);
+    }
 }

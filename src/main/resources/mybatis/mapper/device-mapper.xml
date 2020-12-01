@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.DeviceDao">
+    <!-- 字段映射 -->
+    <resultMap id="device" type="device">
+        <id property="device_number" column="device_number"/>
+        <result property="client_user" column="client_user"/>
+        <result property="device_type" column="device_type"/>
+        <result property="device_point" column="device_point"/>
+        <result property="device_producer" column="device_producer"/>
+        <result property="device_durability" column="device_durability"/>
+        <result property="device_create_date" column="device_create_date"/>
+    </resultMap>
+
+    <select id="select" resultType="device">
+        select * from device where client_user=#{client_user}
+    </select>
+
+    <delete id="delete">
+        delete from device where device_number=#{device_number}
+    </delete>
+
+</mapper>

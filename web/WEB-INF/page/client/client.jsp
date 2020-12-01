@@ -13,7 +13,7 @@
     <script src="/layui/layui.js" charset="utf-8"></script>
 </head>
 <body>
-    <form class="layui-form" action="#" method="post"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+    <form class="layui-form" action="/client/alter" method="post">
         <div class="layui-form-item">
             <label class="layui-form-label">用户名</label>
             <div class="layui-input-block">

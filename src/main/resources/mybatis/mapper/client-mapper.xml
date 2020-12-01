@@ -26,4 +26,9 @@
             ,#{client.client_gender},#{client.client_age},#{client.client_phone},#{client.client_address})
     </insert>
 
+    <update id="update">
+        update client set client_password=#{client.client_password},client_gender=#{client.client_gender},client_age=#{client.client_age}
+            ,client_phone=#{client.client_phone},client_address=#{client.client_address} where client_user = #{client.client_user};
+    </update>
+
 </mapper>

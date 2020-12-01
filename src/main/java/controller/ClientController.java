@@ -9,9 +9,10 @@ import service.ClientService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 
 @Controller
-public class LoginController {
+public class ClientController {
 
     private ClientService clientService;
 
@@ -22,18 +23,18 @@ public class LoginController {
 
     @RequestMapping("/")
     public ModelAndView start(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-        ModelAndView mav = new ModelAndView("login");
+        ModelAndView mav = new ModelAndView("login/login");
         return mav;
     }
 
-    @RequestMapping("/show/client")
+    @RequestMapping("/client")
     public ModelAndView showClient(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
         String client_user = httpServletRequest.getParameter("client_user");
         String client_password = httpServletRequest.getParameter("client_password");
         Client client = clientService.getClient(client_user,client_password);
         ModelAndView mav = null;
         if(client != null){
-            mav = new ModelAndView("client");
+            mav = new ModelAndView("client/client");
             mav.addObject("client",client);
         }else{
             httpServletResponse.sendRedirect(httpServletRequest.getContextPath());
@@ -41,27 +42,36 @@ public class LoginController {
         return mav;
     }
 
+    @RequestMapping("/client/alter")
+    public void alter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+        Client client = getClient(httpServletRequest);
+        if(clientService.updateClient(client) > 0){
+            httpServletRequest.removeAttribute("client");
+            httpServletRequest.setAttribute("client",client);
+        }
+        httpServletRequest.getRequestDispatcher("/client").forward(httpServletRequest,httpServletResponse);
+    }
+
     @RequestMapping("/regist")
     public ModelAndView regist(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-        ModelAndView mav = new ModelAndView("regist");
+        ModelAndView mav = new ModelAndView("login/regist");
         return mav;
     }
 
     @RequestMapping("/regist/add")
-    public ModelAndView registAdd(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-        httpServletRequest.setCharacterEncoding("UTF-8");
+    public void registAdd(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
         Client client = getClient(httpServletRequest);
         //  插入成功
         if(clientService.insertClient(client) > 0){
             httpServletRequest.setAttribute("client",client);
-            httpServletRequest.getRequestDispatcher("/show/client").forward(httpServletRequest,httpServletResponse);
+            httpServletRequest.getRequestDispatcher("/client").forward(httpServletRequest,httpServletResponse);
         }else{
             httpServletRequest.getRequestDispatcher("/regist").forward(httpServletRequest,httpServletResponse);
         }
-        return null;
     }
 
-    private Client getClient(HttpServletRequest httpServletRequest) {
+    private Client getClient(HttpServletRequest httpServletRequest) throws UnsupportedEncodingException {
+        httpServletRequest.setCharacterEncoding("UTF-8");
         Client client = new Client();
         client.setClient_user(httpServletRequest.getParameter("client_user"));
         client.setClient_password(httpServletRequest.getParameter("client_password"));
@@ -72,4 +82,5 @@ public class LoginController {
         client.setClient_address(httpServletRequest.getParameter("client_address"));
         return client;
     }
+
 }
