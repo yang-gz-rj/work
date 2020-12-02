@@ -14,21 +14,40 @@
     </head>
     <body>
         <table id="demo" lay-filter="test"></table>
+        <div id="pageLimit"></div>
         <script type="text/html" id="barDemo">
             <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
             <a class="layui-btn layui-btn-xs" lay-event="bill">账单</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </script>
         <script>
+
             layui.use(["table","layer","laypage"], function(){
-                var table = layui.table
+                const table = layui.table
                     ,layer = layui.layer
                     ,laypage = layui.laypage;
 
-                var viewTable = table.render({
+                //执行一个laypage实例
+                laypage.render({
+                    elem: 'pageLimit' //注意，这里的 test1 是 ID，不用加 # 号
+                    ,count: ${device_count}
+                    ,limit: 10
+                    ,jump: function(obj, first){
+                        // console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                        // console.log(obj.limit); //得到每页显示的条数
+                        //首次不执行
+                        if(!first){
+                            viewTable.reload({
+                                url: "/device/json?client_user=${client_user}&curr="+obj.curr+"&limit=10"
+                            });
+                        }
+                    }
+                });
+
+                const viewTable = table.render({
                     elem: "#demo"
-                    ,url:"/device/json?client_user=${client_user}"
-                    ,page: true
+                    ,url:"/device/json?client_user=${client_user}&curr=1&limit=10"
+                    ,page: false
                     ,response: {
                         statusCode: 200
                     }
@@ -48,7 +67,7 @@
 
                 //监听行工具事件
                 table.on("tool(test)", function(obj){
-                    var data = obj.data;
+                    const data = obj.data;
                     if(obj.event === "del"){
                         layer.confirm("真的删除行么", function(index){
                             layui.$.ajax({
@@ -78,13 +97,16 @@
                         layer.open({
                             type: 2
                             ,content: "/device/detail"
-                            ,area: ["500px","600px"]
+                            ,area: ["450px","500px"]
                             ,success: function (layero,index){
-                                var body = layer.getChildFrame("body");
-                                // TODO 显示设备详细信息
-                            }
-                            ,cancel: function (){
-
+                                var body = layer.getChildFrame("body",index);
+                                body.find("#device_number").val(data.device_number);
+                                body.find("#client_user").val(data.client_user);
+                                body.find("#device_type").val(data.device_type);
+                                body.find("#device_point").val(data.device_point);
+                                body.find("#device_producer").val(data.device_producer);
+                                body.find("#device_create_date").val(data.device_create_date);
+                                body.find("#device_durability").val(data.device_durability);
                             }
                         });
                     }else if(obj.event === "bill"){
@@ -94,13 +116,17 @@
 
                 //监听头工具栏事件
                 table.on('toolbar(test)', function(obj){
-                    var checkStatus = table.checkStatus(obj.config.id)
+                    const checkStatus = table.checkStatus(obj.config.id)
                         ,data = checkStatus.data; //获取选中的数据
                     if(obj.event === 'add'){
                         layer.open({
                             type: 2
                             ,content: "/device/add"
-                            ,area: ["500px","600px"]
+                            ,area: ["450px","500px"]
+                            ,success: function (layero,index){
+                                var body = layer.getChildFrame("body",index);
+                                body.find("#client_user").attr("value","${client_user}");
+                            }
                             ,cancel: function (){
                                 viewTable.reload();
                             }
@@ -110,19 +136,6 @@
                             layer.msg('请选择一行');
                         } else {
                             layer.msg('删除');
-                        }
-                    }
-                });
-
-                //分页
-                laypage.render({
-                    elem: 'pageDemo' //分页容器的id
-                    ,count: 100 //总页数
-                    ,skin: '#1E9FFF' //自定义选中色值
-                    //,skip: true //开启跳页
-                    ,jump: function(obj, first){
-                        if(!first){
-                            layer.msg('第'+ obj.curr +'页', {offset: 'b'});
                         }
                     }
                 });

@@ -22,8 +22,8 @@ public class DeviceService {
      * @param client_user
      * @return
      */
-    public List<Device> select(String client_user){
-        return deviceDao.select(client_user);
+    public List<Device> select(String client_user,Integer curr,Integer limit){
+        return deviceDao.select(client_user,(curr-1)*limit,limit);
     }
 
     /**

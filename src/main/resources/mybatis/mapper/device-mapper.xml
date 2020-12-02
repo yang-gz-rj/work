@@ -16,7 +16,7 @@
     </resultMap>
 
     <select id="select" resultType="device">
-        select * from device where client_user=#{client_user}
+        select * from device where client_user=#{client_user} limit #{start},#{end}
     </select>
 
     <delete id="delete">

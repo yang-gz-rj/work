@@ -14,7 +14,7 @@ public interface DeviceDao {
      * @param client_user
      * @return
      */
-    public List<Device> select(@Param("client_user") String client_user);
+    public List<Device> select(@Param("client_user") String client_user, @Param("start") Integer start, @Param("end") Integer end);
 
     /**
      * 删除device_number对应的设备表

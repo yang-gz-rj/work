@@ -28,14 +28,17 @@ public class DeviceController {
     }
 
     @RequestMapping("/device")
-    public ModelAndView device(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+    public ModelAndView device(HttpServletRequest httpServletRequest) throws Exception {
         ModelAndView mav = new ModelAndView("client/device");
-        mav.addObject("client_user",httpServletRequest.getParameter("client_user"));
+        httpServletRequest.setCharacterEncoding("UTF-8");
+        String client_user = httpServletRequest.getParameter("client_user");
+        mav.addObject("device_count",deviceService.select(client_user,1,Integer.MAX_VALUE).size());
+        mav.addObject("client_user",client_user);
         return mav;
     }
 
     @RequestMapping("/device/add")
-    public ModelAndView deviceAdd(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+    public ModelAndView deviceAdd(){
         ModelAndView mav = new ModelAndView("client/device_add");
         return mav;
     }
@@ -55,12 +58,23 @@ public class DeviceController {
         pw.close();
     }
 
+
+    @RequestMapping("/device/detail")
+    public ModelAndView deviceDetail(){
+        ModelAndView mav = new ModelAndView("client/device_detail");
+        return mav;
+    }
+
     @RequestMapping("/device/json")
     public void deviceJson(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+        httpServletRequest.setCharacterEncoding("UTF-8");
         String client_user = httpServletRequest.getParameter("client_user");
+        int curr = Integer.valueOf(httpServletRequest.getParameter("curr"));
+        int limit = Integer.valueOf(httpServletRequest.getParameter("limit"));
+
         ResponseBase<List<Device>> br = new ResponseBase<List<Device>>();
         br.setCode(200);
-        br.setData(deviceService.select(client_user));
+        br.setData(deviceService.select(client_user,curr,limit));
         httpServletResponse.setContentType("text/html;charset=utf-8");
         PrintWriter pw = httpServletResponse.getWriter();
         pw.write(gson.toJson(br));
