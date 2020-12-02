@@ -7,6 +7,7 @@
     <groupId>yang.cn</groupId>
     <artifactId>web</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
 
     <dependencies>
         <!-- spring -->
