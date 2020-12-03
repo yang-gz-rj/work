@@ -62,11 +62,19 @@ public class ClientController {
     @RequestMapping("/client/alter")
     public void clientAlter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
         Client client = getClient(httpServletRequest);
+        BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(clientService.updateClient(client) > 0){
+            br.setCode(200);
             httpServletRequest.removeAttribute("client");
             httpServletRequest.setAttribute("client",client);
+        }else{
+            br.setCode(300);
         }
-        httpServletRequest.getRequestDispatcher("/client").forward(httpServletRequest,httpServletResponse);
+        httpServletResponse.setContentType("text/html;charset=utf-8");
+        PrintWriter pw = httpServletResponse.getWriter();
+        pw.write(gson.toJson(br));
+        pw.flush();
+        pw.close();
     }
 
     @RequestMapping("/regist")

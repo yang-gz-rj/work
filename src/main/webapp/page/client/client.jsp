@@ -8,12 +8,25 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>user</title>
-    <link rel="stylesheet" href="/layui/css/layui.css" media="all"/>
-    <script src="/layui/layui.js" charset="utf-8"></script>
+    <style>
+        #client-body{
+            height: 80%;
+            width: 60%;
+            position: absolute;
+            top: 15%;
+            left: 25%;
+        }
+        #client-body form{
+            height: 100%;
+            width: 100%;
+        }
+        #client-btn{
+            float: right;
+        }
+    </style>
 </head>
-<body>
-    <form class="layui-form" action="/client/alter" method="post">
+<div id="client-body">
+    <form class="layui-form" action="#">
         <div class="layui-form-item">
             <label class="layui-form-label">用户名</label>
             <div class="layui-input-block">
@@ -50,7 +63,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">年龄</label>
             <div class="layui-input-block">
-                <input type="tel" name="client_age" value="${client.client_age}" autocomplete="off" class="layui-input">
+                <input type="text" name="client_age" value="${client.client_age}" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -71,21 +84,40 @@
                 <input type="text" name="client_money" value="${client.client_money}" readonly autocomplete="off" class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item">
+        <div class="layui-form-item" id="client-btn">
             <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="btn_submit">确认修改</button>
+                <button class="layui-btn" lay-submit lay-filter="sure">确认修改</button>
                 <button type="reset" class="layui-btn layui-btn-primary">回退</button>
             </div>
         </div>
     </form>
     <script>
-        layui.use('form', function(){
-            let form = layui.form;
-            form.render();
-            form.on("submit(btn_submit)",function (data){
-
+        form.render();
+        form.on("submit(sure)",function (data){
+            $.ajax({
+                type: "POST"
+                ,url: "/client/alter"
+                ,xhrFields: {
+                    withCredentials: true
+                }
+                ,data:data.field
+                ,async: true // 同步
+                ,dataType:"json"
+                ,success: function (response){
+                    if(response.code == 200){
+                        layer.msg("修改成功");
+                    }else{
+                        form.render();
+                        layer.msg("修改失败");
+                    }
+                }
+                ,error: function (){
+                    form.render();
+                    layer.msg("服务器错误");
+                }
             });
+            return false;
         });
     </script>
-</body>
+</div>
 </html>

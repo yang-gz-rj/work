@@ -28,7 +28,7 @@
   <body>
 
   <div id="show-main">
-    <form class="layui-form" action="/guide" method="GET">
+    <form class="layui-form" action="/guide" method="POST">
       <div class="layui-form-item">
         <label class="layui-form-label">用户名</label>
         <div class="layui-input-block">
