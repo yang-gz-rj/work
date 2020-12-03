@@ -80,8 +80,11 @@
     </form>
     <script>
         layui.use('form', function(){
-            var form = layui.form;
+            let form = layui.form;
             form.render();
+            form.on("submit(btn_submit)",function (data){
+
+            });
         });
     </script>
 </body>

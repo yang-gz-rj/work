@@ -68,7 +68,7 @@
     <li class="layui-nav-item layui-nav-itemed">
         <a href="javascript:void(0)"><img src="/image/client.png"/>用户管理</a>
         <dl class="layui-nav-child">
-            <dd><a href="">用户信息</a></dd>
+            <dd onclick="pageChange('client')"><a href="">用户信息</a></dd>
             <dd><a href="">设备信息</a></dd>
         </dl>
     </li>
@@ -90,17 +90,36 @@
 <div id="show-right">
     <ul class="layui-nav layui-nav-tree" id="show-user">
         <li class="layui-nav-item">
-            <a href="javascript:void(0)"><img src="/image/user.png">我</a>
+            <a href="javascript:void(0)"><img src="/image/user.png">${pageContext.request.getParameter('client_user')}</a>
             <dl class="layui-nav-child">
-                <dd style="text-align: center;">注销</dd>
+                <dd style="text-align: center;" onclick="logout()">注销</dd>
             </dl>
         </li>
     </ul>
     <div id="show-frame"></div>
 </div>
 <script>
+
     layui.use('element', function(){
         var element = layui.element;
+
+        const div_frame = document.getElementById("show-frame");
+        function pageChange(pageMark){
+            let pageHtml = "";
+            layui.$.ajax({
+                type:"GET"
+                ,xhrFields: {
+                    withCredentials: true
+                }
+                ,async: false
+                ,url: pageMark
+                ,success: function (response){
+                    pageHtml += response;
+                }
+            });
+            div_frame.innerHTML = pageHtml;
+        }
+        pageChange('/client');
 
         //一些事件监听
         element.on('tab(demo)', function(data){

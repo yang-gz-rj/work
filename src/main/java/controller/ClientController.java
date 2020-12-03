@@ -1,20 +1,27 @@
 package controller;
 
+import com.google.gson.Gson;
 import dao.entity.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import service.ClientService;
+import util.BaseResponse;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
 @Controller
 public class ClientController {
 
     private ClientService clientService;
+    private final Gson gson = new Gson();
 
     @Autowired
     public void setClientService(ClientService clientService) {
@@ -22,28 +29,38 @@ public class ClientController {
     }
 
     @RequestMapping("/")
-    public ModelAndView start(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-        ModelAndView mav = new ModelAndView("login/login");
-        return mav;
+    public ModelAndView start() {
+        return new ModelAndView("/page/login/login.jsp");
     }
 
     @RequestMapping("/client")
-    public ModelAndView showClient(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+    public void client(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
+        httpServletRequest.getRequestDispatcher("/page/client/client.jsp").forward(httpServletRequest,httpServletResponse);
+    }
+
+    @RequestMapping("/client/filter")
+    public void clientFilter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+        httpServletRequest.setCharacterEncoding("utf-8");
         String client_user = httpServletRequest.getParameter("client_user");
         String client_password = httpServletRequest.getParameter("client_password");
         Client client = clientService.getClient(client_user,client_password);
-        ModelAndView mav = null;
+        BaseResponse<Client> br = new BaseResponse<Client>();
         if(client != null){
-            mav = new ModelAndView("client/client");
-            mav.addObject("client",client);
+            br.setCode(200);
+            HttpSession session = httpServletRequest.getSession();
+            session.setAttribute("client",client);
         }else{
-            httpServletResponse.sendRedirect(httpServletRequest.getContextPath());
+            br.setCode(300);
         }
-        return mav;
+        httpServletResponse.setContentType("text/html;charset=utf-8");
+        PrintWriter pw = httpServletResponse.getWriter();
+        pw.write(gson.toJson(br));
+        pw.flush();
+        pw.close();
     }
 
     @RequestMapping("/client/alter")
-    public void alter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+    public void clientAlter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
         Client client = getClient(httpServletRequest);
         if(clientService.updateClient(client) > 0){
             httpServletRequest.removeAttribute("client");
@@ -53,9 +70,8 @@ public class ClientController {
     }
 
     @RequestMapping("/regist")
-    public ModelAndView regist(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-        ModelAndView mav = new ModelAndView("login/regist");
-        return mav;
+    public ModelAndView regist(HttpServletResponse httpServletResponse) throws Exception {
+        return new ModelAndView("/page/login/regist.jsp");
     }
 
     @RequestMapping("/regist/add")
@@ -70,8 +86,12 @@ public class ClientController {
         }
     }
 
-    private Client getClient(HttpServletRequest httpServletRequest) throws UnsupportedEncodingException {
-        httpServletRequest.setCharacterEncoding("UTF-8");
+    private Client getClient(HttpServletRequest httpServletRequest) {
+        try {
+            httpServletRequest.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         Client client = new Client();
         client.setClient_user(httpServletRequest.getParameter("client_user"));
         client.setClient_password(httpServletRequest.getParameter("client_password"));

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import service.DeviceService;
-import util.ResponseBase;
+import util.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +29,7 @@ public class DeviceController {
 
     @RequestMapping("/device")
     public ModelAndView device(HttpServletRequest httpServletRequest) throws Exception {
-        ModelAndView mav = new ModelAndView("client/device");
+        ModelAndView mav = new ModelAndView("/page/client/device.jsp");
         httpServletRequest.setCharacterEncoding("UTF-8");
         String client_user = httpServletRequest.getParameter("client_user");
         mav.addObject("device_count",deviceService.select(client_user,1,Integer.MAX_VALUE).size());
@@ -39,13 +39,12 @@ public class DeviceController {
 
     @RequestMapping("/device/add")
     public ModelAndView deviceAdd(){
-        ModelAndView mav = new ModelAndView("client/device_add");
-        return mav;
+        return new ModelAndView("/page/client/device_add.jsp");
     }
 
     @RequestMapping("/device/add/filter")
-    public void deviceFilter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-        ResponseBase<Integer> br = new ResponseBase<Integer>();
+    public void deviceAddFilter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+        BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(deviceService.insert(getDevice(httpServletRequest)) > 0){
             br.setCode(200);
         }else{
@@ -61,7 +60,7 @@ public class DeviceController {
 
     @RequestMapping("/device/detail")
     public ModelAndView deviceDetail(){
-        ModelAndView mav = new ModelAndView("client/device_detail");
+        ModelAndView mav = new ModelAndView("/page/client/device_detail.jsp");
         return mav;
     }
 
@@ -72,7 +71,7 @@ public class DeviceController {
         int curr = Integer.valueOf(httpServletRequest.getParameter("curr"));
         int limit = Integer.valueOf(httpServletRequest.getParameter("limit"));
 
-        ResponseBase<List<Device>> br = new ResponseBase<List<Device>>();
+        BaseResponse<List<Device>> br = new BaseResponse<List<Device>>();
         br.setCode(200);
         br.setData(deviceService.select(client_user,curr,limit));
         httpServletResponse.setContentType("text/html;charset=utf-8");
@@ -85,7 +84,7 @@ public class DeviceController {
     @RequestMapping("/device/delete")
     public void deviceDelete(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
         String device_number = httpServletRequest.getParameter("device_number");
-        ResponseBase<Integer> br = new ResponseBase<Integer>();
+        BaseResponse<Integer> br = new BaseResponse<Integer>();
         br.setData(deviceService.delete(device_number));
         if(br.getData() > 0){
             br.setCode(200);

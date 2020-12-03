@@ -1,6 +1,6 @@
 package util;
 
-public class ResponseBase<T> {
+public class BaseResponse<T> {
     private int code;
     private String msg;
     private T data;
