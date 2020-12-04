@@ -19,6 +19,10 @@
         select * from device where client_user = #{client_user} limit #{start},#{end}
     </select>
 
+    <select id="selectByNumber" resultType="device">
+        select * from device where device_number = #{device_number}
+    </select>
+
     <delete id="deleteByNumber">
         delete from device where device_number = #{device_number}
     </delete>

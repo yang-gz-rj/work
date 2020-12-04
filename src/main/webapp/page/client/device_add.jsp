@@ -55,7 +55,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">生产日期</label>
             <div class="layui-input-inline">
-                <input type="text" name="device_create_date" autocomplete="off" class="layui-input" id="demo" placeholder="yyyy-MM-dd">
+                <input type="text" name="device_create_date" autocomplete="off" class="layui-input" id="demo">
             </div>
         </div>
     </div>

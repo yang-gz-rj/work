@@ -17,6 +17,13 @@ public interface DeviceDao {
     public List<Device> selectByUser(@Param("client_user") String client_user, @Param("start") Integer start, @Param("end") Integer end);
 
     /**
+     * 通过device_number获取设备
+     * @param device_number
+     * @return
+     */
+    public Device selectByNumber(@Param("device_number") String device_number);
+
+    /**
      * 删除device_number对应的设备表
      * @param device_number
      * @return

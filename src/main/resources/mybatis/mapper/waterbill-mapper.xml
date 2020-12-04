@@ -27,4 +27,11 @@
         delete from waterBill where water_bill_number = #{bill_number}
     </delete>
 
+    <insert id="insert">
+        insert into waterBill(water_bill_number,device_number,water_price_gradient,water_price_update_date,water_bill_init_value,water_bill_now_value
+            ,water_bill_r_dw,water_bill_output_date,water_bill_fee,water_bill_pay_date) values (#{bill.water_bill_number},#{bill.device_number},#{bill.water_price_gradient}
+            ,#{bill.water_price_update_date},#{bill.water_bill_init_value},#{bill.water_bill_now_value
+            },#{bill.water_bill_r_dw},#{bill.water_bill_output_date},#{bill.water_bill_fee},#{bill.water_bill_pay_date})
+    </insert>
+
 </mapper>

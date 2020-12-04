@@ -135,12 +135,6 @@
                             viewTable.reload();
                         }
                     });
-                }else if(obj.event === 'delete'){
-                    if(data.length === 0){
-                        layer.msg('请选择一行');
-                    } else {
-                        layer.msg('删除');
-                    }
                 }
             });
         </script>

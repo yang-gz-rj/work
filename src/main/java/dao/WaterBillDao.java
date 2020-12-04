@@ -22,4 +22,11 @@ public interface WaterBillDao {
      * @return
      */
     public Integer deleteByBNumber(@Param("bill_number") String bill_number);
+
+    /**
+     * 插入waterbill
+     * @param waterBill
+     * @return
+     */
+    public Integer insert(@Param("bill") WaterBill waterBill);
 }

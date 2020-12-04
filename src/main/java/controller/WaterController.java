@@ -14,6 +14,8 @@ import util.BaseResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,5 +105,46 @@ public class WaterController {
         pw.flush();
         pw.close();
     }
+
+    @RequestMapping("/water/bill/add")
+    public void waterBillAdd(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) throws Exception{
+        WaterBill waterBill = getWaterBill(httpServletRequest);
+        BaseResponse<Integer> br = new BaseResponse<Integer>();
+        Device device = deviceService.getDeviceByNumber(waterBill.getDevice_number());
+        String client_user = httpServletRequest.getParameter("client_user");
+        if(device != null && device.getClient_user().equals(client_user) && waterBillService.insertWaterBill(waterBill) > 0){
+            br.setCode(200);
+        }else{
+            br.setCode(300);
+        }
+        httpServletResponse.setContentType("text/html;charset=utf-8");
+        PrintWriter pw = httpServletResponse.getWriter();
+        pw.write(gson.toJson(br));
+        pw.flush();
+        pw.close();
+    }
+
+    private WaterBill getWaterBill(HttpServletRequest httpServletRequest) {
+        try {
+            httpServletRequest.setCharacterEncoding("utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        WaterBill waterBill = new WaterBill();
+        waterBill.setWater_bill_number(httpServletRequest.getParameter("water_bill_number"));
+        waterBill.setDevice_number(httpServletRequest.getParameter("device_number"));
+        waterBill.setWater_price_gradient(Integer.valueOf(httpServletRequest.getParameter("water_price_gradient")));
+        waterBill.setWater_price_update_date(Date.valueOf(httpServletRequest.getParameter("water_price_update_date")));
+
+        waterBill.setWater_bill_init_value(Float.valueOf(httpServletRequest.getParameter("water_bill_init_value")));
+        waterBill.setWater_bill_now_value(Float.valueOf(httpServletRequest.getParameter("water_bill_now_value")));
+        waterBill.setWater_bill_r_dw(httpServletRequest.getParameter("water_bill_r_dw"));
+        waterBill.setWater_bill_output_date(Date.valueOf(httpServletRequest.getParameter("water_bill_output_date")));
+        waterBill.setWater_bill_fee(Float.valueOf(httpServletRequest.getParameter("water_bill_fee")));
+        waterBill.setWater_bill_pay_date(Date.valueOf(httpServletRequest.getParameter("water_bill_pay_date")));
+
+        return waterBill;
+    }
+
 
 }

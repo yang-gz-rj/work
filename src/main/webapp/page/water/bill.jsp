@@ -55,17 +55,17 @@
             }
             ,toolbar: "#toolbarDemo"
             ,cols: [[
-                {field:"water_bill_number", width:80,align:"center",title: "账单号", sort: true}
+                {field:"water_bill_number", width:100,align:"center",title: "账单号", sort: true}
                 ,{field:"device_number", width:120, align:"center",title: "表号", sort: true}
-                ,{field:"water_price_gradient", width:80, align:"center",title: "价位梯度", sort: true}
-                ,{field:"water_price_update_date", width:80, align:"center",title: "价位更新时间", sort: true}
-                ,{field:"water_bill_init_value", width:140, align:"center",title: "初始读数",sort: true}
-                ,{field:"water_bill_now_value", width:130, align:"center",title: "现在读数", sort: true}
-                ,{field:"water_bill_r_dw", width:110, align:"center",title: "单位",sort: true}
-                ,{field:"water_bill_output_date", width:110, align:"center",title: "出账时间",sort: true}
+                ,{field:"water_price_gradient", width:110, align:"center",title: "价位梯度", sort: true}
+                ,{field:"water_price_update_date", width:140, align:"center",title: "价位更新时间", sort: true}
+                ,{field:"water_bill_init_value", width:110, align:"center",title: "初始读数"}
+                ,{field:"water_bill_now_value", width:110, align:"center",title: "现在读数"}
+                ,{field:"water_bill_r_dw", width:80, align:"center",title: "单位"}
+                ,{field:"water_bill_output_date", width:140, align:"center",title: "出账时间",sort: true}
                 ,{field:"water_bill_fee", width:110, align:"center",title: "应缴费用",sort: true}
-                ,{field:"water_bill_pay_date", width:110, align:"center",title: "缴费时间",sort: true}
-                ,{fixed: "right", width:210, title: "操作",align:"center", toolbar: "#barDemo"}
+                ,{field:"water_bill_pay_date", width:140, align:"center",title: "缴费时间",sort: true}
+                ,{fixed: "right", width:160, title: "操作",align:"center", toolbar: "#barDemo"}
             ]]
         });
 
@@ -99,20 +99,23 @@
                     });
                 });
             } else if(obj.event === "detail"){
-                // TODO 账单详细信息
                 layer.open({
                     type: 2
-                    ,content: "/water/bill/detail"
-                    ,area: ["450px","500px"]
+                    ,content: "/page/water/bill_detail.jsp"
+                    ,area: ["750px","400px"]
+                    ,offset: ["15%","30%"]
                     ,success: function (layero,index){
                         var body = layer.getChildFrame("body",index);
-                        // body.find("#device_number").val(data.device_number);
-                        // body.find("#client_user").val(data.client_user);
-                        // body.find("#device_type").val(data.device_type);
-                        // body.find("#device_point").val(data.device_point);
-                        // body.find("#device_producer").val(data.device_producer);
-                        // body.find("#device_create_date").val(data.device_create_date);
-                        // body.find("#device_durability").val(data.device_durability);
+                        body.find("#water_bill_number").val(data.water_bill_number);
+                        body.find("#device_number").val(data.device_number);
+                        body.find("#water_price_gradient").val(data.water_price_gradient);
+                        body.find("#water_price_update_date").val(data.water_price_update_date);
+                        body.find("#water_bill_init_value").val(data.water_bill_init_value);
+                        body.find("#water_bill_now_value").val(data.water_bill_now_value);
+                        body.find("#water_bill_r_dw").val(data.water_bill_r_dw);
+                        body.find("#water_bill_output_date").val(data.water_bill_output_date);
+                        body.find("#water_bill_fee").val(data.water_bill_fee);
+                        body.find("#water_bill_pay_date").val(data.water_bill_pay_date);
                     }
                 });
             }
@@ -121,17 +124,13 @@
         //监听头工具栏事件
         table.on('toolbar(test)', function(obj){
             const checkStatus = table.checkStatus(obj.config.id)
-                ,data = checkStatus.data; //获取选中的数据
+                ,data = checkStatus.data;
             if(obj.event === 'add'){
-                // TODO 账单的添加
                 layer.open({
                     type: 2
-                    ,content: "/water/bill/add"
-                    ,area: ["450px","500px"]
-                    ,success: function (layero,index){
-                        var body = layer.getChildFrame("body",index);
-                        body.find("#client_user").attr("value","${client_user}");
-                    }
+                    ,content: "/page/water/bill_add.jsp?client_user=${client_user}"
+                    ,area: ["750px","450px"]
+                    ,offset: ["10%","30%"]
                     ,cancel: function (){
                         viewTable.reload();
                     }

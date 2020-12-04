@@ -29,7 +29,7 @@
     </style>
 </head>
 <body>
-<ul class="layui-nav layui-nav-tree" lay-filter="ulfilter" id="show-guide" style="float: left; height: 100%;width: 15%;">
+<ul class="layui-nav layui-nav-tree" lay-filter="guide-filter" id="show-guide" style="float: left; height: 100%;width: 15%;">
     <li class="layui-nav-item">
         <a href="javascript:;"><img src="/image/public.png"/>公告</a>
         <dl class="layui-nav-child">
@@ -40,18 +40,18 @@
     <li class="layui-nav-item layui-nav-itemed">
         <a href="javascript:;"><img src="/image/client.png"/>用户管理</a>
         <dl class="layui-nav-child">
-            <dd style="padding-left: 20%;"><a href="javascript:;">用户信息</a></dd>
-            <dd style="padding-left: 20%;"><a href="javascript:;">设备信息</a></dd>
+            <dd id="dd-user" style="padding-left: 20%;"><a href="javascript:;">用户信息</a></dd>
+            <dd id="dd-device" style="padding-left: 20%;"><a href="javascript:;">设备信息</a></dd>
         </dl>
     </li>
     <li class="layui-nav-item">
         <a href="javascript:;"><img src="/image/water.png"/>水费管理</a>
         <dl class="layui-nav-child">
             <dd style="padding-left: 20%;"><a href="javascript:;" >水价位信息</a></dd>
-            <dd style="padding-left: 20%;"><a href="javascript:;" >水费账单信息</a></dd>
+            <dd id="dd-water-bill" style="padding-left: 20%;"><a href="javascript:;" >水费账单信息</a></dd>
         </dl>
     </li>
-    <li class="layui-nav-item">
+    <li class="layui-nav-item" show="true">
         <a href="javascript:;"><img src="/image/elect.png"/>电费管理</a>
         <dl class="layui-nav-child">
             <dd style="padding-left: 20%;"><a href="javascript:;" >电价位信息</a></dd>
@@ -118,13 +118,11 @@
         ,laypage = layui.laypage;
 
         $("#show-frame").load(currPage);
+        $("#dd-user").attr("style","padding-left: 20%;background-color:#009688;");
 
         $('a').on('click', function(){
-        // element.on("nav(filter)",function (elem){
             let nextPage = "";
             switch($(this).text()){
-            // layer.msg(elem.text());
-            // switch (elem.text()){
                 case "公共公告":
                     nextPage = "/public"
                     break;
@@ -153,6 +151,9 @@
             if(nextPage != "")
                 if(currPage != nextPage){
                     currPage = nextPage;
+                    if(currPage != "/client"){
+                        $("#dd-user").attr("style","padding-left: 20%;");
+                    }
                     $("#show-frame").load(currPage);
                 }
         });

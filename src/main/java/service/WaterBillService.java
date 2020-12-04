@@ -34,4 +34,13 @@ public class WaterBillService {
     public Integer deleteBillByBNumber(String bill_number) {
         return waterBillDao.deleteByBNumber(bill_number);
     }
+
+    /**
+     * 插入waterbill
+     * @param waterBill
+     * @return
+     */
+    public Integer insertWaterBill(WaterBill waterBill) {
+        return waterBillDao.insert(waterBill);
+    }
 }

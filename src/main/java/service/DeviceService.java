@@ -43,4 +43,13 @@ public class DeviceService {
     public Integer insertDevice(Device device){
         return deviceDao.insert(device);
     }
+
+    /**
+     * 通过device_number获取设备
+     * @param device_number
+     * @return
+     */
+    public Device getDeviceByNumber(String device_number) {
+        return deviceDao.selectByNumber(device_number);
+    }
 }
