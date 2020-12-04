@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
   <head>
-    <title>login</title>
+    <title>登录</title>
     <link rel="stylesheet" href="/layui/css/layui.css" media="all"/>
     <script src="/layui/layui.js" charset="utf-8"></script>
     <style>
@@ -43,7 +43,7 @@
       </div>
       <div class="layui-form-item">
         <div class="layui-input-block">
-          <button class="layui-btn" lay-submit lay-filter="*">立即提交</button>
+          <button class="layui-btn" lay-submit lay-filter="login">立即提交</button>
           <button type="reset" class="layui-bg-green layui-btn layui-btn-primary">重置</button>
         </div>
       </div>
@@ -61,7 +61,7 @@
     layui.use(['form','layer'], function(){
       const form = layui.form;
         layer = layui.layer;
-      form.on("submit(*)",function (data){
+      form.on("submit(login)",function (data){
         let status=0;
         layui.$.ajax({
             type: "GET"
@@ -80,7 +80,7 @@
               }
             }
             ,error: function (){
-              layer.msg("服务器错误");
+              layer.msg("服务器繁忙");
             }
         });
         if(status == 1){

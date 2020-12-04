@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.WaterBillDao">
+    <!-- 字段映射 -->
+    <resultMap id="waterBill" type="waterBill">
+        <!-- property实体类  column表字段-->
+        <id property="water_bill_number" column="water_bill_number"/>
+        <result property="device_number" column="device_number"/>
+        <result property="water_price_gradient" column="water_price_gradient"/>
+        <result property="water_price_update_date" column="water_price_update_date"/>
+        <result property="water_bill_init_value" column="water_bill_init_value"/>
+        <result property="water_bill_now_value" column="water_bill_now_value"/>
+        <result property="water_bill_r_dw" column="water_bill_r_dw"/>
+        <result property="water_bill_output_date" column="water_bill_output_date"/>
+        <result property="water_bill_fee" column="water_bill_fee"/>
+        <result property="water_bill_pay_date" column="water_bill_pay_date"/>
+    </resultMap>
+
+    <select id="selectByDevice" resultType="waterBill">
+        select * from waterBill where device_number = #{device_number}
+    </select>
+
+    <delete id="deleteByBNumber">
+        delete from waterBill where water_bill_number = #{bill_number}
+    </delete>
+
+</mapper>

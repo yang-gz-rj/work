@@ -43,7 +43,7 @@ public class ClientController {
         httpServletRequest.setCharacterEncoding("utf-8");
         String client_user = httpServletRequest.getParameter("client_user");
         String client_password = httpServletRequest.getParameter("client_password");
-        Client client = clientService.getClient(client_user,client_password);
+        Client client = clientService.getClientByUserPassword(client_user,client_password);
         BaseResponse<Client> br = new BaseResponse<Client>();
         if(client != null){
             br.setCode(200);
@@ -65,12 +65,28 @@ public class ClientController {
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(clientService.updateClient(client) > 0){
             br.setCode(200);
-            httpServletRequest.removeAttribute("client");
-            httpServletRequest.setAttribute("client",client);
+            httpServletRequest.getSession().removeAttribute("client");
+            httpServletRequest.getSession().setAttribute("client",client);
         }else{
             br.setCode(300);
         }
         httpServletResponse.setContentType("text/html;charset=utf-8");
+        PrintWriter pw = httpServletResponse.getWriter();
+        pw.write(gson.toJson(br));
+        pw.flush();
+        pw.close();
+    }
+
+    @RequestMapping("/client/delete")
+    public void clientDelete(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) throws Exception {
+        httpServletRequest.setCharacterEncoding("utf-8");
+        String client_user = httpServletRequest.getParameter("client_user");
+        BaseResponse<Integer> br = new BaseResponse<Integer>();
+        if(clientService.deleteClientByUser(client_user) > 0){
+            br.setCode(200);
+        }else{
+            br.setCode(300);
+        }
         PrintWriter pw = httpServletResponse.getWriter();
         pw.write(gson.toJson(br));
         pw.flush();
@@ -86,12 +102,17 @@ public class ClientController {
     public void registAdd(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
         Client client = getClient(httpServletRequest);
         //  插入成功
+        BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(clientService.insertClient(client) > 0){
-            httpServletRequest.setAttribute("client",client);
-            httpServletRequest.getRequestDispatcher("/client").forward(httpServletRequest,httpServletResponse);
+            br.setCode(200);
+            httpServletRequest.getSession().setAttribute("client",client);
         }else{
-            httpServletRequest.getRequestDispatcher("/regist").forward(httpServletRequest,httpServletResponse);
+            br.setCode(300);
         }
+        PrintWriter pw = httpServletResponse.getWriter();
+        pw.write(gson.toJson(br));
+        pw.flush();
+        pw.close();
     }
 
     private Client getClient(HttpServletRequest httpServletRequest) {

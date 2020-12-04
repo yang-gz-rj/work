@@ -15,12 +15,12 @@
         <result property="device_create_date" column="device_create_date"/>
     </resultMap>
 
-    <select id="select" resultType="device">
-        select * from device where client_user=#{client_user} limit #{start},#{end}
+    <select id="selectByUser" resultType="device">
+        select * from device where client_user = #{client_user} limit #{start},#{end}
     </select>
 
-    <delete id="delete">
-        delete from device where device_number=#{device_number}
+    <delete id="deleteByNumber">
+        delete from device where device_number = #{device_number}
     </delete>
 
     <insert id="insert">
@@ -28,5 +28,9 @@
             values (#{device.device_number},#{device.client_user},#{device.device_type},#{device.device_point},#{device.device_producer}
                 ,#{device.device_durability},#{device.device_create_date})
     </insert>
+
+    <delete id="deleteByUser">
+        delete from device where client_user = #{client_user}
+    </delete>
 
 </mapper>

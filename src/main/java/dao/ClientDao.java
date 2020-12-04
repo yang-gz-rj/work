@@ -12,7 +12,7 @@ public interface ClientDao {
      * @param client_password
      * @return 存在返回client,否则返回null
      */
-    public Client select(@Param("client_user") String client_user, @Param("client_password") String client_password);
+    public Client selectByUserPassword(@Param("client_user") String client_user, @Param("client_password") String client_password);
 
     /**
      * 插入client
@@ -27,4 +27,11 @@ public interface ClientDao {
      * @return
      */
     public Integer update(@Param("client") Client client);
+
+    /**
+     * 删除client
+     * @param client_user
+     * @return
+     */
+    public Integer deleteByUser(@Param("client_user") String client_user);
 }

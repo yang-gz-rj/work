@@ -32,7 +32,7 @@ public class DeviceController {
         ModelAndView mav = new ModelAndView("/page/client/device.jsp");
         httpServletRequest.setCharacterEncoding("UTF-8");
         String client_user = httpServletRequest.getParameter("client_user");
-        mav.addObject("device_count",deviceService.select(client_user,1,Integer.MAX_VALUE).size());
+        mav.addObject("device_count",deviceService.getDeviceByUser(client_user,1,Integer.MAX_VALUE).size());
         mav.addObject("client_user",client_user);
         return mav;
     }
@@ -45,7 +45,7 @@ public class DeviceController {
     @RequestMapping("/device/add/filter")
     public void deviceAddFilter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
         BaseResponse<Integer> br = new BaseResponse<Integer>();
-        if(deviceService.insert(getDevice(httpServletRequest)) > 0){
+        if(deviceService.insertDevice(getDevice(httpServletRequest)) > 0){
             br.setCode(200);
         }else{
             br.setCode(300);
@@ -73,7 +73,7 @@ public class DeviceController {
 
         BaseResponse<List<Device>> br = new BaseResponse<List<Device>>();
         br.setCode(200);
-        br.setData(deviceService.select(client_user,curr,limit));
+        br.setData(deviceService.getDeviceByUser(client_user,curr,limit));
         httpServletResponse.setContentType("text/html;charset=utf-8");
         PrintWriter pw = httpServletResponse.getWriter();
         pw.write(gson.toJson(br));
@@ -85,7 +85,7 @@ public class DeviceController {
     public void deviceDelete(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
         String device_number = httpServletRequest.getParameter("device_number");
         BaseResponse<Integer> br = new BaseResponse<Integer>();
-        br.setData(deviceService.delete(device_number));
+        br.setData(deviceService.deleteDeviceByNumber(device_number));
         if(br.getData() > 0){
             br.setCode(200);
         }else{

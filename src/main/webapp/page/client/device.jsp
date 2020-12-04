@@ -8,9 +8,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
     <head>
-        <title>device</title>
-        <link rel="stylesheet" href="/layui/css/layui.css" media="all">
-        <script src="/layui/layui.all.js" charset="utf-8"></script>
         <style>
             #device-body{
                 height: 80%;
@@ -66,7 +63,7 @@
                     ,{field:"device_producer", width:140, align:"center",title: "生产厂商"}
                     ,{field:"device_create_date", width:130, align:"center",title: "生产日期", sort: true}
                     ,{field:"device_durability", width:110, align:"center",title: "使用年限",sort: true}
-                    ,{fixed: "right", width:200, title: "操作",align:"center", toolbar: "#barDemo"}
+                    ,{fixed: "right", width:210, title: "操作",align:"center", toolbar: "#barDemo"}
                 ]]
             });
 
@@ -116,7 +113,8 @@
                         }
                     });
                 }else if(obj.event === "bill"){
-                    // TODO 跳转账单
+                    currPage = "/water/bill?bill_type=single&device_number="+data.device_number;
+                    $("#show-frame").load(currPage);
                 }
             });
 

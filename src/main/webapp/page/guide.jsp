@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head id="gude-head">
-    <title>wes</title>
+    <title>水电缴费系统</title>
     <meta name="renderer" content="webkit">
     <link rel="stylesheet" href="/layui/css/layui.css" media="all">
     <style>
@@ -67,6 +67,7 @@
             <a href="javascript:;" style="text-align: center;line-heigh: 100%;height: 100%;"><img src="/image/user.png">${pageContext.request.getParameter('client_user')}</a>
             <dl class="layui-nav-child">
                 <dd style="text-align: center;" onclick="logout()">注销</dd>
+                <dd style="text-align: center;" onclick="quit()">退出</dd>
             </dl>
         </li>
     </ul>
@@ -75,6 +76,33 @@
 </div>
 <script src="/layui/layui.js" charset="UTF-8"></script>
 <script>
+    function quit(){
+        window.location.href = "/";
+    }
+    function logout(){
+        $.ajax({
+            type: "POST"
+            ,url: "/client/delete"
+            ,async: false
+            ,xhrFields:{
+                withCredentials: true
+            }
+            ,data: {
+                "client_user": client_user
+            }
+            ,dataType: "json"
+            ,success: function (response){
+                if(response.code == 200){
+                    window.location.href = "/";
+                }else{
+                    layer.msg("服务器繁忙");
+                }
+            }
+            ,error: function (){
+                layer.msg("服务器繁忙");
+            }
+        });
+    }
     let currPage = "/client";
     const client_user = '${pageContext.request.getParameter('client_user')}';
     /* 加载所有模块 */
@@ -113,7 +141,7 @@
                     nextPage = "/public"
                     break;
                 case "水费账单信息":
-                    nextPage = "/public"
+                    nextPage = "/water/bill?bill_type=all&client_user="+client_user
                     break;
                 case "电价位信息":
                     nextPage = "/public"
@@ -129,7 +157,6 @@
                 }
         });
 
-        element.init();
     });
 </script>
 </body>

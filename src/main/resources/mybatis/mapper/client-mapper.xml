@@ -16,7 +16,7 @@
         <result property="client_money" column="client_money"/>
     </resultMap>
 
-    <select id="select" resultType="client">
+    <select id="selectByUserPassword" resultType="client">
         select * from client where client_user = #{client_user} and client_password = #{client_password}
     </select>
 
@@ -30,5 +30,9 @@
         update client set client_password=#{client.client_password},client_gender=#{client.client_gender},client_age=#{client.client_age}
             ,client_phone=#{client.client_phone},client_address=#{client.client_address} where client_user = #{client.client_user};
     </update>
+
+    <delete id="deleteByUser">
+        delete from client where client_user = #{client_user}
+    </delete>
 
 </mapper>

@@ -1,6 +1,7 @@
 package service;
 
 import dao.ClientDao;
+import dao.DeviceDao;
 import dao.entity.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,10 +10,16 @@ import org.springframework.stereotype.Service;
 public class ClientService {
 
     private ClientDao clientDao;
+    private DeviceDao deviceDao;
 
     @Autowired
     public void setClientDao(ClientDao clientDao) {
         this.clientDao = clientDao;
+    }
+
+    @Autowired
+    public void setDeviceDao(DeviceDao deviceDao) {
+        this.deviceDao = deviceDao;
     }
 
     /**
@@ -21,8 +28,8 @@ public class ClientService {
      * @param client_password
      * @return 存在返回client,否则返回null
      */
-    public Client getClient(String client_user,String client_password){
-        return clientDao.select(client_user, client_password);
+    public Client getClientByUserPassword(String client_user, String client_password){
+        return clientDao.selectByUserPassword(client_user, client_password);
     }
 
     /**
@@ -41,5 +48,15 @@ public class ClientService {
      */
     public Integer updateClient(Client client){
         return clientDao.update(client);
+    }
+
+    /**
+     * 删除client
+     * @param client_user
+     * @return
+     */
+    public Integer deleteClientByUser(String client_user){
+        deviceDao.deleteByUser(client_user);
+        return clientDao.deleteByUser(client_user);
     }
 }

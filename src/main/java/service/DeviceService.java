@@ -22,8 +22,8 @@ public class DeviceService {
      * @param client_user
      * @return
      */
-    public List<Device> select(String client_user,Integer curr,Integer limit){
-        return deviceDao.select(client_user,(curr-1)*limit,limit);
+    public List<Device> getDeviceByUser(String client_user, Integer curr, Integer limit){
+        return deviceDao.selectByUser(client_user,(curr-1)*limit,limit);
     }
 
     /**
@@ -31,8 +31,8 @@ public class DeviceService {
      * @param device_number
      * @return
      */
-    public Integer delete(String device_number){
-        return deviceDao.delete(device_number);
+    public Integer deleteDeviceByNumber(String device_number){
+        return deviceDao.deleteByNumber(device_number);
     }
 
     /**
@@ -40,7 +40,7 @@ public class DeviceService {
      * @param device
      * @return
      */
-    public Integer insert(Device device){
+    public Integer insertDevice(Device device){
         return deviceDao.insert(device);
     }
 }
