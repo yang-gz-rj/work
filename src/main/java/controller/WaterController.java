@@ -147,7 +147,7 @@ public class WaterController {
         int curr = Integer.valueOf(httpServletRequest.getParameter("curr"));
         int limit = Integer.valueOf(httpServletRequest.getParameter("limit"));
 
-        br.setData( waterPriceService.getWaterPriceLimit(curr,limit));
+        br.setData(waterPriceService.getWaterPriceLimit(curr,limit));
         br.setCode(200);
 
         httpServletResponse.setContentType("text/html;charset=utf-8");
@@ -156,6 +156,57 @@ public class WaterController {
         pw.flush();
         pw.close();
     }
+
+    @RequestMapping("/water/price/delete")
+    public void waterPriceDelete(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) throws Exception{
+        httpServletRequest.setCharacterEncoding("utf-8");
+        Integer gradient = Integer.valueOf(httpServletRequest.getParameter("gradient"));
+        Date update_date = Date.valueOf(httpServletRequest.getParameter("update_date"));
+        BaseResponse<Integer> br = new BaseResponse<Integer>();
+        if(waterPriceService.deleteWaterPriceByGD(gradient,update_date) > 0){
+            br.setCode(200);
+        }else{
+            br.setCode(300);
+        }
+        httpServletResponse.setContentType("text/html;charset=utf-8");
+        PrintWriter pw = httpServletResponse.getWriter();
+        pw.write(gson.toJson(br));
+        pw.flush();
+        pw.close();
+    }
+
+    @RequestMapping("/water/price/add")
+    public void waterPriceAdd(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) throws Exception{
+        WaterPrice waterPrice = getWaterPrice(httpServletRequest);
+        BaseResponse<Integer> br = new BaseResponse<Integer>();
+        if(waterPriceService.insertWaterPrice(waterPrice) > 0){
+            br.setCode(200);
+        }else{
+            br.setCode(300);
+        }
+        httpServletResponse.setContentType("text/html;charset=utf-8");
+        PrintWriter pw = httpServletResponse.getWriter();
+        pw.write(gson.toJson(br));
+        pw.flush();
+        pw.close();
+    }
+
+    private WaterPrice getWaterPrice(HttpServletRequest httpServletRequest) {
+        try {
+            httpServletRequest.setCharacterEncoding("utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        WaterPrice waterPrice = new WaterPrice();
+        waterPrice.setWater_price_gradient(Integer.valueOf(httpServletRequest.getParameter("water_price_gradient")));
+        waterPrice.setWater_price_update_date(Date.valueOf(httpServletRequest.getParameter("water_price_update_date")));
+        waterPrice.setAdmin_user(httpServletRequest.getParameter("admin_user"));
+        waterPrice.setWater_price_maximum(Float.valueOf(httpServletRequest.getParameter("water_price_maximum")));
+        waterPrice.setWater_price_dw(httpServletRequest.getParameter("water_price_dw"));
+        waterPrice.setWater_price_unit_price(Float.valueOf(httpServletRequest.getParameter("water_price_unit_price")));
+        return waterPrice;
+    }
+
 
     private WaterBill getWaterBill(HttpServletRequest httpServletRequest) {
         try {

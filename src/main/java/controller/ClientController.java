@@ -10,6 +10,7 @@ import service.ClientService;
 import util.BaseResponse;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -49,6 +50,10 @@ public class ClientController {
             br.setCode(200);
             HttpSession session = httpServletRequest.getSession();
             session.setAttribute("client",client);
+            Cookie cookie = new Cookie(client.getClient_user(),client.getClient_password());
+            cookie.setComment("wes use");
+            cookie.setMaxAge(60*1000);//    1分钟有效
+            httpServletResponse.addCookie(cookie);
         }else{
             br.setCode(300);
         }

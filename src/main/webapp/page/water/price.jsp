@@ -11,7 +11,7 @@
     <style>
         #price-body{
             height: 80%;
-            width: 70%;
+            width: 65%;
             position: absolute;
             top: 8%;
             left: 25%;
@@ -27,8 +27,7 @@
     <table id="demo" lay-filter="test"></table>
     <div id="pageLimit"></div>
     <script type="text/html" id="barDemo">
-        <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        <a class="layui-btn layui-btn-xs" lay-event="del">删除</a>
     </script>
     <script>
         //执行一个laypage实例
@@ -55,13 +54,16 @@
             }
             ,toolbar: "#toolbarDemo"
             ,cols: [[
-                {field:"water_price_gradient", width:100,align:"center",title: "价位梯度", sort: true}
-                ,{field:"water_price_update_date", width:120, align:"center",title: "价位更新时间", sort: true}
+                {field:"water_price_gradient", width:140,align:"center",title: "价位梯度", sort: true}
+                ,{field:"water_price_update_date", width:160, align:"center",title: "价位更新时间", sort: true
+                ,templet:function(data){
+                        return layui.util.toDateString(data.water_price_update_date, "yyyy-MM-dd");
+                    }}
                 ,{field:"admin_user", width:110, align:"center",title: "提供者", sort: true}
                 ,{field:"water_price_maximum", width:140, align:"center",title: "最大量度", sort: true}
                 ,{field:"water_price_dw", width:110, align:"center",title: "单位"}
                 ,{field:"water_price_unit_price", width:110, align:"center",title: "单价"}
-                ,{fixed: "right", width:160, title: "操作",align:"center", toolbar: "#barDemo"}
+                ,{fixed: "right", width:110, title: "操作",align:"center", toolbar: "#barDemo"}
             ]]
         });
 
@@ -76,7 +78,7 @@
                         dataType: "json",
                         data: {
                             "gradient":data.water_price_gradient
-                            ,"update_date":data.water_price_update_date
+                            ,"update_date":layui.util.toDateString(data.water_price_update_date, "yyyy-MM-dd")
                         },
                         success: function(response){
                             if(response.code == 200){
@@ -95,22 +97,6 @@
                         }
                     });
                 });
-            } else if(obj.event === "detail"){
-                layer.open({
-                    type: 2
-                    ,content: "/page/water/price_detail.jsp"
-                    ,area: ["750px","400px"]
-                    ,offset: ["15%","30%"]
-                    ,success: function (layero,index){
-                        var body = layer.getChildFrame("body",index);
-                        body.find("#water_price_gradient").val(data.water_price_gradient);
-                        body.find("#water_price_update_date").val(data.water_price_update_date);
-                        body.find("#admin_user").val(data.admin_user);
-                        body.find("#water_price_maximum").val(data.water_price_maximum);
-                        body.find("#water_price_dw").val(data.water_price_dw);
-                        body.find("#water_price_unit_price").val(data.water_price_unit_price);
-                    }
-                });
             }
         });
 
@@ -122,8 +108,8 @@
                 layer.open({
                     type: 2
                     ,content: "/page/water/price_add.jsp?client_user=${client_user}"
-                    ,area: ["750px","450px"]
-                    ,offset: ["10%","30%"]
+                    ,area: ["480px","500px"]
+                    ,offset: ["10%","40%"]
                     ,cancel: function (){
                         viewTable.reload();
                     }
