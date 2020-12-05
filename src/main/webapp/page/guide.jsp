@@ -136,7 +136,7 @@
                     nextPage = "/device?client_user="+client_user
                     break;
                 case "水价位信息":
-                    nextPage = "/public"
+                    nextPage = "/water/price"
                     break;
                 case "水费账单信息":
                     nextPage = "/water/bill?bill_type=all&client_user="+client_user

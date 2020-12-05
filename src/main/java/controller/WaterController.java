@@ -3,12 +3,14 @@ package controller;
 import com.google.gson.Gson;
 import dao.entity.Device;
 import dao.entity.WaterBill;
+import dao.entity.WaterPrice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import service.DeviceService;
 import service.WaterBillService;
+import service.WaterPriceService;
 import util.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,12 +25,18 @@ import java.util.List;
 public class WaterController {
 
     private WaterBillService waterBillService;
+    private WaterPriceService waterPriceService;
     private DeviceService deviceService;
     private final Gson gson = new Gson();
 
     @Autowired
     public void setWaterBillService(WaterBillService waterBillService) {
         this.waterBillService = waterBillService;
+    }
+
+    @Autowired
+    public void setWaterPriceService(WaterPriceService waterPriceService) {
+        this.waterPriceService = waterPriceService;
     }
 
     @Autowired
@@ -117,6 +125,31 @@ public class WaterController {
         }else{
             br.setCode(300);
         }
+        httpServletResponse.setContentType("text/html;charset=utf-8");
+        PrintWriter pw = httpServletResponse.getWriter();
+        pw.write(gson.toJson(br));
+        pw.flush();
+        pw.close();
+    }
+
+    @RequestMapping("/water/price")
+    public ModelAndView waterPrice(){
+        ModelAndView mav = new ModelAndView("/page/water/price.jsp");
+        int price_count = waterPriceService.getWaterPrice().size();
+        mav.addObject("price_count",price_count);
+        return mav;
+    }
+
+    @RequestMapping("/water/price/json")
+    public void waterPriceJson(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+        httpServletRequest.setCharacterEncoding("utf-8");
+        BaseResponse<List<WaterPrice>> br = new BaseResponse<List<WaterPrice>>();
+        int curr = Integer.valueOf(httpServletRequest.getParameter("curr"));
+        int limit = Integer.valueOf(httpServletRequest.getParameter("limit"));
+
+        br.setData( waterPriceService.getWaterPriceLimit(curr,limit));
+        br.setCode(200);
+
         httpServletResponse.setContentType("text/html;charset=utf-8");
         PrintWriter pw = httpServletResponse.getWriter();
         pw.write(gson.toJson(br));
