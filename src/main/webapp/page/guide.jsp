@@ -75,9 +75,8 @@
     <%-- 用户昵称显示 --%>
     <ul class="layui-nav layui-nav-tree" id="show-user" style="position: absolute;top: 0%; left: 0%;
         background: #F0F0F0; width: 100%;height: 7%;">
-        <form class="layui-form" style="position: absolute; left: 5%; top: 20%; height: 60%; width: 60%; color: black;">
-            <label class="layui-form-label">模块</label>
-            <div class="layui-input-block" style="position: absolute; left: 10%; top: 0%; height: 100%;width: 25%;">
+        <form class="layui-form" style="position: absolute; left: 2%; top: 8%; height: 60%; width: 60%; color: black;">
+            <div class="layui-input-block" style="position: absolute; left: 0%; top: 0%; height: 100%;width: 25%;">
                 <select name="city" lay-verify="" >
                     <option value="">请选择一个模块</option>
                     <option value="010">用户信息</option>
@@ -86,8 +85,7 @@
                     <option value="0571">水费价位信息</option>
                 </select>
             </div>
-            <label class="layui-form-label">字段</label>
-            <div class="layui-input-block" style="position: absolute; left: 37%; top: 0%; height: 100%;width: 25%;">
+            <div class="layui-input-block" style="position: absolute; left: 27%; top: 0%; height: 100%;width: 25%;">
                 <select name="city" lay-verify="" >
                     <option value="">请选择一个字段</option>
                     <option value="010">北京</option>
@@ -95,7 +93,9 @@
                     <option value="0571">杭州</option>
                 </select>
             </div>
-            <input type="text" name="title" style="position: absolute; left: 64%; top: 0%; height: 100%;width: 25%;" required lay-verify="required" placeholder="请输入搜索内容" autocomplete="off" class="layui-input">
+            <div class="layui-input-block" style="position: absolute; left: 54%; top: 0%; height: 100%;width: 25%;">
+                <input type="text" name="title"  required lay-verify="required" placeholder="请输入搜索内容" autocomplete="off" class="layui-input">
+            </div>
         </form>
         <li class="layui-nav-item" style="float: right;width: 8%;height: 100%;background: ">
             <a href="javascript:;" style="text-align: center;line-heigh: 100%;height: 100%;background: #4E5465;"><img src="/image/user.png">${pageContext.request.getParameter('client_user')}</a>

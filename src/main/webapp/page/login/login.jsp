@@ -15,13 +15,20 @@
       body{
         height: 100%;
         width: 100%;
-        background-image: url("/image/back.png");
+        background-image: url("/image/back.jpg");
         background-size: 100% 100%;
       }
       #show-main{
         position: absolute;
-        top: 30%;
-        left: 35%;
+        top: 25%;
+        left: 40%;
+        width: 20%;
+        height: 30%;
+        background: #f8f8f8;
+        border: 1px solid #f8f8f8;
+      }
+      form div{
+        float: left;
       }
     </style>
   </head>
@@ -29,41 +36,47 @@
 
   <div id="show-main">
     <form class="layui-form" action="/guide" method="POST">
-      <div class="layui-form-item">
-        <label class="layui-form-label">用户名</label>
-        <div class="layui-input-block">
-          <input type="text" name="client_user" placeholder="请输入用户名" autocomplete="off" class="layui-input">
-        </div>
+      <div style="width: 100%;">
+          <input type="text" name="client_user" placeholder="请输入用户名" class="layui-input"/>
       </div>
-      <div class="layui-form-item">
-        <label class="layui-form-label">密码</label>
-        <div class="layui-input-block">
-          <input type="password" name="client_password" placeholder="请输入密码" autocomplete="off" class="layui-input">
-        </div>
+      <div style="width: 100%; padding-top: 4%;">
+        <input type="text" name="client_password" placeholder="请输入密码" class="layui-input"/>
       </div>
-      <div class="layui-form-item">
-        <div class="layui-input-block">
-          <button class="layui-btn" lay-submit lay-filter="login">立即提交</button>
-          <button type="reset" class="layui-bg-green layui-btn layui-btn-primary">重置</button>
-        </div>
+      <div style="width: 100%; padding-top: 4%;">
+        <input type="text" name="verifyCode" style="width: 70%;float:left;" placeholder="请输入验证码" class="layui-input"/>
+        <img id="verifyCodeImg" style="width: 30%;float: left;" alt="点击更换" src="/guide/verify"
+             title="点击更换" onclick="change()">
       </div>
-    </form>
-
-    <form class="layui-form" action="/regist" method="post">
-      <div class="layui-form-item">
-        <div class="layui-input-block">
-          <button class="layui-btn" lay-submit>注册</button>
-        </div>
+      <div style="width: 100%; padding-top: 4%;">
+        <button class="layui-btn" lay-submit lay-filter="login" style="float: left;margin-left: 5%;">立即提交</button>
+        <button type="reset" class="layui-bg-green layui-btn layui-btn-primary" style="float: right;margin-right: 5%;">重置</button>
+      </div>
+      <div style="width: 100%; padding-top: 4%;">
+        <span style="float: left;">忘记密码?</span>
+        <span id="regist" style="float: right;cursor: grabbing;">立即注册</span>
       </div>
     </form>
   </div>
   <script>
-    layui.use(['form','layer'], function(){
+
+    function change() {
+      var verifyCode = document.getElementById("verifyCodeImg");
+      verifyCode.src = "/guide/verify?time=" + Math.random(1000);
+    }
+
+    layui.use(['form','layer','jquery'], function(){
       const form = layui.form;
         layer = layui.layer;
+
+      let $ = layui.$;
+
+      $("#regist").on('click',function (){
+        window.location.href = "/regist";
+      });
+
       form.on("submit(login)",function (data){
         let status=0;
-        layui.$.ajax({
+        $.ajax({
             type: "GET"
             ,url: "/client/filter"
             ,xhrFields: {
@@ -75,6 +88,8 @@
             ,success: function (response){
               if(response.code == 200){
                 status = 1;
+              }else if(response.code == 400) {
+                layer.msg("验证码错误");
               }else{
                 layer.msg("用户名密码错误");
               }

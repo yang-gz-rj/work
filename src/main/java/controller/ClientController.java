@@ -44,19 +44,27 @@ public class ClientController {
         httpServletRequest.setCharacterEncoding("utf-8");
         String client_user = httpServletRequest.getParameter("client_user");
         String client_password = httpServletRequest.getParameter("client_password");
-        Client client = clientService.getClientByUserPassword(client_user,client_password);
+        String verifyCode = httpServletRequest.getParameter("verifyCode");
+
         BaseResponse<Client> br = new BaseResponse<Client>();
-        if(client != null){
-            br.setCode(200);
-            HttpSession session = httpServletRequest.getSession();
-            session.setAttribute("client",client);
-            Cookie cookie = new Cookie(client.getClient_user(),client.getClient_password());
-            cookie.setPath("/");
-            cookie.setMaxAge(60*10);//    1分钟有效
-            httpServletResponse.addCookie(cookie);
+        // 验证码不正确
+        if(!verifyCode.equals(httpServletRequest.getSession().getAttribute("verifyCode").toString())){
+            br.setCode(400);
         }else{
-            br.setCode(300);
+            Client client = clientService.getClientByUserPassword(client_user,client_password);
+            if(client != null){
+                br.setCode(200);
+                HttpSession session = httpServletRequest.getSession();
+                session.setAttribute("client",client);
+                Cookie cookie = new Cookie(client.getClient_user(),client.getClient_password());
+                cookie.setPath("/");
+                cookie.setMaxAge(60*10);//    1分钟有效
+                httpServletResponse.addCookie(cookie);
+            }else{
+                br.setCode(300);
+            }
         }
+
         httpServletResponse.setContentType("text/html;charset=utf-8");
         PrintWriter pw = httpServletResponse.getWriter();
         pw.write(gson.toJson(br));

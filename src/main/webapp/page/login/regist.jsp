@@ -15,7 +15,7 @@
         body{
             height: 100%;
             width: 100%;
-            background-image: url("/image/back.png");
+            background-image: url("/image/back.jpg");
             background-size: 100% 100%;
         }
         #show-main{
