@@ -45,7 +45,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">价位更新时间</label>
             <div class="layui-input-inline">
-                <input type="text" name="water_price_update_date" autocomplete="off" class="layui-input demo">
+                <input type="text" name="water_price_update_date" autocomplete="off" class="layui-input demo1">
             </div>
         </div>
     </div>
@@ -73,7 +73,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">出账日期</label>
             <div class="layui-input-inline">
-                <input type="text" name="water_bill_output_date" autocomplete="off" class="layui-input demo" >
+                <input type="text" name="water_bill_output_date" autocomplete="off" class="layui-input demo2" >
             </div>
         </div>
     </div>
@@ -87,7 +87,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">缴费时间</label>
             <div class="layui-input-inline">
-                <input type="text" name="water_bill_pay_date" autocomplete="off" class="layui-input demo" >
+                <input type="text" name="water_bill_pay_date" autocomplete="off" class="layui-input demo3" >
             </div>
         </div>
     </div>
@@ -107,7 +107,17 @@
             ,laydate = layui.laydate;
 
         laydate.render({
-            elem: '.demo'
+            elem: '.demo1'
+            ,type: 'date'
+            ,trigger: 'click'
+        });
+        laydate.render({
+            elem: '.demo2'
+            ,type: 'date'
+            ,trigger: 'click'
+        });
+        laydate.render({
+            elem: '.demo3'
             ,type: 'date'
             ,trigger: 'click'
         });

@@ -11,10 +11,10 @@
     <style>
         #price-body{
             height: 80%;
-            width: 65%;
+            width: 85%;
             position: absolute;
             top: 8%;
-            left: 25%;
+            left: 10%;
         }
     </style>
 </head>
@@ -25,7 +25,7 @@
         </div>
     </script>
     <table id="demo" lay-filter="test"></table>
-    <div id="pageLimit"></div>
+    <div id="pageLimit" style="padding-left: 30%;padding-top: 0%;"></div>
     <script type="text/html" id="barDemo">
         <a class="layui-btn layui-btn-xs" lay-event="del">删除</a>
     </script>
@@ -52,6 +52,9 @@
             ,response: {
                 statusCode: 200
             }
+            ,height: $(window).height()*0.70
+            ,width: $(window).width()*0.75
+            ,cellMinWidth: $(window).height()*0.70*0.1
             ,toolbar: "#toolbarDemo"
             ,cols: [[
                 {field:"water_price_gradient", width:140,align:"center",title: "价位梯度", sort: true}

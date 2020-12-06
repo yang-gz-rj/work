@@ -31,11 +31,10 @@ public class GuideController {
             //  验证cookie是否存在client对象
             Cookie[] cookies = httpServletRequest.getCookies();
             for(Cookie cookie: cookies){
-                String comment = cookie.getComment();
                 //  验证是否是需要的cookie
-                if(comment != null && comment.equals("wes use")){
-                    //  获取cookie存储的用户名，密码
-                    Client client = clientService.getClientByUserPassword(cookie.getName(),cookie.getValue());
+                //  获取cookie存储的用户名，密码
+                Client client = clientService.getClientByUserPassword(cookie.getName(),cookie.getValue());
+                if(client != null){
                     httpServletRequest.getSession().setAttribute("client",client);
                     httpServletRequest.getRequestDispatcher("/page/guide.jsp").forward(httpServletRequest,httpServletResponse);
                     return;

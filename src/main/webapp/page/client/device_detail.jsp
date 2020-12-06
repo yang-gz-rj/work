@@ -10,7 +10,6 @@
 <head>
     <title>device_detail</title>
     <link rel="stylesheet" href="/layui/css/layui.css" media="all"/>
-    <script src="/layui/layui.js" charset="utf-8"></script>
 </head>
 <body>
 <form class="layui-form" action="#" method="post">
@@ -59,9 +58,10 @@
         </div>
     </div>
 </form>
+<script src="/layui/layui.js" charset="utf-8"></script>
 <script>
     layui.use("form",function (){
-
+        let form = layui.form;
     });
 </script>
 </body>

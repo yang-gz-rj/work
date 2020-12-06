@@ -1,3 +1,4 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%--
   Created by IntelliJ IDEA.
   User: yang
@@ -18,18 +19,28 @@
             padding-right: 10px;
         }
         #show-right{
-            float: left;
+            position: absolute;
+            top: 0%;
+            left: 15%;
             width: 85%;
             height: 100%;
-            background-image: url("/image/background.png");
-            background-size: 100% 100%;
+            background-color: #eeeeee;
             opacity:0.95;
             filter:alpha(opacity=95); /* 针对 IE8 以及更早的版本 */
         }
+        #show-icon{
+            height: 7%;
+            width: 15%;
+            background-image: url("/image/guide.png");
+            background-size: 100% 100%;
+            background-color: #eeeeee;
+        }
     </style>
 </head>
-<body>
-<ul class="layui-nav layui-nav-tree" lay-filter="guide-filter" id="show-guide" style="float: left; height: 100%;width: 15%;">
+<body style="width: 100%;height: 100%;">
+<div id="show-icon" class="layui-nav-item"></div>
+<ul class="layui-nav layui-nav-tree" lay-filter="guide-filter" id="show-guide" style="position: absolute;
+    left: 0%; top: 7%; height: 93%;width: 15%;">
     <li class="layui-nav-item">
         <a href="javascript:;"><img src="/image/public.png"/>公告</a>
         <dl class="layui-nav-child">
@@ -62,15 +73,39 @@
 <%-- 右布局 --%>
 <div id="show-right">
     <%-- 用户昵称显示 --%>
-    <ul class="layui-nav layui-nav-tree" id="show-user" style="float: left;width: 100%;height: 7%;">
-        <li class="layui-nav-item" style="float: right;width: 8%;height: 100%;">
-            <a href="javascript:;" style="text-align: center;line-heigh: 100%;height: 100%;"><img src="/image/user.png">${pageContext.request.getParameter('client_user')}</a>
+    <ul class="layui-nav layui-nav-tree" id="show-user" style="position: absolute;top: 0%; left: 0%;
+        background: #F0F0F0; width: 100%;height: 7%;">
+        <form class="layui-form" style="position: absolute; left: 5%; top: 20%; height: 60%; width: 60%; color: black;">
+            <label class="layui-form-label">模块</label>
+            <div class="layui-input-block" style="position: absolute; left: 10%; top: 0%; height: 100%;width: 25%;">
+                <select name="city" lay-verify="" >
+                    <option value="">请选择一个模块</option>
+                    <option value="010">用户信息</option>
+                    <option value="021">设备信息</option>
+                    <option value="0571">水费账单信息</option>
+                    <option value="0571">水费价位信息</option>
+                </select>
+            </div>
+            <label class="layui-form-label">字段</label>
+            <div class="layui-input-block" style="position: absolute; left: 37%; top: 0%; height: 100%;width: 25%;">
+                <select name="city" lay-verify="" >
+                    <option value="">请选择一个字段</option>
+                    <option value="010">北京</option>
+                    <option value="021">上海</option>
+                    <option value="0571">杭州</option>
+                </select>
+            </div>
+            <input type="text" name="title" style="position: absolute; left: 64%; top: 0%; height: 100%;width: 25%;" required lay-verify="required" placeholder="请输入搜索内容" autocomplete="off" class="layui-input">
+        </form>
+        <li class="layui-nav-item" style="float: right;width: 8%;height: 100%;background: ">
+            <a href="javascript:;" style="text-align: center;line-heigh: 100%;height: 100%;background: #4E5465;"><img src="/image/user.png">${pageContext.request.getParameter('client_user')}</a>
             <dl class="layui-nav-child">
                 <dd style="text-align: center;" onclick="logout()">注销</dd>
                 <dd style="text-align: center;" onclick="quit()">退出</dd>
             </dl>
         </li>
     </ul>
+    <hr style="position: absolute; left: 0%; top: 5.7%; height:1; width: 100%;background: #555555;"/>
     <%-- 显示动态页面 --%>
     <div id="show-frame" style="float: left;width: 100%;height: 90%;"></div>
 </div>

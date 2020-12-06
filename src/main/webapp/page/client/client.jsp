@@ -14,7 +14,7 @@
             width: 60%;
             position: absolute;
             top: 15%;
-            left: 25%;
+            left: 23%;
         }
         #client-body form{
             height: 100%;

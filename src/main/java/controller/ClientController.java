@@ -51,8 +51,8 @@ public class ClientController {
             HttpSession session = httpServletRequest.getSession();
             session.setAttribute("client",client);
             Cookie cookie = new Cookie(client.getClient_user(),client.getClient_password());
-            cookie.setComment("wes use");
-            cookie.setMaxAge(60*1000);//    1分钟有效
+            cookie.setPath("/");
+            cookie.setMaxAge(60*10);//    1分钟有效
             httpServletResponse.addCookie(cookie);
         }else{
             br.setCode(300);

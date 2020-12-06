@@ -11,10 +11,10 @@
         <style>
             #device-body{
                 height: 80%;
-                width: 70%;
+                width: 85%;
                 position: absolute;
                 top: 8%;
-                left: 25%;
+                left: 10%;
             }
         </style>
     </head>
@@ -25,7 +25,7 @@
             </div>
         </script>
         <table id="demo" lay-filter="test"></table>
-        <div id="pageLimit"></div>
+        <div id="pageLimit" style="padding-left: 30%;padding-top: 0%;"></div>
         <script type="text/html" id="barDemo">
             <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
             <a class="layui-btn layui-btn-xs" lay-event="bill">账单</a>
@@ -54,6 +54,9 @@
                 ,response: {
                     statusCode: 200
                 }
+                ,height: $(window).height()*0.70
+                ,width: $(window).width()*0.75
+                ,cellMinWidth: $(window).height()*0.70*0.1
                 ,toolbar: "#toolbarDemo"
                 ,cols: [[
                     {field:"device_number", width:80,align:"center",title: "表号", sort: true}
@@ -61,7 +64,10 @@
                     ,{field:"device_type", width:80, align:"center",title: "表类型", sort: true}
                     ,{field:"device_point", width:80, align:"center",title: "位数", sort: true}
                     ,{field:"device_producer", width:140, align:"center",title: "生产厂商"}
-                    ,{field:"device_create_date", width:130, align:"center",title: "生产日期", sort: true}
+                    ,{field:"device_create_date", width:130, align:"center",title: "生产日期", sort: true
+                    ,templet:function(data){
+                        return layui.util.toDateString(data.device_create_date, "yyyy-MM-dd");
+                    }}
                     ,{field:"device_durability", width:110, align:"center",title: "使用年限",sort: true}
                     ,{fixed: "right", width:210, title: "操作",align:"center", toolbar: "#barDemo"}
                 ]]
@@ -100,7 +106,7 @@
                     layer.open({
                         type: 2
                         ,content: "/device/detail"
-                        ,area: ["450px","500px"]
+                        ,area: ["400px","450px"]
                         ,success: function (layero,index){
                             var body = layer.getChildFrame("body",index);
                             body.find("#device_number").val(data.device_number);
@@ -108,7 +114,7 @@
                             body.find("#device_type").val(data.device_type);
                             body.find("#device_point").val(data.device_point);
                             body.find("#device_producer").val(data.device_producer);
-                            body.find("#device_create_date").val(data.device_create_date);
+                            body.find("#device_create_date").val(layui.util.toDateString(data.device_create_date, "yyyy-MM-dd"));
                             body.find("#device_durability").val(data.device_durability);
                         }
                     });
