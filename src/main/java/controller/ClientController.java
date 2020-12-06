@@ -44,11 +44,11 @@ public class ClientController {
         httpServletRequest.setCharacterEncoding("utf-8");
         String client_user = httpServletRequest.getParameter("client_user");
         String client_password = httpServletRequest.getParameter("client_password");
-        String verifyCode = httpServletRequest.getParameter("verifyCode");
+        String verifyCode = httpServletRequest.getParameter("verifyCode").toLowerCase();
 
         BaseResponse<Client> br = new BaseResponse<Client>();
         // 验证码不正确
-        if(!verifyCode.equals(httpServletRequest.getSession().getAttribute("verifyCode").toString())){
+        if(!verifyCode.equals(httpServletRequest.getSession().getAttribute("verifyCode").toString().toLowerCase())){
             br.setCode(400);
         }else{
             Client client = clientService.getClientByUserPassword(client_user,client_password);

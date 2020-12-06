@@ -97,7 +97,7 @@
                 <input type="text" name="title"  required lay-verify="required" placeholder="请输入搜索内容" autocomplete="off" class="layui-input">
             </div>
         </form>
-        <li class="layui-nav-item" style="float: right;width: 8%;height: 100%;background: ">
+        <li class="layui-nav-item" style="float: right;width: 8%;height: 100%;">
             <a href="javascript:;" style="text-align: center;line-heigh: 100%;height: 100%;background: #4E5465;"><img src="/image/user.png">${pageContext.request.getParameter('client_user')}</a>
             <dl class="layui-nav-child">
                 <dd style="text-align: center;" onclick="logout()">注销</dd>
@@ -105,7 +105,7 @@
             </dl>
         </li>
     </ul>
-    <hr style="position: absolute; left: 0%; top: 5.7%; height:1; width: 100%;background: #555555;"/>
+    <hr style="position: absolute; left: 0%; top: 5.7%; height:1px; width: 100%;background: #555555;"/>
     <%-- 显示动态页面 --%>
     <div id="show-frame" style="float: left;width: 100%;height: 90%;"></div>
 </div>
