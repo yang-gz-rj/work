@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 
 @Controller
 public class ClientController {
@@ -74,7 +73,7 @@ public class ClientController {
 
     @RequestMapping("/client/alter")
     public void clientAlter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-        Client client = getClient(httpServletRequest);
+        Client client = clientService.getClient(httpServletRequest);
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(clientService.updateClient(client) > 0){
             br.setCode(200);
@@ -113,7 +112,7 @@ public class ClientController {
 
     @RequestMapping("/regist/add")
     public void registAdd(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-        Client client = getClient(httpServletRequest);
+        Client client = clientService.getClient(httpServletRequest);
         //  插入成功
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(clientService.insertClient(client) > 0){
@@ -128,21 +127,6 @@ public class ClientController {
         pw.close();
     }
 
-    private Client getClient(HttpServletRequest httpServletRequest) {
-        try {
-            httpServletRequest.setCharacterEncoding("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        Client client = new Client();
-        client.setClient_user(httpServletRequest.getParameter("client_user"));
-        client.setClient_password(httpServletRequest.getParameter("client_password"));
-        client.setClient_name(httpServletRequest.getParameter("client_name"));
-        client.setClient_gender(httpServletRequest.getParameter("client_gender"));
-        client.setClient_age(Integer.valueOf(httpServletRequest.getParameter("client_age")));
-        client.setClient_phone(httpServletRequest.getParameter("client_phone"));
-        client.setClient_address(httpServletRequest.getParameter("client_address"));
-        return client;
-    }
+
 
 }

@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import service.ClientService;
+import service.DeviceService;
+import service.WaterBillService;
+import service.WaterPriceService;
 import util.VerifyCodeUtil;
 
 import javax.servlet.ServletOutputStream;
@@ -19,10 +22,28 @@ import java.io.IOException;
 public class GuideController {
 
     private ClientService clientService;
+    private DeviceService deviceService;
+    private WaterPriceService waterPriceService;
+    private WaterBillService waterBillService;
 
     @Autowired
     public void setClientService(ClientService clientService) {
         this.clientService = clientService;
+    }
+
+    @Autowired
+    public void setDeviceService(DeviceService deviceService) {
+        this.deviceService = deviceService;
+    }
+
+    @Autowired
+    public void setWaterPriceService(WaterPriceService waterPriceService) {
+        this.waterPriceService = waterPriceService;
+    }
+
+    @Autowired
+    public void setWaterBillService(WaterBillService waterBillService) {
+        this.waterBillService = waterBillService;
     }
 
     @RequestMapping("/guide")
@@ -61,6 +82,32 @@ public class GuideController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @RequestMapping("/guide/search")
+    public void guideSearch(String model,String column,HttpServletRequest req,HttpServletResponse resp){
+        switch (model){
+            case "device":
+                searchDevice(req,resp);
+                break;
+            case "water_bill":
+                searchWaterBill(req,resp);
+                break;
+            case "water_price":
+                searchWaterPrice(req,resp);
+                break;
+        }
+    }
+
+    // TODO 分别查询
+    private void searchWaterPrice(HttpServletRequest req, HttpServletResponse resp) {
+
+    }
+
+    private void searchWaterBill(HttpServletRequest req, HttpServletResponse resp) {
+    }
+
+    private void searchDevice(HttpServletRequest req, HttpServletResponse resp) {
     }
 }
 

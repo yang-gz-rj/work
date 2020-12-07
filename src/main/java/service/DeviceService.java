@@ -5,6 +5,9 @@ import dao.entity.Device;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -51,5 +54,27 @@ public class DeviceService {
      */
     public Device getDeviceByNumber(String device_number) {
         return deviceDao.selectByNumber(device_number);
+    }
+
+    /**
+     * 通过reques对象获取Device
+     * @param httpServletRequest
+     * @return
+     */
+    public Device getDevice(HttpServletRequest httpServletRequest){
+        Device device = new Device();
+        try {
+            httpServletRequest.setCharacterEncoding("utf-8");
+            device.setDevice_number(httpServletRequest.getParameter("device_number"));
+            device.setClient_user(httpServletRequest.getParameter("client_user"));
+            device.setDevice_type(httpServletRequest.getParameter("device_type"));
+            device.setDevice_point(Integer.parseInt(httpServletRequest.getParameter("device_point")));
+            device.setDevice_producer(httpServletRequest.getParameter("device_producer"));
+            device.setDevice_durability(Float.parseFloat(httpServletRequest.getParameter("device_durability")));
+            device.setDevice_create_date(Date.valueOf(httpServletRequest.getParameter("device_create_date")));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return device;
     }
 }

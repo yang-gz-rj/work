@@ -77,24 +77,20 @@
         background: #F0F0F0; width: 100%;height: 7%;">
         <form class="layui-form" style="position: absolute; left: 2%; top: 8%; height: 60%; width: 60%; color: black;">
             <div class="layui-input-block" style="position: absolute; left: 0%; top: 0%; height: 100%;width: 25%;">
-                <select name="city" lay-verify="" >
+                <select id="select_model" name="model" lay-verify="" lay-filter="select_model">
                     <option value="">请选择一个模块</option>
-                    <option value="010">用户信息</option>
-                    <option value="021">设备信息</option>
-                    <option value="0571">水费账单信息</option>
-                    <option value="0571">水费价位信息</option>
+                    <option value="device">设备信息</option>
+                    <option value="water_bill">水费账单信息</option>
+                    <option value="water_price">水费价位信息</option>
                 </select>
             </div>
             <div class="layui-input-block" style="position: absolute; left: 27%; top: 0%; height: 100%;width: 25%;">
-                <select name="city" lay-verify="" >
+                <select name="column" lay-verify="" id="select_column" lay-filter="select_column">
                     <option value="">请选择一个字段</option>
-                    <option value="010">北京</option>
-                    <option value="021">上海</option>
-                    <option value="0571">杭州</option>
                 </select>
             </div>
             <div class="layui-input-block" style="position: absolute; left: 54%; top: 0%; height: 100%;width: 25%;">
-                <input type="text" name="title"  required lay-verify="required" placeholder="请输入搜索内容" autocomplete="off" class="layui-input">
+                <input type="text" id="search-input" name="input"  required lay-verify="required" placeholder="请选择模块和字段" autocomplete="off" class="layui-input">
             </div>
         </form>
         <li class="layui-nav-item" style="float: right;width: 8%;height: 100%;">
@@ -111,33 +107,6 @@
 </div>
 <script src="/layui/layui.js" charset="UTF-8"></script>
 <script>
-    function quit(){
-        window.location.href = "/";
-    }
-    function logout(){
-        $.ajax({
-            type: "POST"
-            ,url: "/client/delete"
-            ,async: false
-            ,xhrFields:{
-                withCredentials: true
-            }
-            ,data: {
-                "client_user": client_user
-            }
-            ,dataType: "json"
-            ,success: function (response){
-                if(response.code == 200){
-                    window.location.href = "/";
-                }else{
-                    layer.msg("服务器繁忙");
-                }
-            }
-            ,error: function (){
-                layer.msg("服务器繁忙");
-            }
-        });
-    }
     let currPage = "/client";
     const client_user = '${pageContext.request.getParameter('client_user')}';
     /* 加载所有模块 */
@@ -154,6 +123,66 @@
 
         $("#show-frame").load(currPage);
         $("#dd-user").attr("style","padding-left: 20%;background-color:#009688;");
+
+        form.on('select(select_model)', function(data){
+            switch (data.value){
+                case "device":
+                    select_device();
+                    break;
+                case "water_bill":
+                    select_water_bill();
+                    break;
+                case "water_price":
+                    select_water_price();
+                    break;
+                default:
+                    break;
+            }
+
+            form.render();
+        });
+
+        form.on('select(select_column)', function(data){
+            if(data.value != ""){
+                if(data.value.endsWith("date")){
+                    $("#search-input").attr("placeholder","请输入时间:yyyy-MM-dd");
+                }else{
+                    $("#search-input").attr("placeholder","请输入搜索内容");
+                }
+            }
+        });
+
+        $('#search-input').on('keyup',function (event){
+            if(event.keyCode === 13){
+                if($("#select_model").val() == ""){
+                    layer.msg("请选择模型");
+                }else if($("#select_column").val() == ""){
+                    layer.msg("请选择字段");
+                }else{
+                    // TODO 查找
+                    let sendData = {
+                        "model": $("#select_model").val()
+                        ,"column": $("#select_column").val()
+                    };
+
+                    $.ajax({
+                        url: "/guide/search"
+                        ,data: sendData
+                        ,dataType: "json"
+                        ,async: false
+                        ,xhrFields: {
+                            withCredentials: true
+                        }
+                        ,success: function (resp){
+
+                        }
+                        ,error: function (){
+                            layer.msg("服务器繁忙");
+                        }
+                    });
+                }
+            }
+        });
 
         $('a').on('click', function(){
             let nextPage = "";
@@ -194,6 +223,75 @@
         });
 
     });
+
+    function quit(){
+        window.location.href = "/";
+    }
+
+    function logout(){
+        $.ajax({
+            type: "POST"
+            ,url: "/client/delete"
+            ,async: false
+            ,xhrFields:{
+                withCredentials: true
+            }
+            ,data: {
+                "client_user": client_user
+            }
+            ,dataType: "json"
+            ,success: function (response){
+                if(response.code == 200){
+                    window.location.href = "/";
+                }else{
+                    layer.msg("服务器繁忙");
+                }
+            }
+            ,error: function (){
+                layer.msg("服务器繁忙");
+            }
+        });
+    }
+
+    function select_device(){
+        let options = "<option value=\"\">请选择一个字段</option>";
+        options += "<option value=\"device_number\">表号</option>";
+        options += "<option value=\"device_type\">表类型</option>";
+        options += "<option value=\"device_point\">位数</option>";
+        options += "<option value=\"device_producer\">生产厂商</option>";
+        options += "<option value=\"device_create_date\">生产日期</option>";
+        options += "<option value=\"device_durability\">使用年限</option>";
+
+        $("#select_column").html(options);
+    }
+
+    function select_water_bill(){
+        let options = "<option value=\"\">请选择一个字段</option>";
+        options += "<option value=\"water_bill_number\">账单号</option>";
+        options += "<option value=\"device_number\">表号</option>";
+        options += "<option value=\"water_price_gradient\">价位梯度</option>";
+        options += "<option value=\"water_price_update_date\">价位更新时间</option>";
+        options += "<option value=\"water_bill_init_value\">初始读数</option>";
+        options += "<option value=\"water_bill_now_value\">现在读数</option>";
+        options += "<option value=\"water_bill_output_date\">出账时间</option>";
+        options += "<option value=\"water_bill_fee\">应缴费用</option>";
+        options += "<option value=\"water_bill_pay_date\">缴费时间</option>";
+
+        $("#select_column").html(options);
+    }
+
+    function select_water_price(){
+        let options = "<option value=\"\">请选择一个字段</option>";
+        options += "<option value=\"water_price_gradient\">价位梯度</option>";
+        options += "<option value=\"water_price_update_date\">价位更新时间</option>";
+        options += "<option value=\"admin_user\">提供者</option>";
+        options += "<option value=\"water_price_maximum\">最大量度</option>";
+        options += "<option value=\"water_price_dw\">单位</option>";
+        options += "<option value=\"water_price_unit_price\">单价</option>";
+
+        $("#select_column").html(options);
+    }
+
 </script>
 </body>
 </html>
