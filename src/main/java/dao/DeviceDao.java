@@ -43,4 +43,14 @@ public interface DeviceDao {
      * @return
      */
     public Integer deleteByUser(@Param("client_user") String client_user);
+
+    List<Device> selectByType(@Param("type") String type);
+
+    List<Device> selectByPoint(@Param("point") String point);
+
+    List<Device> selectByProducer(@Param("producer") String producer);
+
+    List<Device> selectByCreateDate(@Param("createDate") String createDate);
+
+    List<Device> selectByDurability(@Param("durability") String durability);
 }

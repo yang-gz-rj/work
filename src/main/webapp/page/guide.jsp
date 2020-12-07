@@ -108,8 +108,7 @@
 <script src="/layui/layui.js" charset="UTF-8"></script>
 <script>
     let currPage = "/client";
-    const client_user = '${pageContext.request.getParameter('client_user')}';
-    /* 加载所有模块 */
+    // 加载所有模块
     let element,form,layer,$,table,laypage;
 
     layui.use(['element','form','layer','jquery','table','laypage'], function(){
@@ -121,9 +120,12 @@
         ,table = layui.table
         ,laypage = layui.laypage;
 
+        // 初始化页面为client
         $("#show-frame").load(currPage);
+        // 设置css
         $("#dd-user").attr("style","padding-left: 20%;background-color:#009688;");
 
+        // 监听模块选择
         form.on('select(select_model)', function(data){
             switch (data.value){
                 case "device":
@@ -142,6 +144,7 @@
             form.render();
         });
 
+        // 监听字段选择
         form.on('select(select_column)', function(data){
             if(data.value != ""){
                 if(data.value.endsWith("date")){
@@ -152,6 +155,7 @@
             }
         });
 
+        // 监听搜索框回车
         $('#search-input').on('keyup',function (event){
             if(event.keyCode === 13){
                 if($("#select_model").val() == ""){
@@ -159,10 +163,11 @@
                 }else if($("#select_column").val() == ""){
                     layer.msg("请选择字段");
                 }else{
-                    // TODO 查找
+                    // TODO 查找路径
                     let sendData = {
                         "model": $("#select_model").val()
                         ,"column": $("#select_column").val()
+                        ,"input": $("#search-input").val()
                     };
 
                     $.ajax({
@@ -184,6 +189,7 @@
             }
         });
 
+        // 监听左侧导航，进行相应跳转
         $('a').on('click', function(){
             let nextPage = "";
             switch($(this).text()){
@@ -197,7 +203,7 @@
                     nextPage = "/client"
                     break;
                 case "设备信息":
-                    nextPage = "/device?client_user="+client_user
+                    nextPage = "/device"
                     break;
                 case "水价位信息":
                     nextPage = "/water/price"
@@ -224,10 +230,12 @@
 
     });
 
+    // 退出登录
     function quit(){
         window.location.href = "/";
     }
 
+    // 注销用户
     function logout(){
         $.ajax({
             type: "POST"

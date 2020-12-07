@@ -37,4 +37,24 @@
         delete from device where client_user = #{client_user}
     </delete>
 
+    <select id="selectByType" resultType="device">
+        select * from device where device_type = #{type}
+    </select>
+
+    <select id="selectByPoint" resultType="device">
+        select * from device where device_point = #{point}
+    </select>
+
+    <select id="selectByProducer" resultType="device">
+        select * from device where device_producer = #{producer}
+    </select>
+
+    <select id="selectByCreateDate" resultType="device">
+        select * from device where device_create_date = #{createDate}
+    </select>
+
+    <select id="selectByDurability" resultType="device">
+        select * from device where device_durability = #{durability}
+    </select>
+
 </mapper>

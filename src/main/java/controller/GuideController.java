@@ -46,30 +46,42 @@ public class GuideController {
         this.waterBillService = waterBillService;
     }
 
+    /**
+     * 跳转到guide页面
+     *  处理判读用户是否存在
+     * @param req
+     * @param resp
+     * @throws Exception
+     */
     @RequestMapping("/guide")
-    public void guide(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-        Object obj_client = httpServletRequest.getSession().getAttribute("client");
+    public void guide(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        Object obj_client = req.getSession().getAttribute("client");
         //  验证session是否存在client对象
         if (obj_client != null) {
-            httpServletRequest.getRequestDispatcher("/page/guide.jsp").forward(httpServletRequest, httpServletResponse);
+            req.getRequestDispatcher("/page/guide.jsp").forward(req, resp);
         } else {
             //  验证cookie是否存在client对象
-            Cookie[] cookies = httpServletRequest.getCookies();
+            Cookie[] cookies = req.getCookies();
             for (Cookie cookie : cookies) {
                 //  验证是否是需要的cookie
                 //  获取cookie存储的用户名，密码
                 Client client = clientService.getClientByUserPassword(cookie.getName(), cookie.getValue());
                 if (client != null) {
-                    httpServletRequest.getSession().setAttribute("client", client);
-                    httpServletRequest.getRequestDispatcher("/page/guide.jsp").forward(httpServletRequest, httpServletResponse);
+                    req.getSession().setAttribute("client", client);
+                    req.getRequestDispatcher("/page/guide.jsp").forward(req, resp);
                     return;
                 }
             }
             //  回到登录页面
-            httpServletResponse.sendRedirect("/");
+            resp.sendRedirect("/");
         }
     }
 
+    /**
+     * 更新验证码
+     * @param response
+     * @param session
+     */
     @RequestMapping("/guide/verify")
     public void guideVerify(HttpServletResponse response, HttpSession session){
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -84,30 +96,5 @@ public class GuideController {
         }
     }
 
-    @RequestMapping("/guide/search")
-    public void guideSearch(String model,String column,HttpServletRequest req,HttpServletResponse resp){
-        switch (model){
-            case "device":
-                searchDevice(req,resp);
-                break;
-            case "water_bill":
-                searchWaterBill(req,resp);
-                break;
-            case "water_price":
-                searchWaterPrice(req,resp);
-                break;
-        }
-    }
-
-    // TODO 分别查询
-    private void searchWaterPrice(HttpServletRequest req, HttpServletResponse resp) {
-
-    }
-
-    private void searchWaterBill(HttpServletRequest req, HttpServletResponse resp) {
-    }
-
-    private void searchDevice(HttpServletRequest req, HttpServletResponse resp) {
-    }
 }
 

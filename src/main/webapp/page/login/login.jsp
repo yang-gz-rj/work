@@ -35,7 +35,7 @@
   <body>
 
   <div id="show-main">
-    <form class="layui-form" action="/guide" method="POST">
+    <form class="layui-form" action="#" method="POST">
       <div style="width: 100%;">
           <input type="text" name="client_user" placeholder="请输入用户名" class="layui-input"/>
       </div>
@@ -59,21 +59,23 @@
   </div>
   <script>
 
+      // 验证码更新
     function change() {
-      var verifyCode = document.getElementById("verifyCodeImg");
+      let verifyCode = document.getElementById("verifyCodeImg");
       verifyCode.src = "/guide/verify?time=" + Math.random(1000);
     }
 
     layui.use(['form','layer','jquery'], function(){
-      const form = layui.form;
-        layer = layui.layer;
+      let form = layui.form
+        ,layer = layui.layer
+        ,$ = layui.$;
 
-      let $ = layui.$;
-
+      // 监听注册按钮，点击进入注册页面
       $("#regist").on('click',function (){
         window.location.href = "/regist";
       });
 
+      // 进行登录预验证
       form.on("submit(login)",function (data){
         let status=0;
         $.ajax({
@@ -82,7 +84,7 @@
             ,xhrFields: {
               withCredentials: true
             }
-            ,data:data.field
+            ,data: data.field
             ,async: false // 同步
             ,dataType:"json"
             ,success: function (response){
@@ -98,11 +100,11 @@
               layer.msg("服务器繁忙");
             }
         });
+        //  用户名密码正确则跳转到guide
         if(status == 1){
-          return true;
-        }else{
-          return false;
+           window.location.href = "/guide";
         }
+        return false;
       });
     });
   </script>

@@ -81,12 +81,15 @@
 </div>
 <script>
     layui.use(['form','jquery','layer'], function(){
-        var form = layui.form
+        let form = layui.form
             ,$ = layui.$
             ,layer = layui.layer;
         form.render();
+
+        // 监听用户提交注册
         form.on("submit(regist)",function (data){
-            var status = 0;
+            // 添加成功与否标识，1成功，0失败
+            let status = 0;
             $.ajax({
                 type:"POST"
                 ,url: "/regist/add"
@@ -100,6 +103,7 @@
                     if(response.code != 200){
                         layer.msg("用户名已存在");
                     }else{
+                        // 添加成功，修改标识
                         status = 1;
                     }
                 }
@@ -107,11 +111,11 @@
                     layer.msg("服务器繁忙");
                 }
             });
+            // 添加成功则进行跳转到guide页面
             if(status == 1){
-                return true;
-            }else{
-                return false;
+                window.location.href = "/guide";
             }
+            return false;
         });
     });
 </script>

@@ -77,4 +77,24 @@ public class DeviceService {
         }
         return device;
     }
+
+    public List<Device> getDeviceByType(String type) {
+        return deviceDao.selectByType(type);
+    }
+
+    public List<Device> getDeviceByPoint(String point) {
+        return deviceDao.selectByPoint(point);
+    }
+
+    public List<Device> getDeviceByProducer(String producer) {
+        return deviceDao.selectByProducer(producer);
+    }
+
+    public List<Device> getDeviceByCreateDate(String createDate) {
+        return deviceDao.selectByCreateDate(createDate);
+    }
+
+    public List<Device> getDeviceByDurability(String durability) {
+        return deviceDao.selectByDurability(durability);
+    }
 }
