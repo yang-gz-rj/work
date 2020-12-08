@@ -41,7 +41,7 @@
                     //首次不执行
                     if(!first){
                         viewTable.reload({
-                            url: "/device/json?client_user=${client_user}&curr="+obj.curr+"&limit=10"
+                            url: "/device/json?client_user=${client.client_user}&curr="+obj.curr+"&limit=10"
                         });
                     }
                 }
@@ -49,7 +49,7 @@
 
             const viewTable = table.render({
                 elem: "#demo"
-                ,url:"/device/json?client_user=${client_user}&curr=1&limit=10"
+                ,url:"/device/json?client_user=${client.client_user}&curr=1&limit=10"
                 ,page: false
                 ,response: {
                     statusCode: 200
@@ -119,7 +119,7 @@
                         }
                     });
                 }else if(obj.event === "bill"){
-                    currPage = "/water/bill?bill_type=single&device_number="+data.device_number;
+                    currPage = "/water/bill?device_number="+data.device_number;
                     $("#show-frame").load(currPage);
                 }
             });
@@ -135,7 +135,7 @@
                         ,area: ["450px","500px"]
                         ,success: function (layero,index){
                             var body = layer.getChildFrame("body",index);
-                            body.find("#client_user").attr("value","${client_user}");
+                            body.find("#client_user").attr("value","${client.client_user}");
                         }
                         ,cancel: function (){
                             viewTable.reload();

@@ -1,13 +1,13 @@
 package controller;
 
 import com.google.gson.Gson;
+import dao.entity.Client;
 import dao.entity.Device;
 import dao.entity.WaterBill;
 import dao.entity.WaterPrice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 import service.DeviceService;
 import service.WaterBillService;
 import service.WaterPriceService;
@@ -43,148 +43,223 @@ public class WaterController {
         this.deviceService = deviceService;
     }
 
+    /**
+     * 跳转到账单页面
+     *  判断是全显示，还是单显示（针对设备号进行显示）
+     * @param req
+     * @param resp
+     * @return
+     * @throws Exception
+     */
     @RequestMapping("/water/bill")
-    public ModelAndView waterBill(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-        httpServletRequest.setCharacterEncoding("utf-8");
-        ModelAndView mav = new ModelAndView("/page/water/bill.jsp");
-        String client_user = httpServletRequest.getParameter("client_user");
-        mav.addObject("client_user",client_user);
-        if(client_user != null && !client_user.equals("")){
-            mav.addObject("bill_type","all");
-            List<Device> devices = deviceService.getDeviceByUser(client_user,1,Integer.MAX_VALUE);
-            int count = 0;
-            for(Device device: devices){
-                count += waterBillService.getWaterBillByDevice(device.getDevice_number()).size();
+    public void waterBill(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        Client client = (Client) req.getSession().getAttribute("client");
+        String column = req.getParameter("column");
+
+        // 并非是搜素
+        if(column == null){
+            if(req.getSession().getAttribute("column") != null){
+                req.getSession().removeAttribute("column");
+                req.getSession().removeAttribute("input");
             }
-            mav.addObject("bill_count",count);
+            String device_number = req.getParameter("device_number");
+            // 并非是点击“账单进入”
+            if(device_number == null){
+                req.getSession().setAttribute("bill_type","all");
+                List<Device> devices = deviceService.getDeviceByUser(client.getClient_user(),1,Integer.MAX_VALUE);
+                int count = 0;
+                for(Device device: devices){
+                    count += waterBillService.getWaterBillByDevice(device.getDevice_number()).size();
+                }
+                req.getSession().setAttribute("bill_count",count);
+            }else{
+                req.getSession().setAttribute("bill_type","single");
+                req.getSession().setAttribute("device_number",device_number);
+                req.getSession().setAttribute("bill_count",waterBillService.getWaterBillByDevice(device_number).size());
+            }
+
         }else{
-            mav.addObject("bill_type","single");
-            String device_number = httpServletRequest.getParameter("device_number");
-            mav.addObject("device_number",device_number);
-            mav.addObject("bill_count",waterBillService.getWaterBillByDevice(device_number).size());
+            String input = req.getParameter("input");
+            req.getSession().setAttribute("bill_count",waterBillService.getWaterBillByColumn(client.getClient_user()
+                ,column,input).size());
+            req.getSession().setAttribute("column",column);
+            req.getSession().setAttribute("input",input);
         }
-        return mav;
+
+        req.getRequestDispatcher("/page/water/bill.jsp").forward(req, resp);
     }
 
+    /**
+     * 获取水费账单数据
+     * @param req
+     * @param resp
+     * @throws Exception
+     */
     @RequestMapping("/water/bill/json")
-    public void waterBillJson(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-        httpServletRequest.setCharacterEncoding("utf-8");
-        String bill_type = httpServletRequest.getParameter("bill_type");
+    public void waterBillJson(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        String column = (String) req.getSession().getAttribute("column");
         BaseResponse<List<WaterBill>> br = new BaseResponse<List<WaterBill>>();
-        if(bill_type.equals("single")){
-            String device_number = httpServletRequest.getParameter("device_number");
-            br.setData(waterBillService.getWaterBillByDevice(device_number));
-        }else{
-            String client_user = httpServletRequest.getParameter("client_user");
-            List<Device> devices = deviceService.getDeviceByUser(client_user, 1, Integer.MAX_VALUE);
-            List<WaterBill> waterBills = new ArrayList<WaterBill>();
-            for(Device device: devices){
-                List<WaterBill> bills = waterBillService.getWaterBillByDevice(device.getDevice_number());
-                for(WaterBill bill: bills){
-                    waterBills.add(bill);
-                }
-            }
-            br.setData(waterBills);
-        }
-
         br.setCode(200);
 
-        httpServletResponse.setContentType("text/html;charset=utf-8");
-        PrintWriter pw = httpServletResponse.getWriter();
+        if(column == null){
+            String bill_type = (String) req.getSession().getAttribute("bill_type");
+            if(bill_type.equals("single")){
+                String device_number = (String) req.getSession().getAttribute("device_number");
+                br.setData(waterBillService.getWaterBillByDevice(device_number));
+            }else{
+                Client client = (Client) req.getSession().getAttribute("client");
+                List<Device> devices = deviceService.getDeviceByUser(client.getClient_user(), 1, Integer.MAX_VALUE);
+                List<WaterBill> waterBills = new ArrayList<WaterBill>();
+                for(Device device: devices){
+                    List<WaterBill> bills = waterBillService.getWaterBillByDevice(device.getDevice_number());
+                    for(WaterBill bill: bills){
+                        waterBills.add(bill);
+                    }
+                }
+                br.setData(waterBills);
+            }
+        // 进行搜索
+        }else{
+            Client client = (Client) req.getSession().getAttribute("client");
+            String input = (String) req.getSession().getAttribute("input");
+            br.setData(waterBillService.getWaterBillByColumn(client.getClient_user(),column,input));
+        }
+
+        PrintWriter pw = resp.getWriter();
         pw.write(gson.toJson(br));
         pw.flush();
         pw.close();
     }
 
+    /**
+     * 删除水费账单信息
+     * @param req
+     * @param resp
+     * @throws Exception
+     */
     @RequestMapping("/water/bill/delete")
-    public void waterBillDelete(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) throws Exception{
-        httpServletRequest.setCharacterEncoding("utf-8");
-        String bill_number = httpServletRequest.getParameter("bill_number");
+    public void waterBillDelete(HttpServletRequest req,HttpServletResponse resp) throws Exception{
+        String bill_number = req.getParameter("bill_number");
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(waterBillService.deleteBillByBNumber(bill_number) > 0){
             br.setCode(200);
         }else{
             br.setCode(300);
         }
-        httpServletResponse.setContentType("text/html;charset=utf-8");
-        PrintWriter pw = httpServletResponse.getWriter();
+        PrintWriter pw = resp.getWriter();
         pw.write(gson.toJson(br));
         pw.flush();
         pw.close();
     }
 
+    /**
+     * 添加水费账单信息
+     * @param req
+     * @param resp
+     * @throws Exception
+     */
     @RequestMapping("/water/bill/add")
-    public void waterBillAdd(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) throws Exception{
-        WaterBill waterBill = waterBillService.getWaterBill(httpServletRequest);
+    public void waterBillAdd(HttpServletRequest req,HttpServletResponse resp) throws Exception{
+        WaterBill waterBill = waterBillService.getWaterBill(req);
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         Device device = deviceService.getDeviceByNumber(waterBill.getDevice_number());
-        String client_user = httpServletRequest.getParameter("client_user");
+        String client_user = req.getParameter("client_user");
         if(device != null && device.getClient_user().equals(client_user) && waterBillService.insertWaterBill(waterBill) > 0){
             br.setCode(200);
         }else{
             br.setCode(300);
         }
-        httpServletResponse.setContentType("text/html;charset=utf-8");
-        PrintWriter pw = httpServletResponse.getWriter();
+        PrintWriter pw = resp.getWriter();
         pw.write(gson.toJson(br));
         pw.flush();
         pw.close();
     }
 
+    /**
+     * 跳转到水价位页面
+     * @param req
+     * @param resp
+     */
     @RequestMapping("/water/price")
-    public ModelAndView waterPrice(){
-        ModelAndView mav = new ModelAndView("/page/water/price.jsp");
-        int price_count = waterPriceService.getWaterPrice().size();
-        mav.addObject("price_count",price_count);
-        return mav;
+    public void waterPrice(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        String column = req.getParameter("column");
+        if(column == null){
+            if(req.getSession().getAttribute("column") != null){
+                req.getSession().removeAttribute("column");
+                req.getSession().removeAttribute("input");
+            }
+            req.getSession().setAttribute("price_count", waterPriceService.getWaterPrice().size());
+        }else{
+            String input = req.getParameter("input");
+            req.getSession().setAttribute("price_count", waterPriceService.getWaterPriceByColumn(column,input).size());
+            req.getSession().setAttribute("column",column);
+            req.getSession().setAttribute("input",input);
+        }
+        req.getRequestDispatcher("/page/water/price.jsp").forward(req, resp);
     }
 
+    /**
+     * 获取水价位信息数据
+     * @param resp
+     * @throws Exception
+     */
     @RequestMapping("/water/price/json")
-    public void waterPriceJson(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-        httpServletRequest.setCharacterEncoding("utf-8");
+    public void waterPriceJson(int curr,int limit,HttpServletRequest req, HttpServletResponse resp) throws Exception {
         BaseResponse<List<WaterPrice>> br = new BaseResponse<List<WaterPrice>>();
-        int curr = Integer.valueOf(httpServletRequest.getParameter("curr"));
-        int limit = Integer.valueOf(httpServletRequest.getParameter("limit"));
-
-        br.setData(waterPriceService.getWaterPriceLimit(curr,limit));
         br.setCode(200);
 
-        httpServletResponse.setContentType("text/html;charset=utf-8");
-        PrintWriter pw = httpServletResponse.getWriter();
+        String column = (String) req.getSession().getAttribute("column");
+        if(column == null){
+            br.setData(waterPriceService.getWaterPriceLimit(curr,limit));
+        }else{
+            String input = (String) req.getSession().getAttribute("input");
+            br.setData(waterPriceService.getWaterPriceByColumn(column,input));
+        }
+
+        PrintWriter pw = resp.getWriter();
         pw.write(gson.toJson(br));
         pw.flush();
         pw.close();
     }
 
+    /**
+     * 删除水价位信息
+     * @param req
+     * @param resp
+     * @throws Exception
+     */
     @RequestMapping("/water/price/delete")
-    public void waterPriceDelete(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) throws Exception{
-        httpServletRequest.setCharacterEncoding("utf-8");
-        Integer gradient = Integer.valueOf(httpServletRequest.getParameter("gradient"));
-        Date update_date = Date.valueOf(httpServletRequest.getParameter("update_date"));
+    public void waterPriceDelete(HttpServletRequest req,HttpServletResponse resp) throws Exception{
+        int gradient = Integer.valueOf(req.getParameter("gradient"));
+        Date update_date = Date.valueOf(req.getParameter("update_date"));
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(waterPriceService.deleteWaterPriceByGD(gradient,update_date) > 0){
             br.setCode(200);
         }else{
             br.setCode(300);
         }
-        httpServletResponse.setContentType("text/html;charset=utf-8");
-        PrintWriter pw = httpServletResponse.getWriter();
+        PrintWriter pw = resp.getWriter();
         pw.write(gson.toJson(br));
         pw.flush();
         pw.close();
     }
 
+    /**
+     * 添加价位信息
+     * @param req
+     * @param resp
+     * @throws Exception
+     */
     @RequestMapping("/water/price/add")
-    public void waterPriceAdd(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) throws Exception{
-        WaterPrice waterPrice = waterPriceService.getWaterPrice(httpServletRequest);
+    public void waterPriceAdd(HttpServletRequest req,HttpServletResponse resp) throws Exception{
+        WaterPrice waterPrice = waterPriceService.getWaterPrice(req);
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(waterPriceService.insertWaterPrice(waterPrice) > 0){
             br.setCode(200);
         }else{
             br.setCode(300);
         }
-        httpServletResponse.setContentType("text/html;charset=utf-8");
-        PrintWriter pw = httpServletResponse.getWriter();
+        PrintWriter pw = resp.getWriter();
         pw.write(gson.toJson(br));
         pw.flush();
         pw.close();

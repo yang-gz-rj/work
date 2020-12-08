@@ -79,9 +79,9 @@
             <div class="layui-input-block" style="position: absolute; left: 0%; top: 0%; height: 100%;width: 25%;">
                 <select id="select_model" name="model" lay-verify="" lay-filter="select_model">
                     <option value="">请选择一个模块</option>
-                    <option value="device">设备信息</option>
-                    <option value="water_bill">水费账单信息</option>
-                    <option value="water_price">水费价位信息</option>
+                    <option value="/device">设备信息</option>
+                    <option value="/water/bill">水费账单信息</option>
+                    <option value="/water/price">水费价位信息</option>
                 </select>
             </div>
             <div class="layui-input-block" style="position: absolute; left: 27%; top: 0%; height: 100%;width: 25%;">
@@ -128,16 +128,14 @@
         // 监听模块选择
         form.on('select(select_model)', function(data){
             switch (data.value){
-                case "device":
+                case "/device":
                     select_device();
                     break;
-                case "water_bill":
+                case "/water/bill":
                     select_water_bill();
                     break;
-                case "water_price":
+                case "/water/price":
                     select_water_price();
-                    break;
-                default:
                     break;
             }
 
@@ -164,27 +162,12 @@
                     layer.msg("请选择字段");
                 }else{
                     // TODO 查找路径
-                    let sendData = {
-                        "model": $("#select_model").val()
-                        ,"column": $("#select_column").val()
-                        ,"input": $("#search-input").val()
-                    };
-
-                    $.ajax({
-                        url: "/guide/search"
-                        ,data: sendData
-                        ,dataType: "json"
-                        ,async: false
-                        ,xhrFields: {
-                            withCredentials: true
-                        }
-                        ,success: function (resp){
-
-                        }
-                        ,error: function (){
-                            layer.msg("服务器繁忙");
-                        }
-                    });
+                    //       /device?colunm=*&input=*
+                    let nextPage = $("#select_model").val()+"?column="+$("#select_column").val()+"&input="+$("#search-input").val();
+                    if(currPage != nextPage){
+                        currPage = nextPage;
+                    }
+                    $("#show-frame").load(currPage);
                 }
             }
         });
@@ -194,28 +177,28 @@
             let nextPage = "";
             switch($(this).text()){
                 case "公共公告":
-                    nextPage = "/public"
+                    nextPage = "/public";
                     break;
                 case "个人公告":
-                    nextPage = "/public"
+                    nextPage = "/public";
                     break;
                 case "用户信息":
-                    nextPage = "/client"
+                    nextPage = "/client";
                     break;
                 case "设备信息":
-                    nextPage = "/device"
+                    nextPage = "/device";
                     break;
                 case "水价位信息":
-                    nextPage = "/water/price"
+                    nextPage = "/water/price";
                     break;
                 case "水费账单信息":
-                    nextPage = "/water/bill?bill_type=all&client_user="+client_user
+                    nextPage = "/water/bill";
                     break;
                 case "电价位信息":
-                    nextPage = "/public"
+                    nextPage = "/public";
                     break;
                 case "电费账单信息":
-                    nextPage = "/public"
+                    nextPage = "/public";
                     break;
             }
             if(nextPage != "")
@@ -243,9 +226,6 @@
             ,async: false
             ,xhrFields:{
                 withCredentials: true
-            }
-            ,data: {
-                "client_user": client_user
             }
             ,dataType: "json"
             ,success: function (response){

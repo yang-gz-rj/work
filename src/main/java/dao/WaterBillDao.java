@@ -29,4 +29,6 @@ public interface WaterBillDao {
      * @return
      */
     public Integer insert(@Param("bill") WaterBill waterBill);
+
+    List<WaterBill> select();
 }

@@ -20,7 +20,7 @@
 </head>
 <body>
 <form class="layui-form" action="#" method="post">
-    <input type="hidden" name="client_user" value="${pageContext.request.getParameter('client_user')}"/>
+    <input type="hidden" name="client_user" value="${client.client_user}"/>
     <div class="layui-form-item">
         <div class="layui-inline">
             <label class="layui-form-label">价位梯度</label>
@@ -90,11 +90,10 @@
         });
 
         form.on("submit(btn_submit)",function (data){
-            var field = data.field;
             layui.$.ajax({
                 url: "/water/price/add"
                 ,type: "POST"
-                ,data: field
+                ,data: data.field
                 ,dataType: "json"
                 ,response: {
                     statusCode: 200

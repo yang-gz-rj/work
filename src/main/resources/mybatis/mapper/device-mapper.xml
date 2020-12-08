@@ -4,7 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="dao.DeviceDao">
-    <!-- 字段映射 -->
     <resultMap id="device" type="device">
         <id property="device_number" column="device_number"/>
         <result property="client_user" column="client_user"/>
@@ -16,15 +15,15 @@
     </resultMap>
 
     <select id="selectByUser" resultType="device">
-        select * from device where client_user = #{client_user} limit #{start},#{end}
+        select * from device where client_user = #{user} limit #{start},#{count}
     </select>
 
-    <select id="selectByNumber" resultType="device">
-        select * from device where device_number = #{device_number}
-    </select>
+    <delete id="deleteByUser">
+        delete from device where client_user = #{user}
+    </delete>
 
     <delete id="deleteByNumber">
-        delete from device where device_number = #{device_number}
+        delete from device where device_number = #{number}
     </delete>
 
     <insert id="insert">
@@ -33,28 +32,12 @@
                 ,#{device.device_durability},#{device.device_create_date})
     </insert>
 
-    <delete id="deleteByUser">
-        delete from device where client_user = #{client_user}
-    </delete>
-
-    <select id="selectByType" resultType="device">
-        select * from device where device_type = #{type}
+    <select id="select" resultType="device">
+        select * from device
     </select>
 
-    <select id="selectByPoint" resultType="device">
-        select * from device where device_point = #{point}
-    </select>
-
-    <select id="selectByProducer" resultType="device">
-        select * from device where device_producer = #{producer}
-    </select>
-
-    <select id="selectByCreateDate" resultType="device">
-        select * from device where device_create_date = #{createDate}
-    </select>
-
-    <select id="selectByDurability" resultType="device">
-        select * from device where device_durability = #{durability}
+    <select id="selectByNumber" resultType="device">
+        select * from device where device_number = #{number};
     </select>
 
 </mapper>

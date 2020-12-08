@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -58,43 +58,61 @@ public class DeviceService {
 
     /**
      * 通过reques对象获取Device
-     * @param httpServletRequest
+     * @param req
      * @return
      */
-    public Device getDevice(HttpServletRequest httpServletRequest){
+    public Device getDevice(HttpServletRequest req){
         Device device = new Device();
-        try {
-            httpServletRequest.setCharacterEncoding("utf-8");
-            device.setDevice_number(httpServletRequest.getParameter("device_number"));
-            device.setClient_user(httpServletRequest.getParameter("client_user"));
-            device.setDevice_type(httpServletRequest.getParameter("device_type"));
-            device.setDevice_point(Integer.parseInt(httpServletRequest.getParameter("device_point")));
-            device.setDevice_producer(httpServletRequest.getParameter("device_producer"));
-            device.setDevice_durability(Float.parseFloat(httpServletRequest.getParameter("device_durability")));
-            device.setDevice_create_date(Date.valueOf(httpServletRequest.getParameter("device_create_date")));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        device.setDevice_number(req.getParameter("device_number"));
+        device.setClient_user(req.getParameter("client_user"));
+        device.setDevice_type(req.getParameter("device_type"));
+        device.setDevice_point(Integer.parseInt(req.getParameter("device_point")));
+        device.setDevice_producer(req.getParameter("device_producer"));
+        device.setDevice_durability(Float.parseFloat(req.getParameter("device_durability")));
+        device.setDevice_create_date(Date.valueOf(req.getParameter("device_create_date")));
         return device;
     }
 
-    public List<Device> getDeviceByType(String type) {
-        return deviceDao.selectByType(type);
-    }
+    public List<Device> getDeviceByColumn(String user,String column, String input) {
+        List<Device> ret = new ArrayList<>();
+        List<Device> dList = deviceDao.select();
+        for(Device device: dList){
+            if(device.getClient_user().equals(user)){
+                switch (column){
+                    case "device_number":
+                        if(device.getDevice_number().equals(input)){
+                            ret.add(device);
+                        }
+                        break;
+                    case "device_type":
+                        if(device.getDevice_type().equals(input)){
+                            ret.add(device);
+                        }
+                        break;
+                    case "device_point":
+                        if(device.getDevice_point() == Integer.valueOf(input)){
+                            ret.add(device);
+                        }
+                        break;
+                    case "device_producer":
+                        if(device.getDevice_producer().equals(input)){
+                            ret.add(device);
+                        }
+                        break;
+                    case "device_create_date":
+                        if(device.getDevice_create_date().toString().equals(input)){
+                            ret.add(device);
+                        }
+                        break;
+                    case "device_durability":
+                        if(device.getDevice_durability() == Float.valueOf(input)){
+                            ret.add(device);
+                        }
+                        break;
+                }
+            }
+        }
 
-    public List<Device> getDeviceByPoint(String point) {
-        return deviceDao.selectByPoint(point);
-    }
-
-    public List<Device> getDeviceByProducer(String producer) {
-        return deviceDao.selectByProducer(producer);
-    }
-
-    public List<Device> getDeviceByCreateDate(String createDate) {
-        return deviceDao.selectByCreateDate(createDate);
-    }
-
-    public List<Device> getDeviceByDurability(String durability) {
-        return deviceDao.selectByDurability(durability);
+        return ret;
     }
 }

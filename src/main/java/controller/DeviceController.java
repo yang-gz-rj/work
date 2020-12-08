@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -37,47 +36,25 @@ public class DeviceController {
      */
     @RequestMapping("/device")
     public void device(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        req.setCharacterEncoding("UTF-8");
         Client client = (Client) req.getSession().getAttribute("client");
-        req.getSession().setAttribute("device_count",deviceService.getDeviceByUser(client.getClient_user(),1,Integer.MAX_VALUE).size());
-        req.getRequestDispatcher("/page/client/device.jsp").forward(req,resp);
-    }
-
-    // TODO 查找获得的数据
-    @RequestMapping("/device/search")
-    public void deviceSearch(String column, HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        req.setCharacterEncoding("utf-8");
-        resp.setContentType("text/html;charset=utf-8");
-        String input = req.getParameter("input");
-        BaseResponse<List<Device>> br = new BaseResponse<List<Device>>();
-        List<Device> list=null;
-        br.setCode(200);
-        switch (column){
-            case "device_number":
-                list = new ArrayList<Device>();
-                list.add(deviceService.getDeviceByNumber(input));
-                break;
-            case "device_type":
-                list = deviceService.getDeviceByType(input);
-                break;
-            case "device_point":
-                list = deviceService.getDeviceByPoint(input);
-                break;
-            case "device_producer":
-                list = deviceService.getDeviceByProducer(input);
-                break;
-            case "device_create_date":
-                list = deviceService.getDeviceByCreateDate(input);
-                break;
-            case "device_durability":
-                list = deviceService.getDeviceByDurability(input);
-                break;
+        String column = req.getParameter("column");
+        if(column == null){
+            // 清空搜素选项内容
+            if(req.getSession().getAttribute("column") != null){
+                req.getSession().removeAttribute("column");
+                req.getSession().removeAttribute("input");
+            }
+            req.getSession().setAttribute("device_count",deviceService.getDeviceByUser(client.getClient_user()
+                    ,1,Integer.MAX_VALUE).size());
+        //  进行搜素    
+        }else{
+            String input = req.getParameter("input");
+            req.getSession().setAttribute("column",column);
+            req.getSession().setAttribute("input",input);
+            req.getSession().setAttribute("device_count",deviceService.getDeviceByColumn(client.getClient_user()
+                    ,column,input).size());
         }
-        br.setData(list);
-        PrintWriter pw = resp.getWriter();
-        pw.write(gson.toJson(br));
-        pw.flush();
-        pw.close();
+        req.getRequestDispatcher("/page/client/device.jsp").forward(req,resp);
     }
 
     /**
@@ -103,7 +80,6 @@ public class DeviceController {
         }else{
             br.setCode(300);
         }
-        resp.setContentType("text/html;charset=utf-8");
         PrintWriter pw = resp.getWriter();
         pw.write(gson.toJson(br));
         pw.flush();
@@ -127,20 +103,23 @@ public class DeviceController {
      * @throws Exception
      */
     @RequestMapping("/device/json")
-    public void deviceJson(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        req.setCharacterEncoding("UTF-8");
+    public void deviceJson(int curr, int limit,HttpServletRequest req, HttpServletResponse resp) throws Exception {
         Client client = (Client)req.getSession().getAttribute("client");
-        int curr = Integer.valueOf(req.getParameter("curr"));
-        int limit = Integer.valueOf(req.getParameter("limit"));
-
-        BaseResponse<List<Device>> br = new BaseResponse<List<Device>>();
+        String column = (String)req.getSession().getAttribute("column");
+        BaseResponse<List<Device>> br = new BaseResponse<>();
         br.setCode(200);
-        br.setData(deviceService.getDeviceByUser(client.getClient_user(),curr,limit));
-        resp.setContentType("text/html;charset=utf-8");
+        // 并没有进行搜素
+        if(column == null){
+            br.setData(deviceService.getDeviceByUser(client.getClient_user(),curr,limit));
+        //  进行搜素
+        }else{
+            br.setData(deviceService.getDeviceByColumn(client.getClient_user(), column, (String) req.getSession().getAttribute("input")));
+        }
         PrintWriter pw = resp.getWriter();
         pw.write(gson.toJson(br));
         pw.flush();
         pw.close();
+
     }
 
     /**
@@ -160,7 +139,6 @@ public class DeviceController {
             br.setCode(300);
         }
         Gson gson = new Gson();
-        resp.setContentType("text/html;charset=utf-8");
         PrintWriter pw = resp.getWriter();
         pw.write(gson.toJson(br));
         pw.flush();

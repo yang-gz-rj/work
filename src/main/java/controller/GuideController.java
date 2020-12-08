@@ -79,17 +79,17 @@ public class GuideController {
 
     /**
      * 更新验证码
-     * @param response
+     * @param resp
      * @param session
      */
     @RequestMapping("/guide/verify")
-    public void guideVerify(HttpServletResponse response, HttpSession session){
+    public void guideVerify(HttpServletResponse resp, HttpSession session){
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         String code = VerifyCodeUtil.drawImage(output);
         //将验证码文本直接存放到session中
         session.setAttribute("verifyCode", code);
         try {
-            ServletOutputStream out = response.getOutputStream();
+            ServletOutputStream out = resp.getOutputStream();
             output.writeTo(out);
         } catch (IOException e) {
             e.printStackTrace();

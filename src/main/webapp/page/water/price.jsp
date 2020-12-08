@@ -110,7 +110,7 @@
             if(obj.event === 'add'){
                 layer.open({
                     type: 2
-                    ,content: "/page/water/price_add.jsp?client_user=${client_user}"
+                    ,content: "/page/water/price_add.jsp"
                     ,area: ["480px","500px"]
                     ,offset: ["10%","40%"]
                     ,cancel: function (){

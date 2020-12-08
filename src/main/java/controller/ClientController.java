@@ -63,7 +63,6 @@ public class ClientController {
      */
     @RequestMapping("/client/filter")
     public void clientFilter(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        req.setCharacterEncoding("utf-8");
         String client_user = req.getParameter("client_user");
         String client_password = req.getParameter("client_password");
         String verifyCode = req.getParameter("verifyCode").toLowerCase();
@@ -82,8 +81,6 @@ public class ClientController {
                 br.setCode(300);
             }
         }
-
-        resp.setContentType("text/html;charset=utf-8");
         PrintWriter pw = resp.getWriter();
         pw.write(gson.toJson(br));
         pw.flush();
@@ -109,7 +106,6 @@ public class ClientController {
         }else{
             br.setCode(300);
         }
-        resp.setContentType("text/html;charset=utf-8");
         PrintWriter pw = resp.getWriter();
         pw.write(gson.toJson(br));
         pw.flush();
@@ -125,7 +121,6 @@ public class ClientController {
      */
     @RequestMapping("/client/delete")
     public void clientDelete(HttpServletRequest req,HttpServletResponse resp) throws Exception {
-        req.setCharacterEncoding("utf-8");
         String client_user = req.getParameter("client_user");
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(clientService.deleteClientByUser(client_user) > 0){
@@ -146,8 +141,8 @@ public class ClientController {
      * @throws Exception
      */
     @RequestMapping("/regist")
-    public void regist(HttpServletResponse resp) throws Exception {
-        resp.sendRedirect("/page/client/regist.jsp");
+    public void regist(HttpServletRequest req,HttpServletResponse resp) throws Exception {
+        req.getRequestDispatcher("/page/client/regist.jsp").forward(req,resp);
     }
 
     /**

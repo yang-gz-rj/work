@@ -40,7 +40,7 @@
                 //首次不执行
                 if(!first){
                     viewTable.reload({
-                        url: "/water/bill/json?bill_type=${bill_type}&client_user=${client_user}&device_number=${device_number}&curr="+obj.curr+"&limit=10"
+                        url: "/water/bill/json?curr="+obj.curr+"&limit=10"
                     });
                 }
             }
@@ -48,7 +48,7 @@
 
         const viewTable = table.render({
             elem: "#demo"
-            ,url:"/water/bill/json?bill_type=${bill_type}&client_user=${client_user}&device_number=${device_number}&curr=1&limit=10"
+            ,url:"/water/bill/json?curr=1&limit=10"
             ,page: false
             ,response: {
                 statusCode: 200
@@ -140,7 +140,7 @@
             if(obj.event === 'add'){
                 layer.open({
                     type: 2
-                    ,content: "/page/water/bill_add.jsp?client_user=${client_user}"
+                    ,content: "/page/water/bill_add.jsp"
                     ,area: ["750px","450px"]
                     ,offset: ["10%","30%"]
                     ,cancel: function (){

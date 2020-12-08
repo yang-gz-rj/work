@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 
 @Service
 public class ClientService {
@@ -65,23 +64,18 @@ public class ClientService {
 
     /**
      * 通过request获取client
-     * @param httpServletRequest
+     * @param req
      * @return
      */
-    public Client getClient(HttpServletRequest httpServletRequest) {
-        try {
-            httpServletRequest.setCharacterEncoding("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+    public Client getClient(HttpServletRequest req) {
         Client client = new Client();
-        client.setClient_user(httpServletRequest.getParameter("client_user"));
-        client.setClient_password(httpServletRequest.getParameter("client_password"));
-        client.setClient_name(httpServletRequest.getParameter("client_name"));
-        client.setClient_gender(httpServletRequest.getParameter("client_gender"));
-        client.setClient_age(Integer.valueOf(httpServletRequest.getParameter("client_age")));
-        client.setClient_phone(httpServletRequest.getParameter("client_phone"));
-        client.setClient_address(httpServletRequest.getParameter("client_address"));
+        client.setClient_user(req.getParameter("client_user"));
+        client.setClient_password(req.getParameter("client_password"));
+        client.setClient_name(req.getParameter("client_name"));
+        client.setClient_gender(req.getParameter("client_gender"));
+        client.setClient_age(Integer.valueOf(req.getParameter("client_age")));
+        client.setClient_phone(req.getParameter("client_phone"));
+        client.setClient_address(req.getParameter("client_address"));
         return client;
     }
 }
