@@ -23,33 +23,21 @@ public class VerifyCodeUtil {
         Graphics2D g = bi.createGraphics();
 
         //设置背景颜色
-        g.setBackground(new Color(255, 255, 255));
+        g.setBackground(new Color(255,250,250));
         g.clearRect(0, 0, width, height);
 
         StringBuilder stringBuilder = new StringBuilder();
         //这里只画入四个字符
+        g.setColor(new Color(0,0,0));         //设置颜色，偏白色
         for (int i = 0; i < 4; i++) {
             String s = randomChar() + "";      //随机生成字符，因为只有画字符串的方法，没有画字符的方法，所以需要将字符变成字符串再画
             stringBuilder.append(s);           //添加到StringBuilder里面
             float x = i * 1.0F * width / 4;   //定义字符的x坐标
             g.setFont(randomFont());           //设置字体，随机
-            g.setColor(randomColor());         //设置颜色，随机
             g.drawString(s, x, height - 5);
         }
         code = stringBuilder.toString();//获取验证码字符串
 
-        //定义干扰线
-        //定义干扰线的数量（3-5条）int num = random.nextInt(max)%(max-min+1) + min;
-        int num = random.nextInt(5) % 3 + 3;
-        Graphics2D graphics = (Graphics2D) bi.getGraphics();
-        for (int i = 0; i < num; i++) {
-            int x1 = random.nextInt(width);
-            int y1 = random.nextInt(height);
-            int x2 = random.nextInt(width);
-            int y2 = random.nextInt(height);
-            graphics.setColor(randomColor());
-            graphics.drawLine(x1, y1, x2, y2);
-        }
         // 释放图形上下文
         g.dispose();
         try {
@@ -72,19 +60,10 @@ public class VerifyCodeUtil {
         return new Font(fontName, style, size);
     }
 
-    //随机颜色
-    private static Color randomColor() {
-        int r = random.nextInt(225);
-        int g = random.nextInt(225);
-        int b = random.nextInt(225);
-        return new Color(r, g, b);
-    }
-
 
     //随机字符
     private static char randomChar() {
-        //A-Z,a-z,0-9,可剔除一些难辨认的字母与数字
-        String str = "0123456789ABCdefghiDEFGHIJopPQRVWXYZabcjklSTUmnqrstKLMNOvuwxyz";
+        String str = "0123456789ABCDEFGHJKMNPQRSTUVWXYZ";
 
         return str.charAt(random.nextInt(str.length()));
     }

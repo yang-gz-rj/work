@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Enumeration;
 
 @Controller
 public class GuideController {
@@ -94,6 +95,16 @@ public class GuideController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @RequestMapping("/exit")
+    public void exit(HttpServletRequest req,HttpServletResponse resp) throws IOException {
+        HttpSession session = req.getSession();
+        Enumeration<String> attributeNames = session.getAttributeNames();
+        while (attributeNames.hasMoreElements()){
+            session.removeAttribute(attributeNames.nextElement());
+        }
+        resp.sendRedirect("/");
     }
 
 }

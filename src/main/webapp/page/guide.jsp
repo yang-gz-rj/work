@@ -29,18 +29,17 @@
             filter:alpha(opacity=95); /* 针对 IE8 以及更早的版本 */
         }
         #show-icon{
-            height: 7%;
+            height: 10%;
             width: 15%;
-            background-image: url("/image/guide.png");
             background-size: 100% 100%;
-            background-color: #eeeeee;
+            background-color: #393D49;
         }
     </style>
 </head>
 <body style="width: 100%;height: 100%;">
 <div id="show-icon" class="layui-nav-item"></div>
 <ul class="layui-nav layui-nav-tree" lay-filter="guide-filter" id="show-guide" style="position: absolute;
-    left: 0%; top: 7%; height: 93%;width: 15%;">
+    left: 0%; top: 10%; height: 90%;width: 15%;">
     <li class="layui-nav-item">
         <a href="javascript:;"><img src="/image/public.png"/>公告</a>
         <dl class="layui-nav-child">
@@ -74,8 +73,9 @@
 <div id="show-right">
     <%-- 用户昵称显示 --%>
     <ul class="layui-nav layui-nav-tree" id="show-user" style="position: absolute;top: 0%; left: 0%;
-        background: #F0F0F0; width: 100%;height: 7%;">
-        <form class="layui-form" style="position: absolute; left: 2%; top: 8%; height: 60%; width: 60%; color: black;">
+        background: #F0F0F0; width: 100%;height: 10%;">
+        <%-- 查找表单 --%>
+        <form class="layui-form" style="position: absolute; left: 2%; top: 20%; height: 60%; width: 60%; color: black;">
             <div class="layui-input-block" style="position: absolute; left: 0%; top: 0%; height: 100%;width: 25%;">
                 <select id="select_model" name="model" lay-verify="" lay-filter="select_model">
                     <option value="">请选择一个模块</option>
@@ -93,15 +93,17 @@
                 <input type="text" id="search-input" name="input"  required lay-verify="required" placeholder="请选择模块和字段" autocomplete="off" class="layui-input">
             </div>
         </form>
-        <li class="layui-nav-item" style="float: right;width: 8%;height: 100%;">
-            <a href="javascript:;" style="text-align: center;line-heigh: 100%;height: 100%;background: #4E5465;"><img src="/image/user.png">${pageContext.request.getParameter('client_user')}</a>
+        <li class="layui-nav-item" style="float: right;width: 8%;height: 80%;padding-top: 1%;padding-right: 1%;">
+            <a href="javascript:;" style="text-align: center;line-heigh: 100%;height: 100%;background: #4E5465;">
+                <img src="/image/user.png">${client.client_user==null?"请登录":client.client_user}</a>
             <dl class="layui-nav-child">
-                <dd style="text-align: center;" onclick="logout()">注销</dd>
+                <dd style="text-align: center;z-index: revert;" onclick="logout()">注销</dd>
                 <dd style="text-align: center;" onclick="quit()">退出</dd>
             </dl>
         </li>
     </ul>
-    <hr style="position: absolute; left: 0%; top: 5.7%; height:1px; width: 100%;background: #555555;"/>
+    <%-- 分割线 --%>
+    <hr style="position: absolute; left: 0%; top: 8.5%; height:1px; width: 100%;background: #555555;"/>
     <%-- 显示动态页面 --%>
     <div id="show-frame" style="float: left;width: 100%;height: 90%;"></div>
 </div>
@@ -215,30 +217,37 @@
 
     // 退出登录
     function quit(){
-        window.location.href = "/";
+        window.location.href = "/exit";
     }
 
     // 注销用户
     function logout(){
-        $.ajax({
-            type: "POST"
-            ,url: "/client/delete"
-            ,async: false
-            ,xhrFields:{
-                withCredentials: true
-            }
-            ,dataType: "json"
-            ,success: function (response){
-                if(response.code == 200){
-                    window.location.href = "/";
-                }else{
+        layer.confirm("确定注销账户吗？", function(index){
+            let flag = 0;
+            $.ajax({
+                type: "GET"
+                ,url: "/client/delete"
+                ,async: false
+                ,xhrFields:{
+                    withCredentials: true
+                }
+                ,dataType: "json"
+                ,success: function (response){
+                    if(response.code != 200){
+                        flag = 1;
+                        layer.msg("服务器繁忙");
+                    }
+                }
+                ,error: function (){
+                    flag = 1;
                     layer.msg("服务器繁忙");
                 }
-            }
-            ,error: function (){
-                layer.msg("服务器繁忙");
+            });
+            if(flag == 0){
+                quit();
             }
         });
+
     }
 
     function select_device(){

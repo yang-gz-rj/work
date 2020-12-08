@@ -13,7 +13,7 @@
                 height: 80%;
                 width: 85%;
                 position: absolute;
-                top: 8%;
+                top: 10%;
                 left: 10%;
             }
         </style>
@@ -22,6 +22,7 @@
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
                 <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+                <button class="layui-btn layui-btn-sm" lay-event="del">多行删除</button>
             </div>
         </script>
         <table id="demo" lay-filter="test"></table>
@@ -59,7 +60,8 @@
                 ,cellMinWidth: $(window).height()*0.70*0.1
                 ,toolbar: "#toolbarDemo"
                 ,cols: [[
-                    {field:"device_number", width:80,align:"center",title: "表号", sort: true}
+                    {type: "checkbox",fixed: 'left'}
+                    ,{field:"device_number", width:80,align:"center",title: "表号", sort: true}
                     ,{field:"client_user", width:120, align:"center",title: "用户名"}
                     ,{field:"device_type", width:80, align:"center",title: "表类型", sort: true}
                     ,{field:"device_point", width:80, align:"center",title: "位数", sort: true}
@@ -78,7 +80,7 @@
                 const data = obj.data;
                 if(obj.event === "del"){
                     layer.confirm("真的删除行么", function(index){
-                        layui.$.ajax({
+                        $.ajax({
                             url: "/device/delete",
                             type: "GET",
                             dataType: "json",
@@ -87,7 +89,6 @@
                             },
                             success: function(response){
                                 if(response.code == 200){
-                                    obj.del();
                                     layer.close(index);
                                     viewTable.reload();
                                     layer.msg("操作成功");
@@ -141,6 +142,44 @@
                             viewTable.reload();
                         }
                     });
+                }else if(obj.event === 'del'){
+                    if(data.length <= 0){
+                        layer.msg("请选择至少一行");
+                    }else{
+                        let length = data.length;
+                        let flag;
+                        for(let i=0; i<length; i++){
+                            flag = 0;
+                            $.ajax({
+                                url: "/device/delete",
+                                type: "GET",
+                                dataType: "json",
+                                async: false,
+                                xhrFields:{
+                                  withCredentials: true
+                                },
+                                data: {
+                                    "device_number":data[i].device_number
+                                },
+                                success: function(response){
+                                    if(response.code != 200){
+                                        layer.msg("删除"+data[i].device_number+"失败");
+                                    }
+                                },
+                                error: function(){
+                                    layer.msg("服务器繁忙");
+                                    flag = 1;
+                                }
+                            });
+                            if(flag == 1) {
+                                break;
+                            }
+                        }
+                        viewTable.reload();
+                        if(flag == 0){
+                            layer.msg("删除完成");
+                        }
+                    }
                 }
             });
         </script>

@@ -13,7 +13,7 @@
             height: 80%;
             width: 85%;
             position: absolute;
-            top: 8%;
+            top: 10%;
             left: 10%;
         }
     </style>
@@ -22,6 +22,7 @@
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+            <button class="layui-btn layui-btn-sm" lay-event="del">多行删除</button>
         </div>
     </script>
     <table id="demo" lay-filter="test"></table>
@@ -58,7 +59,8 @@
             ,cellMinWidth: $(window).height()*0.70*0.1
             ,toolbar: "#toolbarDemo"
             ,cols: [[
-                {field:"water_bill_number", width:100,align:"center",title: "账单号", sort: true}
+                {type:"checkbox",fixed: "left"}
+                ,{field:"water_bill_number", width:100,align:"center",title: "账单号", sort: true}
                 ,{field:"device_number", width:120, align:"center",title: "表号", sort: true}
                 ,{field:"water_price_gradient", width:110, align:"center",title: "价位梯度", sort: true}
                 ,{field:"water_price_update_date", width:140, align:"center",title: "价位更新时间", sort: true
@@ -86,7 +88,7 @@
             const data = obj.data;
             if(obj.event === "del"){
                 layer.confirm("真的删除行么", function(index){
-                    layui.$.ajax({
+                    $.ajax({
                         url: "/water/bill/delete",
                         type: "GET",
                         dataType: "json",
@@ -147,6 +149,44 @@
                         viewTable.reload();
                     }
                 });
+            }else if(obj.event === 'del'){
+                if(data.length <= 0){
+                    layer.msg("请选择至少一行");
+                }else {
+                    let length = data.length;
+                    let flag;
+                    for (let i = 0; i < length; i++) {
+                        flag = 0;
+                        $.ajax({
+                            url: "/water/bill/delete",
+                            type: "GET",
+                            async: false,
+                            xhrFields:{
+                                withCredentials: true
+                            },
+                            dataType: "json",
+                            data: {
+                                "bill_number":data[i].water_bill_number
+                            },
+                            success: function(response){
+                                if(response.code != 200){
+                                    layer.msg("删除"+data[i].water_bill_number+"失败");
+                                }
+                            },
+                            error: function(){
+                                flag = 1;
+                                layer.msg("服务器繁忙");
+                            }
+                        });
+                        if (flag == 1) {
+                            break;
+                        }
+                    }
+                    viewTable.reload();
+                    if (flag == 0) {
+                        layer.msg("删除完成");
+                    }
+                }
             }
         });
     </script>

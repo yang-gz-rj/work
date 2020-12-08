@@ -121,9 +121,9 @@ public class ClientController {
      */
     @RequestMapping("/client/delete")
     public void clientDelete(HttpServletRequest req,HttpServletResponse resp) throws Exception {
-        String client_user = req.getParameter("client_user");
+        Client client = (Client) req.getSession().getAttribute("client");
         BaseResponse<Integer> br = new BaseResponse<Integer>();
-        if(clientService.deleteClientByUser(client_user) > 0){
+        if(clientService.deleteClientByUser(client.getClient_user()) > 0){
             br.setCode(200);
             req.getSession().removeAttribute("client");
         }else{
