@@ -19,11 +19,7 @@
         <result property="water_bill_pay_date" column="water_bill_pay_date"/>
     </resultMap>
 
-    <select id="selectByDevice" resultType="waterBill">
-        select * from waterBill where device_number = #{device_number}
-    </select>
-
-    <delete id="deleteByBNumber">
+    <delete id="deleteByBillNumber">
         delete from waterBill where water_bill_number = #{bill_number}
     </delete>
 
@@ -37,5 +33,97 @@
     <select id="select" resultType="waterBill">
         select * from waterbill
     </select>
+
+    <select id="selectByUserAndBillNumber" resultType="waterBill">
+        select waterbill.* from waterbill,device,client
+        where device.client_user = client.client_user and
+              waterbill.device_number = device.device_number and
+              waterbill.water_bill_number = #{bill_number} and
+              client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+    <select id="selectByUserAndDevice" resultType="waterBill">
+        select waterbill.* from waterbill,device,client
+        where device.client_user = client.client_user and
+            waterbill.device_number = device.device_number and
+            waterbill.device_number = #{device_number} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+    <select id="selectByUserAndGradient" resultType="waterBill">
+        select waterbill.* from waterbill,device,client
+        where device.client_user = client.client_user and
+            waterbill.device_number = device.device_number and
+            waterbill.water_price_gradient = #{gradient} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+    <select id="selectByUserAndUpdate" resultType="waterBill">
+        select waterbill.* from waterbill,device,client
+        where device.client_user = client.client_user and
+            waterbill.device_number = device.device_number and
+            waterbill.water_price_update_date = #{update} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+    <select id="selectByUserAndInit" resultType="waterBill">
+        select waterbill.* from waterbill,device,client
+        where device.client_user = client.client_user and
+            waterbill.device_number = device.device_number and
+            waterbill.water_bill_init_value = #{init} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+    <select id="selectByUserAndNow" resultType="waterBill">
+        select waterbill.* from waterbill,device,client
+        where device.client_user = client.client_user and
+            waterbill.device_number = device.device_number and
+            waterbill.water_bill_now_value = #{now} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+    <select id="selectByUserAndOutput" resultType="waterBill">
+        select waterbill.* from waterbill,device,client
+        where device.client_user = client.client_user and
+            waterbill.device_number = device.device_number and
+            waterbill.water_bill_output_date = #{output} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+    <select id="selectByUserAndFee" resultType="waterBill">
+        select waterbill.* from waterbill,device,client
+        where device.client_user = client.client_user and
+            waterbill.device_number = device.device_number and
+            waterbill.water_bill_fee = #{fee} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+
+    <select id="selectByUserAndPay" resultType="waterBill">
+        select waterbill.* from waterbill,device,client
+        where device.client_user = client.client_user and
+            waterbill.device_number = device.device_number and
+            waterbill.water_bill_pay_date = #{pay} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+    <select id="selectByUser" resultType="waterBill">
+        select waterbill.* from waterbill,device,client
+        where device.client_user = client.client_user and
+            waterbill.device_number = device.device_number and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+
 
 </mapper>

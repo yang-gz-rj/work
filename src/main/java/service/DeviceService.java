@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -52,8 +51,8 @@ public class DeviceService {
      * @param device_number
      * @return
      */
-    public Device getDeviceByNumber(String device_number) {
-        return deviceDao.selectByNumber(device_number);
+    public Device getDeviceByNumber(String user,String device_number,int curr,int limit) {
+        return deviceDao.selectByUserAndNumber(user,device_number,(curr-1)*limit,limit).get(0);
     }
 
     /**
@@ -73,44 +72,30 @@ public class DeviceService {
         return device;
     }
 
-    public List<Device> getDeviceByColumn(String user,String column, String input) {
-        List<Device> ret = new ArrayList<>();
-        List<Device> dList = deviceDao.select();
-        for(Device device: dList){
-            if(device.getClient_user().equals(user)){
-                switch (column){
-                    case "device_number":
-                        if(device.getDevice_number().equals(input)){
-                            ret.add(device);
-                        }
-                        break;
-                    case "device_type":
-                        if(device.getDevice_type().equals(input)){
-                            ret.add(device);
-                        }
-                        break;
-                    case "device_point":
-                        if(device.getDevice_point() == Integer.valueOf(input)){
-                            ret.add(device);
-                        }
-                        break;
-                    case "device_producer":
-                        if(device.getDevice_producer().equals(input)){
-                            ret.add(device);
-                        }
-                        break;
-                    case "device_create_date":
-                        if(device.getDevice_create_date().toString().equals(input)){
-                            ret.add(device);
-                        }
-                        break;
-                    case "device_durability":
-                        if(device.getDevice_durability() == Float.valueOf(input)){
-                            ret.add(device);
-                        }
-                        break;
-                }
-            }
+    public List<Device> getDeviceByColumn(String user,String column, String input,int curr, int limit) {
+        List<Device> ret = null;
+
+        int start = (curr-1)*limit;
+
+        switch (column){
+            case "device_number":
+                ret = deviceDao.selectByUserAndNumber(user,input,start,limit);
+                break;
+            case "device_type":
+                ret = deviceDao.selectByUserAndType(user,input,start,limit);
+                break;
+            case "device_point":
+                ret = deviceDao.selectByUserAndPoint(user,Integer.valueOf(input),start,limit);
+                break;
+            case "device_producer":
+                ret = deviceDao.selectByUserAndProducer(user,input,start,limit);
+                break;
+            case "device_create_date":
+                ret = deviceDao.selectByUserAndCreate(user,Date.valueOf(input),start,limit);
+                break;
+            case "device_durability":
+                ret = deviceDao.selectByUserAndDurability(user,Float.valueOf(input),start,limit);
+                break;
         }
 
         return ret;

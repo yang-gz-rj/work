@@ -47,43 +47,30 @@ public class WaterPriceService {
         return waterPrice;
     }
 
-    public List<WaterPrice> getWaterPriceByColumn(String column, String input) {
-        List<WaterPrice> wpList = waterPriceDao.select();
+    public List<WaterPrice> getWaterPriceByColumn(String user,String column, String input,int curr,int limit) {
         List<WaterPrice> ret = new ArrayList<>();
 
-        for(WaterPrice waterPrice: wpList){
-            switch (column){
-                case "water_price_gradient":
-                    if(waterPrice.getWater_price_gradient().equals(Integer.valueOf(input))){
-                        ret.add(waterPrice);
-                    }
-                    break;
-                case "water_price_update_date":
-                    if(waterPrice.getWater_price_update_date().toString().equals(input)){
-                        ret.add(waterPrice);
-                    }
-                    break;
-                case "admin_user":
-                    if(waterPrice.getAdmin_user().equals(input)){
-                        ret.add(waterPrice);
-                    }
-                    break;
-                case "water_price_maximum":
-                    if(waterPrice.getWater_price_maximum().equals(Float.valueOf(input))){
-                        ret.add(waterPrice);
-                    }
-                    break;
-                case "water_price_dw":
-                    if(waterPrice.getWater_price_dw().equals(input)){
-                        ret.add(waterPrice);
-                    }
-                    break;
-                case "water_price_unit_price":
-                    if(waterPrice.getWater_price_unit_price().equals(Float.valueOf(input))){
-                        ret.add(waterPrice);
-                    }
-                    break;
-            }
+        int start = (curr-1)*limit;
+
+        switch (column){
+            case "water_price_gradient":
+                ret = waterPriceDao.selectByGradient(Integer.valueOf(input),start,limit);
+                break;
+            case "water_price_update_date":
+                ret = waterPriceDao.selectByUpdate(Date.valueOf(input),start,limit);
+                break;
+            case "admin_user":
+                ret = waterPriceDao.selectByAdmin(input,start,limit);
+                break;
+            case "water_price_maximum":
+                ret = waterPriceDao.selectByMaximum(Float.valueOf(input),start,limit);
+                break;
+            case "water_price_dw":
+                ret = waterPriceDao.selectByDw(input,start,limit);
+                break;
+            case "water_price_unit_price":
+                ret = waterPriceDao.selectByUnit(Float.valueOf(input),start,limit);
+                break;
         }
         
         return ret;

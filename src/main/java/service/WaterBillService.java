@@ -2,7 +2,6 @@ package service;
 
 import dao.DeviceDao;
 import dao.WaterBillDao;
-import dao.entity.Device;
 import dao.entity.WaterBill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,8 +32,8 @@ public class WaterBillService {
      * @param device_number
      * @return
      */
-    public List<WaterBill> getWaterBillByDevice(String device_number) {
-        return waterBillDao.selectByDevice(device_number);
+    public List<WaterBill> getWaterBillByUserAndDevice(String user,String device_number, int curr, int limit) {
+        return waterBillDao.selectByUserAndDevice(user,device_number,(curr-1)*limit,limit);
     }
 
     /**
@@ -43,7 +42,7 @@ public class WaterBillService {
      * @return
      */
     public Integer deleteBillByBNumber(String bill_number) {
-        return waterBillDao.deleteByBNumber(bill_number);
+        return waterBillDao.deleteByBillNumber(bill_number);
     }
 
     /**
@@ -72,68 +71,48 @@ public class WaterBillService {
         return waterBill;
     }
 
-    // 查找所有设备，进行匹配input和column
-    public List<WaterBill> getWaterBillByColumn(String user, String column, String input) {
-        // 所有设备
-        List<Device> dList = deviceDao.selectByUser(user,1,Integer.MAX_VALUE);
-        // 获取所有账单
-        List<WaterBill> wList = waterBillDao.select();
+    public List<WaterBill> getWaterBillByColumn(String user, String column, String input,int curr,int limit) {
 
         List<WaterBill> ret = new ArrayList<>();
-        for(Device device: dList){
-            for(WaterBill waterBill: wList){
-                if(device.getClient_user().equals(user)){
-                    switch (column){
-                        case "water_bill_number":
-                            if(waterBill.getWater_bill_number().equals(input)){
-                                ret.add(waterBill);
-                            }
-                            break;
-                        case "device_number":
-                            if(waterBill.getDevice_number().equals(input)){
-                                ret.add(waterBill);
-                            }
-                            break;
-                        case "water_price_gradient":
-                            if(waterBill.getWater_price_gradient() == Integer.valueOf(input)){
-                                ret.add(waterBill);
-                            }
-                            break;
-                        case "water_price_update_date":
-                            if(waterBill.getWater_price_update_date().toString().equals(input)){
-                                ret.add(waterBill);
-                            }
-                            break;
-                        case "water_bill_init_value":
-                            if(waterBill.getWater_bill_init_value() == Float.valueOf(input)){
-                                ret.add(waterBill);
-                            }
-                            break;
-                        case "water_bill_now_value":
-                            if(waterBill.getWater_bill_now_value() == Float.valueOf(input)){
-                                ret.add(waterBill);
-                            }
-                            break;
-                        case "water_bill_output_date":
-                            if(waterBill.getWater_bill_output_date().toString().equals(input)){
-                                ret.add(waterBill);
-                            }
-                            break;
-                        case "water_bill_fee":
-                            if(waterBill.getWater_bill_fee() == Float.valueOf(input)){
-                                ret.add(waterBill);
-                            }
-                            break;
-                        case "water_bill_pay_date":
-                            if(waterBill.getWater_bill_pay_date().toString().equals(input)){
-                                ret.add(waterBill);
-                            }
-                            break;
-                    }
-                }
-            }
+
+        int start = (curr-1)*limit;
+
+        // 查找账单号
+        if(column.equals("water_bill_number")){
+            ret.add(waterBillDao.selectByUserAndBillNumber(user,input,start,limit));
+            return ret;
         }
 
+        switch (column){
+            case "device_number":
+                ret = waterBillDao.selectByUserAndDevice(user,input,start,limit);
+                break;
+            case "water_price_gradient":
+                ret = waterBillDao.selectByUserAndGradient(user,Integer.valueOf(input),start,limit);
+                break;
+            case "water_price_update_date":
+                ret = waterBillDao.selectByUserAndUpdate(user,Date.valueOf(input),start,limit);
+                break;
+            case "water_bill_init_value":
+                ret = waterBillDao.selectByUserAndInit(user,Float.valueOf(input),start,limit);
+                break;
+            case "water_bill_now_value":
+                ret = waterBillDao.selectByUserAndNow(user,Float.valueOf(input),start,limit);
+                break;
+            case "water_bill_output_date":
+                ret = waterBillDao.selectByUserAndOutput(user,Date.valueOf(input),start,limit);
+                break;
+            case "water_bill_fee":
+                ret = waterBillDao.selectByUserAndFee(user,Float.valueOf(input),start,limit);
+                break;
+            case "water_bill_pay_date":
+                ret = waterBillDao.selectByUserAndPay(user,Date.valueOf(input),start,limit);
+                break;
+        }
         return ret;
+    }
+
+    public List<WaterBill> getWaterBillByUser(String user, int curr, int limit) {
+        return waterBillDao.selectByUser(user,(curr-1)*limit,limit);
     }
 }

@@ -71,10 +71,9 @@
 </ul>
 <%-- 右布局 --%>
 <div id="show-right">
-    <%-- 用户昵称显示 --%>
+    <%-- 查找表单 --%>
     <ul class="layui-nav layui-nav-tree" id="show-user" style="position: absolute;top: 0%; left: 0%;
-        background: #F0F0F0; width: 100%;height: 10%;">
-        <%-- 查找表单 --%>
+        background: #F0F0F0; width: 85%;height: 10%;">
         <form class="layui-form" style="position: absolute; left: 2%; top: 20%; height: 60%; width: 60%; color: black;">
             <div class="layui-input-block" style="position: absolute; left: 0%; top: 0%; height: 100%;width: 25%;">
                 <select id="select_model" name="model" lay-verify="" lay-filter="select_model">
@@ -93,12 +92,14 @@
                 <input type="text" id="search-input" name="input"  required lay-verify="required" placeholder="请选择模块和字段" autocomplete="off" class="layui-input">
             </div>
         </form>
-        <li class="layui-nav-item" style="float: right;width: 8%;height: 80%;padding-top: 1%;padding-right: 1%;">
-            <a href="javascript:;" style="text-align: center;line-heigh: 100%;height: 100%;background: #4E5465;">
-                <img src="/image/user.png">${client.client_user==null?"请登录":client.client_user}</a>
+    </ul>
+    <%-- 用户显示 --%>
+    <ul class="layui-nav" style="position: absolute;right: 0%;width: 15%;height: 10%;">
+        <li class="layui-nav-item">
+            <a href=""><img src="/image/user.png" class="layui-nav-img">${client.client_user==null?"请登录":client.client_user}</a>
             <dl class="layui-nav-child">
-                <dd style="text-align: center;z-index: revert;" onclick="logout()">注销</dd>
-                <dd style="text-align: center;" onclick="quit()">退出</dd>
+                <dd><a href="javascript:;" onclick="logout()">注销账户</a></dd>
+                <dd><a href="javascript:;" onclick="quit()">退出登录</a></dd>
             </dl>
         </li>
     </ul>

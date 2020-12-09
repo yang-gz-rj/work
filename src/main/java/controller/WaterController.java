@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -63,25 +62,27 @@ public class WaterController {
                 req.getSession().removeAttribute("input");
             }
             String device_number = req.getParameter("device_number");
-            // 并非是点击“账单进入”
+            // 并非是点击“账单”进入
             if(device_number == null){
                 req.getSession().setAttribute("bill_type","all");
                 List<Device> devices = deviceService.getDeviceByUser(client.getClient_user(),1,Integer.MAX_VALUE);
                 int count = 0;
                 for(Device device: devices){
-                    count += waterBillService.getWaterBillByDevice(device.getDevice_number()).size();
+                    count += waterBillService.getWaterBillByUserAndDevice(client.getClient_user(),device.getDevice_number()
+                            ,1,Integer.MAX_VALUE).size();
                 }
                 req.getSession().setAttribute("bill_count",count);
             }else{
                 req.getSession().setAttribute("bill_type","single");
                 req.getSession().setAttribute("device_number",device_number);
-                req.getSession().setAttribute("bill_count",waterBillService.getWaterBillByDevice(device_number).size());
+                req.getSession().setAttribute("bill_count",waterBillService.getWaterBillByUserAndDevice(client.getClient_user(),device_number
+                        ,1,Integer.MAX_VALUE).size());
             }
 
         }else{
             String input = req.getParameter("input");
             req.getSession().setAttribute("bill_count",waterBillService.getWaterBillByColumn(client.getClient_user()
-                ,column,input).size());
+                ,column,input,1,Integer.MAX_VALUE).size());
             req.getSession().setAttribute("column",column);
             req.getSession().setAttribute("input",input);
         }
@@ -98,31 +99,26 @@ public class WaterController {
     @RequestMapping("/water/bill/json")
     public void waterBillJson(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         String column = (String) req.getSession().getAttribute("column");
+        int curr = Integer.valueOf(req.getParameter("curr"));
+        int limit = Integer.valueOf(req.getParameter("limit"));
+
         BaseResponse<List<WaterBill>> br = new BaseResponse<List<WaterBill>>();
         br.setCode(200);
+        Client client = (Client) req.getSession().getAttribute("client");
 
         if(column == null){
             String bill_type = (String) req.getSession().getAttribute("bill_type");
             if(bill_type.equals("single")){
                 String device_number = (String) req.getSession().getAttribute("device_number");
-                br.setData(waterBillService.getWaterBillByDevice(device_number));
+                br.setData(waterBillService.getWaterBillByUserAndDevice(client.getClient_user(),device_number
+                        , curr, limit));
             }else{
-                Client client = (Client) req.getSession().getAttribute("client");
-                List<Device> devices = deviceService.getDeviceByUser(client.getClient_user(), 1, Integer.MAX_VALUE);
-                List<WaterBill> waterBills = new ArrayList<WaterBill>();
-                for(Device device: devices){
-                    List<WaterBill> bills = waterBillService.getWaterBillByDevice(device.getDevice_number());
-                    for(WaterBill bill: bills){
-                        waterBills.add(bill);
-                    }
-                }
-                br.setData(waterBills);
+                br.setData(waterBillService.getWaterBillByUser(client.getClient_user(),curr,limit));
             }
         // 进行搜索
         }else{
-            Client client = (Client) req.getSession().getAttribute("client");
             String input = (String) req.getSession().getAttribute("input");
-            br.setData(waterBillService.getWaterBillByColumn(client.getClient_user(),column,input));
+            br.setData(waterBillService.getWaterBillByColumn(client.getClient_user(),column,input,curr,limit));
         }
 
         PrintWriter pw = resp.getWriter();
@@ -162,7 +158,9 @@ public class WaterController {
     public void waterBillAdd(HttpServletRequest req,HttpServletResponse resp) throws Exception{
         WaterBill waterBill = waterBillService.getWaterBill(req);
         BaseResponse<Integer> br = new BaseResponse<Integer>();
-        Device device = deviceService.getDeviceByNumber(waterBill.getDevice_number());
+        Client client = (Client) req.getSession().getAttribute("client");
+        Device device = deviceService.getDeviceByNumber(client.getClient_user(),waterBill.getDevice_number()
+                ,1,Integer.MAX_VALUE);
         String client_user = req.getParameter("client_user");
         if(device != null && device.getClient_user().equals(client_user) && waterBillService.insertWaterBill(waterBill) > 0){
             br.setCode(200);
@@ -191,7 +189,9 @@ public class WaterController {
             req.getSession().setAttribute("price_count", waterPriceService.getWaterPrice().size());
         }else{
             String input = req.getParameter("input");
-            req.getSession().setAttribute("price_count", waterPriceService.getWaterPriceByColumn(column,input).size());
+            Client client = (Client) req.getSession().getAttribute("client");
+            req.getSession().setAttribute("price_count", waterPriceService.getWaterPriceByColumn(client.getClient_user(),column,input
+                ,1,Integer.MAX_VALUE).size());
             req.getSession().setAttribute("column",column);
             req.getSession().setAttribute("input",input);
         }
@@ -204,16 +204,21 @@ public class WaterController {
      * @throws Exception
      */
     @RequestMapping("/water/price/json")
-    public void waterPriceJson(int curr,int limit,HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public void waterPriceJson(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         BaseResponse<List<WaterPrice>> br = new BaseResponse<List<WaterPrice>>();
         br.setCode(200);
+
+        int curr  = Integer.valueOf(req.getParameter("curr"));
+        int limit  = Integer.valueOf(req.getParameter("limit"));
 
         String column = (String) req.getSession().getAttribute("column");
         if(column == null){
             br.setData(waterPriceService.getWaterPriceLimit(curr,limit));
         }else{
+            Client client = (Client) req.getSession().getAttribute("client");
             String input = (String) req.getSession().getAttribute("input");
-            br.setData(waterPriceService.getWaterPriceByColumn(column,input));
+            br.setData(waterPriceService.getWaterPriceByColumn(client.getClient_user(),column,input
+                    ,curr,limit));
         }
 
         PrintWriter pw = resp.getWriter();

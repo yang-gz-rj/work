@@ -38,4 +38,22 @@ public interface WaterPriceDao {
      * @return
      */
     Integer insert(@Param("price") WaterPrice waterPrice);
+
+    List<WaterPrice> selectByGradient(@Param("gradient") Integer gradient
+            ,@Param("start") Integer start,@Param("count") Integer count);
+
+    List<WaterPrice> selectByUpdate(@Param("update") Date update
+            ,@Param("start") Integer start,@Param("count") Integer count);
+
+    List<WaterPrice> selectByAdmin(@Param("admin") String admin
+            ,@Param("start") Integer start,@Param("count") Integer count);
+
+    List<WaterPrice> selectByMaximum(@Param("maximum") Float maximum
+            ,@Param("start") Integer start,@Param("count") Integer count);
+
+    List<WaterPrice> selectByDw(@Param("dw") String dw
+            ,@Param("start") Integer start,@Param("count") Integer count);
+
+    List<WaterPrice> selectByUnit(@Param("unit") Float unit
+            ,@Param("start") Integer start,@Param("count") Integer count);
 }

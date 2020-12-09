@@ -52,7 +52,7 @@ public class DeviceController {
             req.getSession().setAttribute("column",column);
             req.getSession().setAttribute("input",input);
             req.getSession().setAttribute("device_count",deviceService.getDeviceByColumn(client.getClient_user()
-                    ,column,input).size());
+                    ,column,input,1,Integer.MAX_VALUE).size());
         }
         req.getRequestDispatcher("/page/client/device.jsp").forward(req,resp);
     }
@@ -103,9 +103,11 @@ public class DeviceController {
      * @throws Exception
      */
     @RequestMapping("/device/json")
-    public void deviceJson(int curr, int limit,HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public void deviceJson(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         Client client = (Client)req.getSession().getAttribute("client");
         String column = (String)req.getSession().getAttribute("column");
+        int curr = Integer.valueOf(req.getParameter("curr"));
+        int limit = Integer.valueOf(req.getParameter("limit"));
         BaseResponse<List<Device>> br = new BaseResponse<>();
         br.setCode(200);
         // 并没有进行搜素
@@ -113,7 +115,8 @@ public class DeviceController {
             br.setData(deviceService.getDeviceByUser(client.getClient_user(),curr,limit));
         //  进行搜素
         }else{
-            br.setData(deviceService.getDeviceByColumn(client.getClient_user(), column, (String) req.getSession().getAttribute("input")));
+            br.setData(deviceService.getDeviceByColumn(client.getClient_user(), column
+                    , (String) req.getSession().getAttribute("input"),curr, limit));
         }
         PrintWriter pw = resp.getWriter();
         pw.write(gson.toJson(br));

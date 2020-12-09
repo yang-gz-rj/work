@@ -32,12 +32,52 @@
                 ,#{device.device_durability},#{device.device_create_date})
     </insert>
 
-    <select id="select" resultType="device">
-        select * from device
+    <select id="selectByUserAndNumber" resultType="device">
+        select * from device,client
+        where device.client_user = client.client_user and
+            device.client_user = #{user} and
+            device.device_number = #{number}
+        limit #{start},#{count}
     </select>
 
-    <select id="selectByNumber" resultType="device">
-        select * from device where device_number = #{number};
+    <select id="selectByUserAndType" resultType="device">
+        select device.* from device,client
+        where device.client_user = client.client_user and
+            device.client_user = #{user} and
+            device.device_type = #{type}
+        limit #{start},#{count}
+    </select>
+
+    <select id="selectByUserAndPoint" resultType="device">
+        select * from device,client
+        where device.client_user = client.client_user and
+            device.client_user = #{user} and
+            device.device_point = #{point}
+        limit #{start},#{count}
+    </select>
+
+    <select id="selectByUserAndProducer" resultType="device">
+        select * from device,client
+        where device.client_user = client.client_user and
+            device.client_user = #{user} and
+            device.device_producer = #{procedurer}
+        limit #{start},#{count}
+    </select>
+
+    <select id="selectByUserAndCreate" resultType="device">
+        select * from device,client
+        where device.client_user = client.client_user and
+            device.client_user = #{user} and
+            device.device_create_date = #{create}
+        limit #{start},#{count}
+    </select>
+
+    <select id="selectByUserAndDurability" resultType="device">
+        select * from device,client
+        where device.client_user = client.client_user and
+            device.client_user = #{user} and
+            device.device_durability = #{durability}
+        limit #{start},#{count}
     </select>
 
 </mapper>
