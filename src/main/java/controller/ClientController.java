@@ -142,7 +142,7 @@ public class ClientController {
      */
     @RequestMapping("/regist")
     public void regist(HttpServletRequest req,HttpServletResponse resp) throws Exception {
-        req.getRequestDispatcher("/page/client/regist.jsp").forward(req,resp);
+        req.getRequestDispatcher("/page/login/regist.jsp").forward(req,resp);
     }
 
     /**

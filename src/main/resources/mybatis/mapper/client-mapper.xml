@@ -16,7 +16,7 @@
         <result property="client_money" column="client_money"/>
     </resultMap>
 
-    <select id="selectByUserPassword" resultType="client">
+    <select id="findByUserPassword" resultType="client">
         select * from client where client_user = #{client_user} and client_password = #{client_password}
     </select>
 

@@ -10,19 +10,10 @@ import java.util.List;
 @Repository
 public interface WaterPriceDao {
 
-    /**
-     * 查询所有价位信息
-     * @return
-     */
-    public List<WaterPrice> select();
 
-    /**
-     * 分页查询
-     * @param start
-     * @param count
-     * @return
-     */
-    public List<WaterPrice> selectLimit(@Param("start") Integer start, @Param("count") Integer count);
+    List<WaterPrice> findAll();
+
+    List<WaterPrice> findWithLimit(@Param("start") Integer start, @Param("count") Integer count);
 
     /**
      * 通过主键删除waterprice
@@ -30,7 +21,7 @@ public interface WaterPriceDao {
      * @param update_date
      * @return
      */
-    public Integer deleteByGD(@Param("gradient") Integer gradient, @Param("update_date") Date update_date);
+    Integer deleteByGD(@Param("gradient") Integer gradient, @Param("update_date") Date update_date);
 
     /**
      * 插入waterPrice
@@ -39,21 +30,21 @@ public interface WaterPriceDao {
      */
     Integer insert(@Param("price") WaterPrice waterPrice);
 
-    List<WaterPrice> selectByGradient(@Param("gradient") Integer gradient
-            ,@Param("start") Integer start,@Param("count") Integer count);
+    List<WaterPrice> findByGradient(@Param("gradient") Integer gradient
+            , @Param("start") Integer start, @Param("count") Integer count);
 
-    List<WaterPrice> selectByUpdate(@Param("update") Date update
-            ,@Param("start") Integer start,@Param("count") Integer count);
+    List<WaterPrice> findByUpdate(@Param("update") Date update
+            , @Param("start") Integer start, @Param("count") Integer count);
 
-    List<WaterPrice> selectByAdmin(@Param("admin") String admin
-            ,@Param("start") Integer start,@Param("count") Integer count);
+    List<WaterPrice> findByAdmin(@Param("admin") String admin
+            , @Param("start") Integer start, @Param("count") Integer count);
 
-    List<WaterPrice> selectByMaximum(@Param("maximum") Float maximum
-            ,@Param("start") Integer start,@Param("count") Integer count);
+    List<WaterPrice> findByMaximum(@Param("maximum") Float maximum
+            , @Param("start") Integer start, @Param("count") Integer count);
 
-    List<WaterPrice> selectByDw(@Param("dw") String dw
-            ,@Param("start") Integer start,@Param("count") Integer count);
+    List<WaterPrice> findByDw(@Param("dw") String dw
+            , @Param("start") Integer start, @Param("count") Integer count);
 
-    List<WaterPrice> selectByUnit(@Param("unit") Float unit
-            ,@Param("start") Integer start,@Param("count") Integer count);
+    List<WaterPrice> findByUnit(@Param("unit") Float unit
+            , @Param("start") Integer start, @Param("count") Integer count);
 }

@@ -25,7 +25,7 @@ public class DeviceService {
      * @return
      */
     public List<Device> getDeviceByUser(String client_user, Integer curr, Integer limit){
-        return deviceDao.selectByUser(client_user,(curr-1)*limit,limit);
+        return deviceDao.findByUser(client_user,(curr-1)*limit,limit);
     }
 
     /**
@@ -52,7 +52,7 @@ public class DeviceService {
      * @return
      */
     public Device getDeviceByNumber(String user,String device_number,int curr,int limit) {
-        return deviceDao.selectByUserAndNumber(user,device_number,(curr-1)*limit,limit).get(0);
+        return deviceDao.findByUserAndNumber(user,device_number,(curr-1)*limit,limit).get(0);
     }
 
     /**
@@ -79,22 +79,22 @@ public class DeviceService {
 
         switch (column){
             case "device_number":
-                ret = deviceDao.selectByUserAndNumber(user,input,start,limit);
+                ret = deviceDao.findByUserAndNumber(user,input,start,limit);
                 break;
             case "device_type":
-                ret = deviceDao.selectByUserAndType(user,input,start,limit);
+                ret = deviceDao.findByUserAndType(user,input,start,limit);
                 break;
             case "device_point":
-                ret = deviceDao.selectByUserAndPoint(user,Integer.valueOf(input),start,limit);
+                ret = deviceDao.findByUserAndPoint(user,Integer.valueOf(input),start,limit);
                 break;
             case "device_producer":
-                ret = deviceDao.selectByUserAndProducer(user,input,start,limit);
+                ret = deviceDao.findByUserAndProducer(user,input,start,limit);
                 break;
             case "device_create_date":
-                ret = deviceDao.selectByUserAndCreate(user,Date.valueOf(input),start,limit);
+                ret = deviceDao.findByUserAndCreate(user,Date.valueOf(input),start,limit);
                 break;
             case "device_durability":
-                ret = deviceDao.selectByUserAndDurability(user,Float.valueOf(input),start,limit);
+                ret = deviceDao.findByUserAndDurability(user,Float.valueOf(input),start,limit);
                 break;
         }
 

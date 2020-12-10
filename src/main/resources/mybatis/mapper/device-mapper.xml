@@ -14,7 +14,7 @@
         <result property="device_create_date" column="device_create_date"/>
     </resultMap>
 
-    <select id="selectByUser" resultType="device">
+    <select id="findByUser" resultType="device">
         select * from device where client_user = #{user} limit #{start},#{count}
     </select>
 
@@ -32,7 +32,7 @@
                 ,#{device.device_durability},#{device.device_create_date})
     </insert>
 
-    <select id="selectByUserAndNumber" resultType="device">
+    <select id="findByUserAndNumber" resultType="device">
         select * from device,client
         where device.client_user = client.client_user and
             device.client_user = #{user} and
@@ -40,7 +40,7 @@
         limit #{start},#{count}
     </select>
 
-    <select id="selectByUserAndType" resultType="device">
+    <select id="findByUserAndType" resultType="device">
         select device.* from device,client
         where device.client_user = client.client_user and
             device.client_user = #{user} and
@@ -48,7 +48,7 @@
         limit #{start},#{count}
     </select>
 
-    <select id="selectByUserAndPoint" resultType="device">
+    <select id="findByUserAndPoint" resultType="device">
         select * from device,client
         where device.client_user = client.client_user and
             device.client_user = #{user} and
@@ -56,7 +56,7 @@
         limit #{start},#{count}
     </select>
 
-    <select id="selectByUserAndProducer" resultType="device">
+    <select id="findByUserAndProducer" resultType="device">
         select * from device,client
         where device.client_user = client.client_user and
             device.client_user = #{user} and
@@ -64,7 +64,7 @@
         limit #{start},#{count}
     </select>
 
-    <select id="selectByUserAndCreate" resultType="device">
+    <select id="findByUserAndCreate" resultType="device">
         select * from device,client
         where device.client_user = client.client_user and
             device.client_user = #{user} and
@@ -72,7 +72,7 @@
         limit #{start},#{count}
     </select>
 
-    <select id="selectByUserAndDurability" resultType="device">
+    <select id="findByUserAndDurability" resultType="device">
         select * from device,client
         where device.client_user = client.client_user and
             device.client_user = #{user} and

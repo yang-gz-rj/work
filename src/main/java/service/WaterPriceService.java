@@ -21,11 +21,11 @@ public class WaterPriceService {
     }
 
     public List<WaterPrice> getWaterPrice(){
-        return waterPriceDao.select();
+        return waterPriceDao.findAll();
     }
 
     public List<WaterPrice> getWaterPriceLimit(Integer curr, Integer limit){
-        return waterPriceDao.selectLimit((curr-1)*limit,limit);
+        return waterPriceDao.findWithLimit((curr-1)*limit,limit);
     }
 
     public Integer deleteWaterPriceByGD(Integer gradient, Date update_date) {
@@ -54,22 +54,22 @@ public class WaterPriceService {
 
         switch (column){
             case "water_price_gradient":
-                ret = waterPriceDao.selectByGradient(Integer.valueOf(input),start,limit);
+                ret = waterPriceDao.findByGradient(Integer.valueOf(input),start,limit);
                 break;
             case "water_price_update_date":
-                ret = waterPriceDao.selectByUpdate(Date.valueOf(input),start,limit);
+                ret = waterPriceDao.findByUpdate(Date.valueOf(input),start,limit);
                 break;
             case "admin_user":
-                ret = waterPriceDao.selectByAdmin(input,start,limit);
+                ret = waterPriceDao.findByAdmin(input,start,limit);
                 break;
             case "water_price_maximum":
-                ret = waterPriceDao.selectByMaximum(Float.valueOf(input),start,limit);
+                ret = waterPriceDao.findByMaximum(Float.valueOf(input),start,limit);
                 break;
             case "water_price_dw":
-                ret = waterPriceDao.selectByDw(input,start,limit);
+                ret = waterPriceDao.findByDw(input,start,limit);
                 break;
             case "water_price_unit_price":
-                ret = waterPriceDao.selectByUnit(Float.valueOf(input),start,limit);
+                ret = waterPriceDao.findByUnit(Float.valueOf(input),start,limit);
                 break;
         }
         

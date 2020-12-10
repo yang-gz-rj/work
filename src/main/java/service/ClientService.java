@@ -31,7 +31,7 @@ public class ClientService {
      * @return 存在返回client,否则返回null
      */
     public Client getClientByUserPassword(String client_user, String client_password){
-        return clientDao.selectByUserPassword(client_user, client_password);
+        return clientDao.findByUserPassword(client_user, client_password);
     }
 
     /**

@@ -33,7 +33,7 @@ public class WaterBillService {
      * @return
      */
     public List<WaterBill> getWaterBillByUserAndDevice(String user,String device_number, int curr, int limit) {
-        return waterBillDao.selectByUserAndDevice(user,device_number,(curr-1)*limit,limit);
+        return waterBillDao.findByUserAndDevice(user,device_number,(curr-1)*limit,limit);
     }
 
     /**
@@ -79,40 +79,40 @@ public class WaterBillService {
 
         // 查找账单号
         if(column.equals("water_bill_number")){
-            ret.add(waterBillDao.selectByUserAndBillNumber(user,input,start,limit));
+            ret.add(waterBillDao.findByUserAndBillNumber(user,input,start,limit));
             return ret;
         }
 
         switch (column){
             case "device_number":
-                ret = waterBillDao.selectByUserAndDevice(user,input,start,limit);
+                ret = waterBillDao.findByUserAndDevice(user,input,start,limit);
                 break;
             case "water_price_gradient":
-                ret = waterBillDao.selectByUserAndGradient(user,Integer.valueOf(input),start,limit);
+                ret = waterBillDao.findByUserAndGradient(user,Integer.valueOf(input),start,limit);
                 break;
             case "water_price_update_date":
-                ret = waterBillDao.selectByUserAndUpdate(user,Date.valueOf(input),start,limit);
+                ret = waterBillDao.findByUserAndUpdate(user,Date.valueOf(input),start,limit);
                 break;
             case "water_bill_init_value":
-                ret = waterBillDao.selectByUserAndInit(user,Float.valueOf(input),start,limit);
+                ret = waterBillDao.findByUserAndInit(user,Float.valueOf(input),start,limit);
                 break;
             case "water_bill_now_value":
-                ret = waterBillDao.selectByUserAndNow(user,Float.valueOf(input),start,limit);
+                ret = waterBillDao.findByUserAndNow(user,Float.valueOf(input),start,limit);
                 break;
             case "water_bill_output_date":
-                ret = waterBillDao.selectByUserAndOutput(user,Date.valueOf(input),start,limit);
+                ret = waterBillDao.findByUserAndOutput(user,Date.valueOf(input),start,limit);
                 break;
             case "water_bill_fee":
-                ret = waterBillDao.selectByUserAndFee(user,Float.valueOf(input),start,limit);
+                ret = waterBillDao.findByUserAndFee(user,Float.valueOf(input),start,limit);
                 break;
             case "water_bill_pay_date":
-                ret = waterBillDao.selectByUserAndPay(user,Date.valueOf(input),start,limit);
+                ret = waterBillDao.findByUserAndPay(user,Date.valueOf(input),start,limit);
                 break;
         }
         return ret;
     }
 
     public List<WaterBill> getWaterBillByUser(String user, int curr, int limit) {
-        return waterBillDao.selectByUser(user,(curr-1)*limit,limit);
+        return waterBillDao.findByUser(user,(curr-1)*limit,limit);
     }
 }

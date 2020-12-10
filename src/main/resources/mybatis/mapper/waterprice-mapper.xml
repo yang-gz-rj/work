@@ -15,11 +15,11 @@
         <result property="water_price_unit_price" column="water_price_unit_price"/>
     </resultMap>
 
-    <select id="select" resultType="waterPrice">
+    <select id="findAll" resultType="waterPrice">
         select * from waterPrice
     </select>
     
-    <select id="selectLimit" resultType="waterPrice">
+    <select id="findWithLimit" resultType="waterPrice">
         select * from waterPrice limit #{start},#{count};
     </select>
 
@@ -33,37 +33,37 @@
             ,#{price.water_price_maximum},#{price.water_price_dw},#{price.water_price_unit_price})
     </insert>
 
-    <select id="selectByGradient" resultType="waterPrice">
+    <select id="findByGradient" resultType="waterPrice">
         select * from waterprice
         where water_price_gradient = #{gradient}
         limit #{start},#{count}
     </select>
 
-    <select id="selectByUpdate" resultType="waterPrice">
+    <select id="findByUpdate" resultType="waterPrice">
         select * from waterprice
         where water_price_update_date = #{update}
         limit #{start},#{count}
     </select>
 
-    <select id="selectByAdmin" resultType="waterPrice">
+    <select id="findByAdmin" resultType="waterPrice">
         select * from waterprice
         where admin_user = #{admin}
         limit #{start},#{count}
     </select>
 
-    <select id="selectByMaximum" resultType="waterPrice">
+    <select id="findByMaximum" resultType="waterPrice">
         select * from waterprice
         where water_price_maximum = #{maximum}
         limit #{start},#{count}
     </select>
 
-    <select id="selectByDw" resultType="waterPrice">
+    <select id="findByDw" resultType="waterPrice">
         select * from waterprice
         where water_price_dw = #{dw}
         limit #{start},#{count}
     </select>
 
-    <select id="selectByUnit" resultType="waterPrice">
+    <select id="findByUnit" resultType="waterPrice">
         select * from waterprice
         where water_price_unit_price = #{unit}
         limit #{start},#{count}

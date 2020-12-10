@@ -30,11 +30,7 @@
             },#{bill.water_bill_r_dw},#{bill.water_bill_output_date},#{bill.water_bill_fee},#{bill.water_bill_pay_date})
     </insert>
 
-    <select id="select" resultType="waterBill">
-        select * from waterbill
-    </select>
-
-    <select id="selectByUserAndBillNumber" resultType="waterBill">
+    <select id="findByUserAndBillNumber" resultType="waterBill">
         select waterbill.* from waterbill,device,client
         where device.client_user = client.client_user and
               waterbill.device_number = device.device_number and
@@ -43,7 +39,7 @@
         limit #{start},#{count}
     </select>
 
-    <select id="selectByUserAndDevice" resultType="waterBill">
+    <select id="findByUserAndDevice" resultType="waterBill">
         select waterbill.* from waterbill,device,client
         where device.client_user = client.client_user and
             waterbill.device_number = device.device_number and
@@ -52,7 +48,7 @@
         limit #{start},#{count}
     </select>
 
-    <select id="selectByUserAndGradient" resultType="waterBill">
+    <select id="findByUserAndGradient" resultType="waterBill">
         select waterbill.* from waterbill,device,client
         where device.client_user = client.client_user and
             waterbill.device_number = device.device_number and
@@ -61,7 +57,7 @@
         limit #{start},#{count}
     </select>
 
-    <select id="selectByUserAndUpdate" resultType="waterBill">
+    <select id="findByUserAndUpdate" resultType="waterBill">
         select waterbill.* from waterbill,device,client
         where device.client_user = client.client_user and
             waterbill.device_number = device.device_number and
@@ -70,7 +66,7 @@
         limit #{start},#{count}
     </select>
 
-    <select id="selectByUserAndInit" resultType="waterBill">
+    <select id="findByUserAndInit" resultType="waterBill">
         select waterbill.* from waterbill,device,client
         where device.client_user = client.client_user and
             waterbill.device_number = device.device_number and
@@ -79,7 +75,7 @@
         limit #{start},#{count}
     </select>
 
-    <select id="selectByUserAndNow" resultType="waterBill">
+    <select id="findByUserAndNow" resultType="waterBill">
         select waterbill.* from waterbill,device,client
         where device.client_user = client.client_user and
             waterbill.device_number = device.device_number and
@@ -88,7 +84,7 @@
         limit #{start},#{count}
     </select>
 
-    <select id="selectByUserAndOutput" resultType="waterBill">
+    <select id="findByUserAndOutput" resultType="waterBill">
         select waterbill.* from waterbill,device,client
         where device.client_user = client.client_user and
             waterbill.device_number = device.device_number and
@@ -97,7 +93,7 @@
         limit #{start},#{count}
     </select>
 
-    <select id="selectByUserAndFee" resultType="waterBill">
+    <select id="findByUserAndFee" resultType="waterBill">
         select waterbill.* from waterbill,device,client
         where device.client_user = client.client_user and
             waterbill.device_number = device.device_number and
@@ -107,7 +103,7 @@
     </select>
 
 
-    <select id="selectByUserAndPay" resultType="waterBill">
+    <select id="findByUserAndPay" resultType="waterBill">
         select waterbill.* from waterbill,device,client
         where device.client_user = client.client_user and
             waterbill.device_number = device.device_number and
@@ -116,7 +112,7 @@
         limit #{start},#{count}
     </select>
 
-    <select id="selectByUser" resultType="waterBill">
+    <select id="findByUser" resultType="waterBill">
         select waterbill.* from waterbill,device,client
         where device.client_user = client.client_user and
             waterbill.device_number = device.device_number and
