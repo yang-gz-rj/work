@@ -47,7 +47,7 @@ public class DeviceService {
     }
 
     /**
-     * 通过device_number获取设备
+     * 通过device_number和user获取设备
      * @param device_number
      * @return
      */
@@ -56,7 +56,7 @@ public class DeviceService {
     }
 
     /**
-     * 通过reques对象获取Device
+     * 通过request对象获取Device
      * @param req
      * @return
      */
@@ -72,6 +72,15 @@ public class DeviceService {
         return device;
     }
 
+    /**
+     * 通过输入input和选择的字段column获取用户user对应的设备
+     * @param user
+     * @param column
+     * @param input
+     * @param curr
+     * @param limit
+     * @return
+     */
     public List<Device> getDeviceByColumn(String user,String column, String input,int curr, int limit) {
         List<Device> ret = null;
 

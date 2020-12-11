@@ -12,6 +12,11 @@ public class VerifyCodeUtil {
     private static final Random random = new Random();
     private static final String[] fontNames = {"宋体", "华文楷体", "黑体", "Georgia", "微软雅黑", "楷体_GB2312"};
 
+    /**
+     * 画一张验证码图片
+     * @param output
+     * @return 验证码
+     */
     public static String drawImage(ByteArrayOutputStream output) {
         String code = "";
         int width = 50;
@@ -41,11 +46,12 @@ public class VerifyCodeUtil {
         // 释放图形上下文
         g.dispose();
         try {
+            //  把图片数据写过去
             ImageIO.write(bi, "jpg", output);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return code;//为了方便取值，直接返回code，
+        return code;
 
 
 

@@ -97,6 +97,12 @@ public class GuideController {
         }
     }
 
+    /**
+     * 退出登录，清楚session中的用户，并不删除数据库信息
+     * @param req
+     * @param resp
+     * @throws IOException
+     */
     @RequestMapping("/exit")
     public void exit(HttpServletRequest req,HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession();

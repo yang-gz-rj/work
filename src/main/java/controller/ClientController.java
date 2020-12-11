@@ -114,7 +114,7 @@ public class ClientController {
 
     /**
      *  注销用户
-     *   删除session存储的用户
+     *   删除数据库用户信息，删除session存储的用户
      * @param req
      * @param resp
      * @throws Exception

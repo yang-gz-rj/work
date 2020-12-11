@@ -1,8 +1,11 @@
 package util;
 
 public class BaseResponse<T> {
+    //  状态码
     private int code;
+    //  状态补充信息
     private String msg;
+    //  返回的数据
     private T data;
 
     public int getCode() {

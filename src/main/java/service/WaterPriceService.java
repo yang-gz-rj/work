@@ -20,22 +20,48 @@ public class WaterPriceService {
         this.waterPriceDao = waterPriceDao;
     }
 
+    /**
+     * 获得所有的价位信息
+     * @return
+     */
     public List<WaterPrice> getWaterPrice(){
         return waterPriceDao.findAll();
     }
 
+    /**
+     * 获取某一页的价位信息
+     * @param curr
+     * @param limit
+     * @return
+     */
     public List<WaterPrice> getWaterPriceLimit(Integer curr, Integer limit){
         return waterPriceDao.findWithLimit((curr-1)*limit,limit);
     }
 
+    /**
+     * 删除价位信息通过gradient和update_date
+     * @param gradient
+     * @param update_date
+     * @return
+     */
     public Integer deleteWaterPriceByGD(Integer gradient, Date update_date) {
         return waterPriceDao.deleteByGD(gradient,update_date);
     }
 
+    /**
+     * 插入价位信息
+     * @param waterPrice
+     * @return
+     */
     public Integer insertWaterPrice(WaterPrice waterPrice) {
         return waterPriceDao.insert(waterPrice);
     }
 
+    /**
+     * 通过request对象获取价位信息
+     * @param req
+     * @return
+     */
     public WaterPrice getWaterPrice(HttpServletRequest req) {
         WaterPrice waterPrice = new WaterPrice();
         waterPrice.setWater_price_gradient(Integer.valueOf(req.getParameter("water_price_gradient")));

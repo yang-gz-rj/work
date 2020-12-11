@@ -54,6 +54,11 @@ public class WaterBillService {
         return waterBillDao.insert(waterBill);
     }
 
+    /**
+     * 通过request对象获取账单
+     * @param req
+     * @return
+     */
     public WaterBill getWaterBill(HttpServletRequest req) {
         WaterBill waterBill = new WaterBill();
         waterBill.setWater_bill_number(req.getParameter("water_bill_number"));
@@ -71,6 +76,15 @@ public class WaterBillService {
         return waterBill;
     }
 
+    /**
+     * 通过输入input和选择的字段column获取用户user对应的账单
+     * @param user
+     * @param column
+     * @param input
+     * @param curr
+     * @param limit
+     * @return
+     */
     public List<WaterBill> getWaterBillByColumn(String user, String column, String input,int curr,int limit) {
 
         List<WaterBill> ret = new ArrayList<>();
@@ -112,6 +126,13 @@ public class WaterBillService {
         return ret;
     }
 
+    /**
+     * 获取用户user的账单
+     * @param user
+     * @param curr
+     * @param limit
+     * @return
+     */
     public List<WaterBill> getWaterBillByUser(String user, int curr, int limit) {
         return waterBillDao.findByUser(user,(curr-1)*limit,limit);
     }
