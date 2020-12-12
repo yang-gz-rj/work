@@ -1,6 +1,7 @@
 package service;
 
 import dao.DeviceDao;
+import dao.WaterBillDao;
 import dao.entity.Device;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,16 @@ import java.util.List;
 public class DeviceService {
 
     private DeviceDao deviceDao;
+    private WaterBillDao waterBillDao;
 
     @Autowired
     public void setDeviceDao(DeviceDao deviceDao) {
         this.deviceDao = deviceDao;
+    }
+
+    @Autowired
+    public void setWaterBillDao(WaterBillDao waterBillDao) {
+        this.waterBillDao = waterBillDao;
     }
 
     /**
@@ -33,7 +40,14 @@ public class DeviceService {
      * @param device_number
      * @return
      */
-    public Integer deleteDeviceByNumber(String device_number){
+    public Integer deleteDeviceByNumber(String device_number,String type){
+        // 删除水费账单
+        if(type.equals("水表")){
+            waterBillDao.deleteByDeviceNumber(device_number);
+        // 删除电费账单
+        }else{
+
+        }
         return deviceDao.deleteByNumber(device_number);
     }
 

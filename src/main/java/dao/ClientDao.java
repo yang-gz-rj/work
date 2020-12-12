@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClientDao {
 
-    Client findByUserPassword(@Param("client_user") String client_user, @Param("client_password") String client_password);
+    Client findByUserPassword(@Param("user") String user, @Param("password") String password);
 
     Integer insert(@Param("client") Client client);
 

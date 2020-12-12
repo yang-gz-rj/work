@@ -18,9 +18,9 @@
         select * from device where client_user = #{user} limit #{start},#{count}
     </select>
 
-    <delete id="deleteByUser">
-        delete from device where client_user = #{user}
-    </delete>
+    <update id="updateEmptyByUser">
+       update device set client_user = "" where client_user = #{user}
+    </update>
 
     <delete id="deleteByNumber">
         delete from device where device_number = #{number}

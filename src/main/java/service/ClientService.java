@@ -58,7 +58,8 @@ public class ClientService {
      * @return
      */
     public Integer deleteClientByUser(String client_user){
-        deviceDao.deleteByUser(client_user);
+        // 清空设备所属者
+        deviceDao.updateEmptyByUser(client_user);
         return clientDao.deleteByUser(client_user);
     }
 

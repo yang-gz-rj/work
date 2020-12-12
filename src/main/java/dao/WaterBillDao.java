@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface WaterBillDao {
 
+    Integer deleteByDeviceNumber(@Param("device_number") String device_number);
+
     Integer deleteByBillNumber(@Param("bill_number") String bill_number);
 
     Integer insert(@Param("bill") WaterBill waterBill);
@@ -43,4 +45,5 @@ public interface WaterBillDao {
 
     List<WaterBill> findByUser(@Param("user") String user
             , @Param("start") Integer start, @Param("count") Integer count);
+
 }

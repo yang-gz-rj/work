@@ -134,8 +134,9 @@ public class DeviceController {
     @RequestMapping("/device/delete")
     public void deviceDelete(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         String device_number = req.getParameter("device_number");
+        String type = req.getParameter("type");
         BaseResponse<Integer> br = new BaseResponse<Integer>();
-        br.setData(deviceService.deleteDeviceByNumber(device_number));
+        br.setData(deviceService.deleteDeviceByNumber(device_number,type));
         if(br.getData() > 0){
             br.setCode(200);
         }else{

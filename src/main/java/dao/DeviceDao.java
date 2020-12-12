@@ -12,7 +12,7 @@ public interface DeviceDao {
 
     List<Device> findByUser(@Param("user") String user, @Param("start") Integer start, @Param("count") Integer count);
 
-    Integer deleteByUser(@Param("user") String user);
+    Integer updateEmptyByUser(@Param("user") String user);
 
     Integer deleteByNumber(@Param("number") String number);
 
@@ -35,4 +35,5 @@ public interface DeviceDao {
 
     List<Device> findByUserAndDurability(@Param("user") String user, @Param("durability") Float durability
             , @Param("start") Integer start, @Param("count") Integer count);
+
 }
