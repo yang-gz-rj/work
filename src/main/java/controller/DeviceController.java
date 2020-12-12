@@ -76,6 +76,11 @@ public class DeviceController {
     public void deviceAddFilter(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(deviceService.insertDevice(deviceService.getDevice(req)) > 0){
+            int device_count = Integer.valueOf(req.getSession().getAttribute("device_count").toString());
+            device_count++;
+            req.getSession().removeAttribute("device_count");
+            // 更新数量
+            req.getSession().setAttribute("device_count",device_count);
             br.setCode(200);
         }else{
             br.setCode(300);
@@ -138,6 +143,11 @@ public class DeviceController {
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         br.setData(deviceService.deleteDeviceByNumber(device_number,type));
         if(br.getData() > 0){
+            int device_count = Integer.valueOf(req.getSession().getAttribute("device_count").toString());
+            device_count--;
+            req.getSession().removeAttribute("device_count");
+            // 更新数量
+            req.getSession().setAttribute("device_count",device_count);
             br.setCode(200);
         }else{
             br.setCode(300);

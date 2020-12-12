@@ -33,20 +33,27 @@
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </script>
         <script>
-            //执行一个laypage实例
-            laypage.render({
-                elem: 'pageLimit' //注意，这里的 test1 是 ID，不用加 # 号
-                ,count: ${device_count}
-                ,limit: 10
-                ,jump: function(obj, first){
-                    //首次不执行
-                    if(!first){
-                        viewTable.reload({
-                            url: "/device/json?client_user=${client.client_user}&curr="+obj.curr+"&limit=10"
-                        });
+
+            let device_count = ${device_count};
+
+            function flushLaypage(){
+                //执行一个laypage实例
+                laypage.render({
+                    elem: 'pageLimit' //注意，这里的 test1 是 ID，不用加 # 号
+                    ,count: device_count
+                    ,limit: 10
+                    ,jump: function(obj, first){
+                        //首次不执行
+                        if(!first){
+                            viewTable.reload({
+                                url: "/device/json?client_user=${client.client_user}&curr="+obj.curr+"&limit=10"
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
+
+            flushLaypage();
 
             const viewTable = table.render({
                 elem: "#demo"
@@ -90,6 +97,8 @@
                             success: function(response){
                                 if(response.code == 200){
                                     layer.close(index);
+                                    device_count--;
+                                    flushLaypage();
                                     viewTable.reload();
                                     layer.msg("操作成功");
                                 }else{
@@ -145,6 +154,8 @@
                             body.find("#client_user").attr("value","${client.client_user}");
                         }
                         ,cancel: function (){
+                            device_count++;
+                            flushLaypage();
                             viewTable.reload();
                         }
                     });
@@ -169,6 +180,7 @@
                                 },
                                 success: function(response){
                                     if(response.code != 200){
+                                        device_count--;
                                         layer.msg("删除"+data[i].device_number+"失败");
                                     }
                                 },
@@ -183,6 +195,7 @@
                         }
                         viewTable.reload();
                         if(flag == 0){
+                            flushLaypage();
                             layer.msg("删除完成");
                         }
                     }

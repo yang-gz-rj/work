@@ -138,6 +138,11 @@ public class WaterController {
         String bill_number = req.getParameter("bill_number");
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(waterBillService.deleteBillByBNumber(bill_number) > 0){
+            int bill_count = Integer.valueOf(req.getSession().getAttribute("bill_count").toString());
+            bill_count--;
+            req.getSession().removeAttribute("bill_count");
+            // 更新数量
+            req.getSession().setAttribute("bill_count",bill_count);
             br.setCode(200);
         }else{
             br.setCode(300);
@@ -163,6 +168,11 @@ public class WaterController {
                 ,1,Integer.MAX_VALUE);
         String client_user = req.getParameter("client_user");
         if(device != null && device.getClient_user().equals(client_user) && waterBillService.insertWaterBill(waterBill) > 0){
+            int bill_count = Integer.valueOf(req.getSession().getAttribute("bill_count").toString());
+            bill_count++;
+            req.getSession().removeAttribute("bill_count");
+            // 更新数量
+            req.getSession().setAttribute("bill_count",bill_count);
             br.setCode(200);
         }else{
             br.setCode(300);
@@ -239,6 +249,11 @@ public class WaterController {
         Date update_date = Date.valueOf(req.getParameter("update_date"));
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(waterPriceService.deleteWaterPriceByGD(gradient,update_date) > 0){
+            int price_count = Integer.valueOf(req.getSession().getAttribute("price_count").toString());
+            price_count--;
+            req.getSession().removeAttribute("price_count");
+            // 更新数量
+            req.getSession().setAttribute("price_count",price_count);
             br.setCode(200);
         }else{
             br.setCode(300);
@@ -260,6 +275,11 @@ public class WaterController {
         WaterPrice waterPrice = waterPriceService.getWaterPrice(req);
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(waterPriceService.insertWaterPrice(waterPrice) > 0){
+            int price_count = Integer.valueOf(req.getSession().getAttribute("price_count").toString());
+            price_count++;
+            req.getSession().removeAttribute("price_count");
+            // 更新数量
+            req.getSession().setAttribute("price_count",price_count);
             br.setCode(200);
         }else{
             br.setCode(300);

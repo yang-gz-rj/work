@@ -31,20 +31,27 @@
         <a class="layui-btn layui-btn-xs" lay-event="del">删除</a>
     </script>
     <script>
-        //执行一个laypage实例
-        laypage.render({
-            elem: 'pageLimit' //注意，这里的 test1 是 ID，不用加 # 号
-            ,count: ${price_count}
-            ,limit: 10
-            ,jump: function(obj, first){
-                //首次不执行
-                if(!first){
-                    viewTable.reload({
-                        url: "/water/price/json?curr="+obj.curr+"&limit=10"
-                    });
+
+        let price_count = ${price_count};
+
+        function flushLaypage(){
+            //执行一个laypage实例
+            laypage.render({
+                elem: 'pageLimit' //注意，这里的 test1 是 ID，不用加 # 号
+                ,count: price_count
+                ,limit: 10
+                ,jump: function(obj, first){
+                    //首次不执行
+                    if(!first){
+                        viewTable.reload({
+                            url: "/water/price/json?curr="+obj.curr+"&limit=10"
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
+
+        flushLaypage();
 
         const viewTable = table.render({
             elem: "#demo"
@@ -87,8 +94,9 @@
                         },
                         success: function(response){
                             if(response.code == 200){
-                                obj.del();
                                 layer.close(index);
+                                price_count--;
+                                flushLaypage();
                                 viewTable.reload();
                                 layer.msg("操作成功");
                             }else{
@@ -116,6 +124,8 @@
                     ,area: ["480px","500px"]
                     ,offset: ["10%","40%"]
                     ,cancel: function (){
+                        price_count++;
+                        flushLaypage();
                         viewTable.reload();
                     }
                 });
@@ -142,6 +152,8 @@
                             success: function(response){
                                 if(response.code != 200){
                                     layer.msg("操作失败");
+                                }else{
+                                    price_count--;
                                 }
                             },
                             error: function(){
@@ -154,6 +166,7 @@
                         }
                     }
                     viewTable.reload();
+                    flushLaypage();
                     if (flag == 0) {
                         layer.msg("删除完成");
                     }

@@ -32,20 +32,25 @@
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     </script>
     <script>
+        let bill_count = ${bill_count};
         //执行一个laypage实例
-        laypage.render({
-            elem: 'pageLimit' //注意，这里的 test1 是 ID，不用加 # 号
-            ,count: ${bill_count}
-            ,limit: 10
-            ,jump: function(obj, first){
-                //首次不执行
-                if(!first){
-                    viewTable.reload({
-                        url: "/water/bill/json?curr="+obj.curr+"&limit=10"
-                    });
+        function flushLaypage(){
+            laypage.render({
+                elem: 'pageLimit' //注意，这里的 pageLimit 是 ID，不用加 # 号
+                ,count: bill_count
+                ,limit: 10
+                ,jump: function(obj, first){
+                    //首次不执行
+                    if(!first){
+                        viewTable.reload({
+                            url: "/water/bill/json?curr="+obj.curr+"&limit=10"
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
+
+        flushLaypage();
 
         const viewTable = table.render({
             elem: "#demo"
@@ -97,8 +102,9 @@
                         },
                         success: function(response){
                             if(response.code == 200){
-                                obj.del();
                                 layer.close(index);
+                                bill_count--;
+                                flushLaypage();
                                 viewTable.reload();
                                 layer.msg("操作成功");
                             }else{
@@ -146,6 +152,8 @@
                     ,area: ["750px","450px"]
                     ,offset: ["10%","30%"]
                     ,cancel: function (){
+                        bill_count++;
+                        flushLaypage();
                         viewTable.reload();
                     }
                 });
@@ -170,6 +178,7 @@
                             },
                             success: function(response){
                                 if(response.code != 200){
+                                    bill_count--;
                                     layer.msg("删除"+data[i].water_bill_number+"失败");
                                 }
                             },
@@ -183,6 +192,7 @@
                         }
                     }
                     viewTable.reload();
+                    flushLaypage();
                     if (flag == 0) {
                         layer.msg("删除完成");
                     }
