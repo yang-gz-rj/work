@@ -33,11 +33,10 @@
     </insert>
 
     <select id="findByUserAndNumber" resultType="device">
-        select * from device,client
+        select device.* from device,client
         where device.client_user = client.client_user and
             device.client_user = #{user} and
             device.device_number = #{number}
-        limit #{start},#{count}
     </select>
 
     <select id="findByUserAndType" resultType="device">
@@ -49,7 +48,7 @@
     </select>
 
     <select id="findByUserAndPoint" resultType="device">
-        select * from device,client
+        select device.* from device,client
         where device.client_user = client.client_user and
             device.client_user = #{user} and
             device.device_point = #{point}
@@ -57,7 +56,7 @@
     </select>
 
     <select id="findByUserAndProducer" resultType="device">
-        select * from device,client
+        select device.* from device,client
         where device.client_user = client.client_user and
             device.client_user = #{user} and
             device.device_producer = #{procedurer}
@@ -65,7 +64,7 @@
     </select>
 
     <select id="findByUserAndCreate" resultType="device">
-        select * from device,client
+        select device.* from device,client
         where device.client_user = client.client_user and
             device.client_user = #{user} and
             device.device_create_date = #{create}
@@ -73,7 +72,7 @@
     </select>
 
     <select id="findByUserAndDurability" resultType="device">
-        select * from device,client
+        select device.* from device,client
         where device.client_user = client.client_user and
             device.client_user = #{user} and
             device.device_durability = #{durability}

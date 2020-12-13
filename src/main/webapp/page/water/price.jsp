@@ -28,41 +28,20 @@
     <table id="demo" lay-filter="test"></table>
     <div id="pageLimit" style="padding-left: 30%;padding-top: 0%;"></div>
     <script type="text/html" id="barDemo">
-        <a class="layui-btn layui-btn-xs" lay-event="del">删除</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     </script>
     <script>
 
-        let price_count = ${price_count};
-
-        function flushLaypage(){
-            //执行一个laypage实例
-            laypage.render({
-                elem: 'pageLimit' //注意，这里的 test1 是 ID，不用加 # 号
-                ,count: price_count
-                ,limit: 10
-                ,jump: function(obj, first){
-                    //首次不执行
-                    if(!first){
-                        viewTable.reload({
-                            url: "/water/price/json?curr="+obj.curr+"&limit=10"
-                        });
-                    }
-                }
-            });
-        }
-
-        flushLaypage();
-
         const viewTable = table.render({
             elem: "#demo"
-            ,url:"/water/price/json?curr=1&limit=10"
-            ,page: false
+            ,url:"/water/price/json"
+            ,page: true
             ,response: {
                 statusCode: 200
             }
-            ,height: $(window).height()*0.70
+            ,height: $(window).height()*0.80
             ,width: $(window).width()*0.75
-            ,cellMinWidth: $(window).height()*0.70*0.1
+            ,cellMinWidth: $(window).height()*0.80*0.1
             ,toolbar: "#toolbarDemo"
             ,cols: [[
                 {type:"checkbox",fixed: "left"}
@@ -95,8 +74,6 @@
                         success: function(response){
                             if(response.code == 200){
                                 layer.close(index);
-                                price_count--;
-                                flushLaypage();
                                 viewTable.reload();
                                 layer.msg("操作成功");
                             }else{
@@ -124,8 +101,6 @@
                     ,area: ["480px","500px"]
                     ,offset: ["10%","40%"]
                     ,cancel: function (){
-                        price_count++;
-                        flushLaypage();
                         viewTable.reload();
                     }
                 });
@@ -152,8 +127,6 @@
                             success: function(response){
                                 if(response.code != 200){
                                     layer.msg("操作失败");
-                                }else{
-                                    price_count--;
                                 }
                             },
                             error: function(){
@@ -166,7 +139,6 @@
                         }
                     }
                     viewTable.reload();
-                    flushLaypage();
                     if (flag == 0) {
                         layer.msg("删除完成");
                     }

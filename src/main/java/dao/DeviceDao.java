@@ -18,8 +18,7 @@ public interface DeviceDao {
 
     Integer insert(@Param("device") Device device);
 
-    List<Device> findByUserAndNumber(@Param("user") String user, @Param("number") String number
-            , @Param("start") Integer start, @Param("count") Integer count);
+    Device findByUserAndNumber(@Param("user") String user, @Param("number") String number);
 
     List<Device> findByUserAndType(@Param("user") String user, @Param("type") String tyoe
             , @Param("start") Integer start, @Param("count") Integer count);

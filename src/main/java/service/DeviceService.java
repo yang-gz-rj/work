@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -65,8 +66,8 @@ public class DeviceService {
      * @param device_number
      * @return
      */
-    public Device getDeviceByNumber(String user,String device_number,int curr,int limit) {
-        return deviceDao.findByUserAndNumber(user,device_number,(curr-1)*limit,limit).get(0);
+    public Device getDeviceByNumber(String user,String device_number) {
+        return deviceDao.findByUserAndNumber(user,device_number);
     }
 
     /**
@@ -100,10 +101,16 @@ public class DeviceService {
 
         int start = (curr-1)*limit;
 
+        if(column.equals("device_number")){
+            Device device = deviceDao.findByUserAndNumber(user,input);
+            if(device != null){
+                ret = new ArrayList<>();
+                ret.add(device);
+            }
+            return ret;
+        }
+
         switch (column){
-            case "device_number":
-                ret = deviceDao.findByUserAndNumber(user,input,start,limit);
-                break;
             case "device_type":
                 ret = deviceDao.findByUserAndType(user,input,start,limit);
                 break;

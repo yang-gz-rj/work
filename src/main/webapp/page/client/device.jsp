@@ -34,37 +34,16 @@
         </script>
         <script>
 
-            let device_count = ${device_count};
-
-            function flushLaypage(){
-                //执行一个laypage实例
-                laypage.render({
-                    elem: 'pageLimit' //注意，这里的 test1 是 ID，不用加 # 号
-                    ,count: device_count
-                    ,limit: 10
-                    ,jump: function(obj, first){
-                        //首次不执行
-                        if(!first){
-                            viewTable.reload({
-                                url: "/device/json?client_user=${client.client_user}&curr="+obj.curr+"&limit=10"
-                            });
-                        }
-                    }
-                });
-            }
-
-            flushLaypage();
-
             const viewTable = table.render({
                 elem: "#demo"
-                ,url:"/device/json?client_user=${client.client_user}&curr=1&limit=10"
-                ,page: false
+                ,url:"/device/json"
+                ,page: true
                 ,response: {
                     statusCode: 200
                 }
-                ,height: $(window).height()*0.70
+                ,height: $(window).height()*0.80
                 ,width: $(window).width()*0.75
-                ,cellMinWidth: $(window).height()*0.70*0.1
+                ,cellMinWidth: $(window).height()*0.80*0.1
                 ,toolbar: "#toolbarDemo"
                 ,cols: [[
                     {type: "checkbox",fixed: 'left'}
@@ -93,12 +72,11 @@
                             dataType: "json",
                             data: {
                                 "device_number":data.device_number
+                                ,"type":data.device_type
                             },
                             success: function(response){
                                 if(response.code == 200){
                                     layer.close(index);
-                                    device_count--;
-                                    flushLaypage();
                                     viewTable.reload();
                                     layer.msg("操作成功");
                                 }else{
@@ -154,8 +132,6 @@
                             body.find("#client_user").attr("value","${client.client_user}");
                         }
                         ,cancel: function (){
-                            device_count++;
-                            flushLaypage();
                             viewTable.reload();
                         }
                     });
@@ -177,10 +153,10 @@
                                 },
                                 data: {
                                     "device_number":data[i].device_number
+                                    ,"type":data[i].device_type
                                 },
                                 success: function(response){
                                     if(response.code != 200){
-                                        device_count--;
                                         layer.msg("删除"+data[i].device_number+"失败");
                                     }
                                 },
@@ -195,7 +171,6 @@
                         }
                         viewTable.reload();
                         if(flag == 0){
-                            flushLaypage();
                             layer.msg("删除完成");
                         }
                     }

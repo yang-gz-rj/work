@@ -7,6 +7,8 @@ public class BaseResponse<T> {
     private String msg;
     //  返回的数据
     private T data;
+    //  数据量
+    private int count;
 
     public int getCode() {
         return code;
@@ -30,5 +32,13 @@ public class BaseResponse<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }

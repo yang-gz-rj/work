@@ -65,24 +65,13 @@ public class WaterController {
             // 并非是点击“账单”进入
             if(device_number == null){
                 req.getSession().setAttribute("bill_type","all");
-                List<Device> devices = deviceService.getDeviceByUser(client.getClient_user(),1,Integer.MAX_VALUE);
-                int count = 0;
-                for(Device device: devices){
-                    count += waterBillService.getWaterBillByUserAndDevice(client.getClient_user(),device.getDevice_number()
-                            ,1,Integer.MAX_VALUE).size();
-                }
-                req.getSession().setAttribute("bill_count",count);
             }else{
                 req.getSession().setAttribute("bill_type","single");
                 req.getSession().setAttribute("device_number",device_number);
-                req.getSession().setAttribute("bill_count",waterBillService.getWaterBillByUserAndDevice(client.getClient_user(),device_number
-                        ,1,Integer.MAX_VALUE).size());
             }
 
         }else{
             String input = req.getParameter("input");
-            req.getSession().setAttribute("bill_count",waterBillService.getWaterBillByColumn(client.getClient_user()
-                ,column,input,1,Integer.MAX_VALUE).size());
             req.getSession().setAttribute("column",column);
             req.getSession().setAttribute("input",input);
         }
@@ -99,7 +88,7 @@ public class WaterController {
     @RequestMapping("/water/bill/json")
     public void waterBillJson(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         String column = (String) req.getSession().getAttribute("column");
-        int curr = Integer.valueOf(req.getParameter("curr"));
+        int page = Integer.valueOf(req.getParameter("page"));
         int limit = Integer.valueOf(req.getParameter("limit"));
 
         BaseResponse<List<WaterBill>> br = new BaseResponse<List<WaterBill>>();
@@ -111,14 +100,18 @@ public class WaterController {
             if(bill_type.equals("single")){
                 String device_number = (String) req.getSession().getAttribute("device_number");
                 br.setData(waterBillService.getWaterBillByUserAndDevice(client.getClient_user(),device_number
-                        , curr, limit));
+                        , page, limit));
+                br.setCount(waterBillService.getWaterBillByUserAndDevice(client.getClient_user(),device_number
+                        , 1, Integer.MAX_VALUE).size());
             }else{
-                br.setData(waterBillService.getWaterBillByUser(client.getClient_user(),curr,limit));
+                br.setData(waterBillService.getWaterBillByUser(client.getClient_user(),page,limit));
+                br.setCount(waterBillService.getWaterBillByUser(client.getClient_user(),1,Integer.MAX_VALUE).size());
             }
         // 进行搜索
         }else{
             String input = (String) req.getSession().getAttribute("input");
-            br.setData(waterBillService.getWaterBillByColumn(client.getClient_user(),column,input,curr,limit));
+            br.setData(waterBillService.getWaterBillByColumn(client.getClient_user(),column,input,page,limit));
+            br.setCount(waterBillService.getWaterBillByColumn(client.getClient_user(),column,input,1,Integer.MAX_VALUE).size());
         }
 
         PrintWriter pw = resp.getWriter();
@@ -138,11 +131,6 @@ public class WaterController {
         String bill_number = req.getParameter("bill_number");
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(waterBillService.deleteBillByBNumber(bill_number) > 0){
-            int bill_count = Integer.valueOf(req.getSession().getAttribute("bill_count").toString());
-            bill_count--;
-            req.getSession().removeAttribute("bill_count");
-            // 更新数量
-            req.getSession().setAttribute("bill_count",bill_count);
             br.setCode(200);
         }else{
             br.setCode(300);
@@ -164,15 +152,8 @@ public class WaterController {
         WaterBill waterBill = waterBillService.getWaterBill(req);
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         Client client = (Client) req.getSession().getAttribute("client");
-        Device device = deviceService.getDeviceByNumber(client.getClient_user(),waterBill.getDevice_number()
-                ,1,Integer.MAX_VALUE);
-        String client_user = req.getParameter("client_user");
-        if(device != null && device.getClient_user().equals(client_user) && waterBillService.insertWaterBill(waterBill) > 0){
-            int bill_count = Integer.valueOf(req.getSession().getAttribute("bill_count").toString());
-            bill_count++;
-            req.getSession().removeAttribute("bill_count");
-            // 更新数量
-            req.getSession().setAttribute("bill_count",bill_count);
+        Device device = deviceService.getDeviceByNumber(client.getClient_user(),waterBill.getDevice_number());
+        if(device != null && device.getDevice_type().equals("水表") && waterBillService.insertWaterBill(waterBill) > 0){
             br.setCode(200);
         }else{
             br.setCode(300);
@@ -196,12 +177,8 @@ public class WaterController {
                 req.getSession().removeAttribute("column");
                 req.getSession().removeAttribute("input");
             }
-            req.getSession().setAttribute("price_count", waterPriceService.getWaterPrice().size());
         }else{
             String input = req.getParameter("input");
-            Client client = (Client) req.getSession().getAttribute("client");
-            req.getSession().setAttribute("price_count", waterPriceService.getWaterPriceByColumn(client.getClient_user(),column,input
-                ,1,Integer.MAX_VALUE).size());
             req.getSession().setAttribute("column",column);
             req.getSession().setAttribute("input",input);
         }
@@ -218,17 +195,20 @@ public class WaterController {
         BaseResponse<List<WaterPrice>> br = new BaseResponse<List<WaterPrice>>();
         br.setCode(200);
 
-        int curr  = Integer.valueOf(req.getParameter("curr"));
+        int page  = Integer.valueOf(req.getParameter("page"));
         int limit  = Integer.valueOf(req.getParameter("limit"));
 
         String column = (String) req.getSession().getAttribute("column");
         if(column == null){
-            br.setData(waterPriceService.getWaterPriceLimit(curr,limit));
+            br.setData(waterPriceService.getWaterPriceLimit(page,limit));
+            br.setCount(waterPriceService.getWaterPriceLimit(1,Integer.MAX_VALUE).size());
         }else{
             Client client = (Client) req.getSession().getAttribute("client");
             String input = (String) req.getSession().getAttribute("input");
             br.setData(waterPriceService.getWaterPriceByColumn(client.getClient_user(),column,input
-                    ,curr,limit));
+                    ,page,limit));
+            br.setCount(waterPriceService.getWaterPriceByColumn(client.getClient_user(),column,input
+                    ,1,Integer.MAX_VALUE).size());
         }
 
         PrintWriter pw = resp.getWriter();
@@ -249,11 +229,6 @@ public class WaterController {
         Date update_date = Date.valueOf(req.getParameter("update_date"));
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(waterPriceService.deleteWaterPriceByGD(gradient,update_date) > 0){
-            int price_count = Integer.valueOf(req.getSession().getAttribute("price_count").toString());
-            price_count--;
-            req.getSession().removeAttribute("price_count");
-            // 更新数量
-            req.getSession().setAttribute("price_count",price_count);
             br.setCode(200);
         }else{
             br.setCode(300);
@@ -275,11 +250,6 @@ public class WaterController {
         WaterPrice waterPrice = waterPriceService.getWaterPrice(req);
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(waterPriceService.insertWaterPrice(waterPrice) > 0){
-            int price_count = Integer.valueOf(req.getSession().getAttribute("price_count").toString());
-            price_count++;
-            req.getSession().removeAttribute("price_count");
-            // 更新数量
-            req.getSession().setAttribute("price_count",price_count);
             br.setCode(200);
         }else{
             br.setCode(300);

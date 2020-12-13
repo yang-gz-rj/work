@@ -87,13 +87,17 @@ public class WaterBillService {
      */
     public List<WaterBill> getWaterBillByColumn(String user, String column, String input,int curr,int limit) {
 
-        List<WaterBill> ret = new ArrayList<>();
+        List<WaterBill> ret = null;
 
         int start = (curr-1)*limit;
 
         // 查找账单号
         if(column.equals("water_bill_number")){
-            ret.add(waterBillDao.findByUserAndBillNumber(user,input,start,limit));
+            WaterBill wb = waterBillDao.findByUserAndBillNumber(user, input, start, limit);
+            if(wb != null){
+                ret = new ArrayList<>();
+                ret.add(wb);
+            }
             return ret;
         }
 

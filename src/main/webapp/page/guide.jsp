@@ -28,16 +28,22 @@
             opacity:0.95;
             filter:alpha(opacity=95); /* 针对 IE8 以及更早的版本 */
         }
-        #show-icon{
+        #show-logo{
             height: 10%;
             width: 15%;
             background-size: 100% 100%;
             background-color: #393D49;
+            text-align: center;
+            color: #ffffff;
+            line-height: 65px;
+            font-size: 20px;
         }
     </style>
 </head>
 <body style="width: 100%;height: 100%;">
-<div id="show-icon" class="layui-nav-item"></div>
+<div id="show-logo" class="layui-nav-item layui-bg-cyan">
+    水电缴费系统
+</div>
 <ul class="layui-nav layui-nav-tree" lay-filter="guide-filter" id="show-guide" style="position: absolute;
     left: 0%; top: 10%; height: 90%;width: 15%;">
     <li class="layui-nav-item">
@@ -94,15 +100,27 @@
         </form>
     </ul>
     <%-- 用户显示 --%>
-    <ul class="layui-nav" style="position: absolute;right: 0%;width: 15%;height: 10%;">
+    <ul class="layui-nav layui-layout-right">
         <li class="layui-nav-item">
-            <a href=""><img src="/image/user.png" class="layui-nav-img">${client.client_user==null?"请登录":client.client_user}</a>
+            <a href="javascript:;">
+                <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                ${client.client_user}
+            </a>
             <dl class="layui-nav-child">
                 <dd><a href="javascript:;" onclick="logout()">注销账户</a></dd>
                 <dd><a href="javascript:;" onclick="quit()">退出登录</a></dd>
             </dl>
         </li>
     </ul>
+<%--    <ul class="layui-nav" style="position: absolute;right: 0%;width: 15%;height: 10%;">--%>
+<%--        <li class="layui-nav-item">--%>
+<%--            <a href=""><img src="/image/user.png" class="layui-nav-img">${client.client_user==null?"请登录":client.client_user}</a>--%>
+<%--            <dl class="layui-nav-child">--%>
+<%--                <dd><a href="javascript:;" onclick="logout()">注销账户</a></dd>--%>
+<%--                <dd><a href="javascript:;" onclick="quit()">退出登录</a></dd>--%>
+<%--            </dl>--%>
+<%--        </li>--%>
+<%--    </ul>--%>
     <%-- 分割线 --%>
     <hr style="position: absolute; left: 0%; top: 8.5%; height:1px; width: 100%;background: #555555;"/>
     <%-- 显示动态页面 --%>

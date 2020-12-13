@@ -44,15 +44,11 @@ public class DeviceController {
                 req.getSession().removeAttribute("column");
                 req.getSession().removeAttribute("input");
             }
-            req.getSession().setAttribute("device_count",deviceService.getDeviceByUser(client.getClient_user()
-                    ,1,Integer.MAX_VALUE).size());
         //  进行搜素    
         }else{
             String input = req.getParameter("input");
             req.getSession().setAttribute("column",column);
             req.getSession().setAttribute("input",input);
-            req.getSession().setAttribute("device_count",deviceService.getDeviceByColumn(client.getClient_user()
-                    ,column,input,1,Integer.MAX_VALUE).size());
         }
         req.getRequestDispatcher("/page/client/device.jsp").forward(req,resp);
     }
@@ -76,11 +72,6 @@ public class DeviceController {
     public void deviceAddFilter(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         if(deviceService.insertDevice(deviceService.getDevice(req)) > 0){
-            int device_count = Integer.valueOf(req.getSession().getAttribute("device_count").toString());
-            device_count++;
-            req.getSession().removeAttribute("device_count");
-            // 更新数量
-            req.getSession().setAttribute("device_count",device_count);
             br.setCode(200);
         }else{
             br.setCode(300);
@@ -111,18 +102,24 @@ public class DeviceController {
     public void deviceJson(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         Client client = (Client)req.getSession().getAttribute("client");
         String column = (String)req.getSession().getAttribute("column");
-        int curr = Integer.valueOf(req.getParameter("curr"));
+        int page = Integer.valueOf(req.getParameter("page"));
         int limit = Integer.valueOf(req.getParameter("limit"));
         BaseResponse<List<Device>> br = new BaseResponse<>();
         br.setCode(200);
         // 并没有进行搜素
+        List<Device> devices;
         if(column == null){
-            br.setData(deviceService.getDeviceByUser(client.getClient_user(),curr,limit));
-        //  进行搜素
+            devices = deviceService.getDeviceByUser(client.getClient_user(), page, limit);
+            br.setCount(deviceService.getDeviceByUser(client.getClient_user(), 1, Integer.MAX_VALUE).size());
+            //  进行搜素
         }else{
-            br.setData(deviceService.getDeviceByColumn(client.getClient_user(), column
-                    , (String) req.getSession().getAttribute("input"),curr, limit));
+            devices = deviceService.getDeviceByColumn(client.getClient_user(), column
+                    , (String) req.getSession().getAttribute("input"), page, limit);
+
+            br.setCount(deviceService.getDeviceByColumn(client.getClient_user(), column
+                    , (String) req.getSession().getAttribute("input"), 1, Integer.MAX_VALUE).size());
         }
+        br.setData(devices);
         PrintWriter pw = resp.getWriter();
         pw.write(gson.toJson(br));
         pw.flush();
@@ -143,11 +140,6 @@ public class DeviceController {
         BaseResponse<Integer> br = new BaseResponse<Integer>();
         br.setData(deviceService.deleteDeviceByNumber(device_number,type));
         if(br.getData() > 0){
-            int device_count = Integer.valueOf(req.getSession().getAttribute("device_count").toString());
-            device_count--;
-            req.getSession().removeAttribute("device_count");
-            // 更新数量
-            req.getSession().setAttribute("device_count",device_count);
             br.setCode(200);
         }else{
             br.setCode(300);
