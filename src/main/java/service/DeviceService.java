@@ -130,4 +130,8 @@ public class DeviceService {
 
         return ret;
     }
+
+    public Integer updateDevice(Device device) {
+        return deviceDao.update(device);
+    }
 }

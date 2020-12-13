@@ -30,6 +30,7 @@
         <script type="text/html" id="barDemo">
             <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
             <a class="layui-btn layui-btn-xs" lay-event="bill">账单</a>
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </script>
         <script>
@@ -57,7 +58,7 @@
                         return layui.util.toDateString(data.device_create_date, "yyyy-MM-dd");
                     }}
                     ,{field:"device_durability", width:110, align:"center",title: "使用年限",sort: true}
-                    ,{fixed: "right", width:210, title: "操作",align:"center", toolbar: "#barDemo"}
+                    ,{fixed: "right", width:230, title: "操作",align:"center", toolbar: "#barDemo"}
                 ]]
             });
 
@@ -115,6 +116,25 @@
                     }else{
 
                     }
+                }else if(obj.event === 'edit'){
+                    layer.open({
+                        type: 2
+                        ,content: "/device/edit"
+                        ,area: ["400px","500px"]
+                        ,success: function (layero,index){
+                            var body = layer.getChildFrame("body",index);
+                            body.find("#device_number").val(data.device_number);
+                            body.find("#client_user").val(data.client_user);
+                            body.find("#device_type").val(data.device_type);
+                            body.find("#device_point").val(data.device_point);
+                            body.find("#device_producer").val(data.device_producer);
+                            body.find("#device_create_date").val(layui.util.toDateString(data.device_create_date, "yyyy-MM-dd"));
+                            body.find("#device_durability").val(data.device_durability);
+                        }
+                        ,cancel: function (){
+                            viewTable.reload();
+                        }
+                    });
                 }
             });
 

@@ -35,4 +35,5 @@ public interface DeviceDao {
     List<Device> findByUserAndDurability(@Param("user") String user, @Param("durability") Float durability
             , @Param("start") Integer start, @Param("count") Integer count);
 
+    Integer update(@Param("device") Device device);
 }

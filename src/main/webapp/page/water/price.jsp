@@ -28,6 +28,7 @@
     <table id="demo" lay-filter="test"></table>
     <div id="pageLimit" style="padding-left: 30%;padding-top: 0%;"></div>
     <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     </script>
     <script>
@@ -54,7 +55,7 @@
                 ,{field:"water_price_maximum", width:140, align:"center",title: "最大量度", sort: true}
                 ,{field:"water_price_dw", width:110, align:"center",title: "单位"}
                 ,{field:"water_price_unit_price", width:110, align:"center",title: "单价"}
-                ,{fixed: "right", width:110, title: "操作",align:"center", toolbar: "#barDemo"}
+                ,{fixed: "right", width:130, title: "操作",align:"center", toolbar: "#barDemo"}
             ]]
         });
 
@@ -86,6 +87,25 @@
                             layer.msg("服务器繁忙");
                         }
                     });
+                });
+            }else if(obj.event === 'edit'){
+                layer.open({
+                    type: 2
+                    ,content: "/page/water/price_edit.jsp"
+                    ,area: ["480px","500px"]
+                    ,offset: ["10%","40%"]
+                    ,success: function (layero,index){
+                        var body = layer.getChildFrame("body",index);
+                        body.find("#water_price_gradient").val(data.water_price_gradient);
+                        body.find("#water_price_update_date").val(layui.util.toDateString(data.water_price_update_date,"yyyy-MM-dd"));
+                        body.find("#admin_user").val(data.admin_user);
+                        body.find("#water_price_maximum").val(data.water_price_maximum);
+                        body.find("#water_price_dw").val(data.water_price_dw);
+                        body.find("#water_price_unit_price").val(data.water_price_unit_price);
+                    }
+                    ,cancel: function (){
+                        viewTable.reload();
+                    }
                 });
             }
         });

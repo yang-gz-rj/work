@@ -260,4 +260,19 @@ public class WaterController {
         pw.close();
     }
 
+    @RequestMapping("/water/price/edit")
+    public void waterPriceEdit(HttpServletRequest req,HttpServletResponse resp) throws Exception{
+        WaterPrice waterPrice = waterPriceService.getWaterPrice(req);
+        BaseResponse<Integer> br = new BaseResponse<Integer>();
+        if(waterPriceService.updateWaterPrice(waterPrice)>0){
+            br.setCode(200);
+        }else{
+            br.setCode(300);
+        }
+        PrintWriter pw = resp.getWriter();
+        pw.write(gson.toJson(br));
+        pw.flush();
+        pw.close();
+    }
+
 }

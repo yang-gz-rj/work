@@ -69,4 +69,11 @@
         limit #{start},#{count}
     </select>
 
+    <update id="update">
+        update waterprice set admin_user=#{waterPrice.admin_user},water_price_maximum=#{waterPrice.water_price_maximum},water_price_dw=#{waterPrice.water_price_dw}
+                            ,water_price_unit_price=#{waterPrice.water_price_unit_price}
+        where water_price_gradient = #{waterPrice.water_price_gradient}
+            and water_price_update_date = #{waterPrice.water_price_update_date}
+    </update>
+
 </mapper>

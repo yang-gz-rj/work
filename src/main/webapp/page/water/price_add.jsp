@@ -20,7 +20,6 @@
 </head>
 <body>
 <form class="layui-form" action="#" method="post">
-    <input type="hidden" name="client_user" value="${client.client_user}"/>
     <div class="layui-form-item">
         <div class="layui-inline">
             <label class="layui-form-label">价位梯度</label>

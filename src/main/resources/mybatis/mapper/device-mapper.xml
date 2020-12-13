@@ -79,4 +79,11 @@
         limit #{start},#{count}
     </select>
 
+    <update id="update">
+        update device set device_type=#{device.device_type}
+            ,device_point=#{device.device_point},device_producer=#{device.device_producer}
+            ,device_durability=#{device.device_durability},device_create_date=#{device.device_create_date}
+            where device_number = #{device.device_number}
+    </update>
+
 </mapper>

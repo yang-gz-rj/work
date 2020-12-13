@@ -47,4 +47,6 @@ public interface WaterPriceDao {
 
     List<WaterPrice> findByUnit(@Param("unit") Float unit
             , @Param("start") Integer start, @Param("count") Integer count);
+
+    Integer update(@Param("waterPrice") WaterPrice waterPrice);
 }

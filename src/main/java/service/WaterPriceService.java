@@ -101,4 +101,8 @@ public class WaterPriceService {
         
         return ret;
     }
+
+    public Integer updateWaterPrice(WaterPrice waterPrice) {
+        return waterPriceDao.update(waterPrice);
+    }
 }

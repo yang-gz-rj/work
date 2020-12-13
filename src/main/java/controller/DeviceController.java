@@ -151,4 +151,24 @@ public class DeviceController {
         pw.close();
     }
 
+    @RequestMapping("/device/edit")
+    public void deviceEdit(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        req.getRequestDispatcher("/page/client/device_edit.jsp").forward(req,resp);
+    }
+
+    @RequestMapping("/device/edit/filter")
+    public void deviceEditFilter(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        Device device = deviceService.getDevice(req);
+        BaseResponse<Integer> br = new BaseResponse<>();
+        if(deviceService.updateDevice(device) > 0){
+            br.setCode(200);
+        }else{
+            br.setCode(300);
+        }
+        PrintWriter pw = resp.getWriter();
+        pw.write(gson.toJson(br));
+        pw.flush();
+        pw.close();
+    }
+
 }
