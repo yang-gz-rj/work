@@ -87,6 +87,8 @@
                     <option value="/device">设备信息</option>
                     <option value="/water/bill">水费账单信息</option>
                     <option value="/water/price">水费价位信息</option>
+                    <option value="/elect/bill">电费账单信息</option>
+                    <option value="/elect/price">电费价位信息</option>
                 </select>
             </div>
             <div class="layui-input-block" style="position: absolute; left: 27%; top: 0%; height: 100%;width: 25%;">
@@ -112,15 +114,6 @@
             </dl>
         </li>
     </ul>
-<%--    <ul class="layui-nav" style="position: absolute;right: 0%;width: 15%;height: 10%;">--%>
-<%--        <li class="layui-nav-item">--%>
-<%--            <a href=""><img src="/image/user.png" class="layui-nav-img">${client.client_user==null?"请登录":client.client_user}</a>--%>
-<%--            <dl class="layui-nav-child">--%>
-<%--                <dd><a href="javascript:;" onclick="logout()">注销账户</a></dd>--%>
-<%--                <dd><a href="javascript:;" onclick="quit()">退出登录</a></dd>--%>
-<%--            </dl>--%>
-<%--        </li>--%>
-<%--    </ul>--%>
     <%-- 分割线 --%>
     <hr style="position: absolute; left: 0%; top: 8.5%; height:1px; width: 100%;background: #555555;"/>
     <%-- 显示动态页面 --%>
@@ -158,6 +151,12 @@
                 case "/water/price":
                     select_water_price();
                     break;
+                case "/elect/bill":
+                    select_elect_bill();
+                    break;
+                case "/elect/price":
+                    select_elect_price();
+                    break;
             }
 
             form.render();
@@ -182,7 +181,6 @@
                 }else if($("#select_column").val() == ""){
                     layer.msg("请选择字段");
                 }else{
-                    // TODO 查找路径
                     //       /device?colunm=*&input=*
                     let nextPage = $("#select_model").val()+"?column="+$("#select_column").val()+"&input="+$("#search-input").val();
                     if(currPage != nextPage){
@@ -216,10 +214,10 @@
                     nextPage = "/water/bill";
                     break;
                 case "电价位信息":
-                    nextPage = "/public";
+                    nextPage = "/elect/price";
                     break;
                 case "电费账单信息":
-                    nextPage = "/public";
+                    nextPage = "/elect/bill";
                     break;
             }
             if(nextPage != "")
@@ -304,6 +302,33 @@
         options += "<option value=\"water_price_maximum\">最大量度</option>";
         options += "<option value=\"water_price_dw\">单位</option>";
         options += "<option value=\"water_price_unit_price\">单价</option>";
+
+        $("#select_column").html(options);
+    }
+
+    function select_elect_bill(){
+        let options = "<option value=\"\">请选择一个字段</option>";
+        options += "<option value=\"elect_bill_number\">账单号</option>";
+        options += "<option value=\"device_number\">表号</option>";
+        options += "<option value=\"elect_price_gradient\">价位梯度</option>";
+        options += "<option value=\"elect_price_update_date\">价位更新时间</option>";
+        options += "<option value=\"elect_bill_init_value\">初始读数</option>";
+        options += "<option value=\"elect_bill_now_value\">现在读数</option>";
+        options += "<option value=\"elect_bill_output_date\">出账时间</option>";
+        options += "<option value=\"elect_bill_fee\">应缴费用</option>";
+        options += "<option value=\"elect_bill_pay_date\">缴费时间</option>";
+
+        $("#select_column").html(options);
+    }
+
+    function select_elect_price(){
+        let options = "<option value=\"\">请选择一个字段</option>";
+        options += "<option value=\"elect_price_gradient\">价位梯度</option>";
+        options += "<option value=\"elect_price_update_date\">价位更新时间</option>";
+        options += "<option value=\"admin_user\">提供者</option>";
+        options += "<option value=\"elect_price_maximum\">最大量度</option>";
+        options += "<option value=\"elect_price_dw\">单位</option>";
+        options += "<option value=\"elect_price_unit_price\">单价</option>";
 
         $("#select_column").html(options);
     }

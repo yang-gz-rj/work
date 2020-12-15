@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.ElectBillDao">
+    <!-- 字段映射 -->
+    <resultMap id="electBill" type="electBill">
+        <!-- property实体类  column表字段-->
+        <id property="elect_bill_number" column="elect_bill_number"/>
+        <result property="device_number" column="device_number"/>
+        <result property="elect_price_gradient" column="elect_price_gradient"/>
+        <result property="elect_price_update_date" column="elect_price_update_date"/>
+        <result property="elect_bill_init_value" column="elect_bill_init_value"/>
+        <result property="elect_bill_now_value" column="elect_bill_now_value"/>
+        <result property="elect_bill_r_dw" column="elect_bill_r_dw"/>
+        <result property="elect_bill_output_date" column="elect_bill_output_date"/>
+        <result property="elect_bill_fee" column="elect_bill_fee"/>
+        <result property="elect_bill_pay_date" column="elect_bill_pay_date"/>
+    </resultMap>
+
+    <delete id="deleteByDeviceNumber">
+        delete from electBill where device_number = #{device_number}
+    </delete>
+
+    <delete id="deleteByBillNumber">
+        delete from electBill where elect_bill_number = #{bill_number}
+    </delete>
+
+    <insert id="insert">
+        insert into electBill(elect_bill_number,device_number,elect_price_gradient,elect_price_update_date,elect_bill_init_value,elect_bill_now_value
+                             ,elect_bill_r_dw,elect_bill_output_date,elect_bill_fee,elect_bill_pay_date) values (#{bill.elect_bill_number},#{bill.device_number},#{bill.elect_price_gradient}
+                                                                                                                ,#{bill.elect_price_update_date},#{bill.elect_bill_init_value},#{bill.elect_bill_now_value
+            },#{bill.elect_bill_r_dw},#{bill.elect_bill_output_date},#{bill.elect_bill_fee},#{bill.elect_bill_pay_date})
+    </insert>
+
+    <select id="findByUserAndBillNumber" resultType="electBill">
+        select electbill.* from electbill,device,client
+        where device.client_user = client.client_user and
+            electbill.device_number = device.device_number and
+            electbill.elect_bill_number = #{bill_number} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+    <select id="findByUserAndDevice" resultType="electBill">
+        select electbill.* from electbill,device,client
+        where device.client_user = client.client_user and
+            electbill.device_number = device.device_number and
+            electbill.device_number = #{device_number} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+    <select id="findByUserAndGradient" resultType="electBill">
+        select electbill.* from electbill,device,client
+        where device.client_user = client.client_user and
+            electbill.device_number = device.device_number and
+            electbill.elect_price_gradient = #{gradient} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+    <select id="findByUserAndUpdate" resultType="electBill">
+        select electbill.* from electbill,device,client
+        where device.client_user = client.client_user and
+            electbill.device_number = device.device_number and
+            electbill.elect_price_update_date = #{update} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+    <select id="findByUserAndInit" resultType="electBill">
+        select electbill.* from electbill,device,client
+        where device.client_user = client.client_user and
+            electbill.device_number = device.device_number and
+            electbill.elect_bill_init_value = #{init} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+    <select id="findByUserAndNow" resultType="electBill">
+        select electbill.* from electbill,device,client
+        where device.client_user = client.client_user and
+            electbill.device_number = device.device_number and
+            electbill.elect_bill_now_value = #{now} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+    <select id="findByUserAndOutput" resultType="electBill">
+        select electbill.* from electbill,device,client
+        where device.client_user = client.client_user and
+            electbill.device_number = device.device_number and
+            electbill.elect_bill_output_date = #{output} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+    <select id="findByUserAndFee" resultType="electBill">
+        select electbill.* from electbill,device,client
+        where device.client_user = client.client_user and
+            electbill.device_number = device.device_number and
+            electbill.elect_bill_fee = #{fee} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+
+    <select id="findByUserAndPay" resultType="electBill">
+        select electbill.* from electbill,device,client
+        where device.client_user = client.client_user and
+            electbill.device_number = device.device_number and
+            electbill.elect_bill_pay_date = #{pay} and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+    <select id="findByUser" resultType="electBill">
+        select electbill.* from electbill,device,client
+        where device.client_user = client.client_user and
+            electbill.device_number = device.device_number and
+            client.client_user = #{user}
+        limit #{start},#{count}
+    </select>
+
+
+
+</mapper>

@@ -111,11 +111,11 @@
                     // 跳转水费账单
                     if(data.device_type == '水表'){
                         currPage = "/water/bill?device_number="+data.device_number;
-                        $("#show-frame").load(currPage);
                     //  跳转电费账单
                     }else{
-
+                        currPage = "/elect/bill?device_number="+data.device_number;
                     }
+                    $("#show-frame").load(currPage);
                 }else if(obj.event === 'edit'){
                     layer.open({
                         type: 2

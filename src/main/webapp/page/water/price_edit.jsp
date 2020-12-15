@@ -33,7 +33,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">价位更新时间</label>
             <div class="layui-input-inline">
-                <input type="text" id="water_price_update_date" readonly name="water_price_update_date" class="layui-input demo">
+                <input type="text" id="water_price_update_date" readonly name="water_price_update_date" class="layui-input">
             </div>
         </div>
     </div>
@@ -83,12 +83,6 @@
             ,layer = layui.layer
             ,laydate = layui.laydate
             ,$ = layui.$;
-
-        laydate.render({
-            elem: '.demo'
-            ,type: 'date'
-            ,trigger: 'click'
-        });
 
         form.on("submit(btn_submit)",function (data){
             $.ajax({

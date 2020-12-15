@@ -52,7 +52,6 @@ public class WaterController {
      */
     @RequestMapping("/water/bill")
     public void waterBill(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        Client client = (Client) req.getSession().getAttribute("client");
         String column = req.getParameter("column");
 
         // 并非是搜素

@@ -22,14 +22,7 @@
         <property name="configLocation" value="classpath:mybatis/mybatis.xml"></property>
         <property name="dataSource" ref="dataSource"></property>
          <!-- 配置对应实体映射 -->
-        <property name="mapperLocations">
-            <list>
-                <value>classpath:mybatis/mapper/client-mapper.xml</value>
-                <value>classpath:mybatis/mapper/device-mapper.xml</value>
-                <value>classpath:mybatis/mapper/waterbill-mapper.xml</value>
-                <value>classpath:mybatis/mapper/waterprice-mapper.xml</value>
-            </list>
-        </property>
+        <property name="mapperLocations" value="classpath:mybatis/mapper/*.xml"></property>
     </bean>
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="dao" />

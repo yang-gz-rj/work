@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.ElectPriceDao">
+    <!-- 字段映射 -->
+    <resultMap id="electPrice" type="electPrice">
+        <!-- property实体类  column表字段-->
+        <id property="elect_price_gradient" column="elect_price_gradient"/>
+        <id property="elect_price_update_date" column="elect_price_update_date"/>
+        <result property="admin_user" column="admin_user"/>
+        <result property="elect_price_maximum" column="elect_price_maximum"/>
+        <result property="elect_price_dw" column="elect_price_dw"/>
+        <result property="elect_price_unit_price" column="elect_price_unit_price"/>
+    </resultMap>
+
+    <select id="findAll" resultType="electPrice">
+        select * from electPrice
+    </select>
+
+    <select id="findWithLimit" resultType="electPrice">
+        select * from electPrice limit #{start},#{count};
+    </select>
+
+    <delete id="deleteByGD">
+        delete from electPrice where elect_price_gradient = #{gradient} and elect_price_update_date = #{update_date}
+    </delete>
+
+    <insert id="insert">
+        insert into electPrice(elect_price_gradient,elect_price_update_date,admin_user,elect_price_maximum,elect_price_dw
+                              ,elect_price_unit_price) values (#{price.elect_price_gradient},#{price.elect_price_update_date},#{price.admin_user}
+                                                              ,#{price.elect_price_maximum},#{price.elect_price_dw},#{price.elect_price_unit_price})
+    </insert>
+
+    <select id="findByGradient" resultType="electPrice">
+        select * from electprice
+        where elect_price_gradient = #{gradient}
+        limit #{start},#{count}
+    </select>
+
+    <select id="findByUpdate" resultType="electPrice">
+        select * from electprice
+        where elect_price_update_date = #{update}
+        limit #{start},#{count}
+    </select>
+
+    <select id="findByAdmin" resultType="electPrice">
+        select * from electprice
+        where admin_user = #{admin}
+        limit #{start},#{count}
+    </select>
+
+    <select id="findByMaximum" resultType="electPrice">
+        select * from electprice
+        where elect_price_maximum = #{maximum}
+        limit #{start},#{count}
+    </select>
+
+    <select id="findByDw" resultType="electPrice">
+        select * from electprice
+        where elect_price_dw = #{dw}
+        limit #{start},#{count}
+    </select>
+
+    <select id="findByUnit" resultType="electPrice">
+        select * from electprice
+        where elect_price_unit_price = #{unit}
+        limit #{start},#{count}
+    </select>
+
+    <update id="update">
+        update electprice set admin_user=#{electPrice.admin_user},elect_price_maximum=#{electPrice.elect_price_maximum},elect_price_dw=#{electPrice.elect_price_dw}
+                            ,elect_price_unit_price=#{electPrice.elect_price_unit_price}
+        where elect_price_gradient = #{electPrice.elect_price_gradient}
+          and elect_price_update_date = #{electPrice.elect_price_update_date}
+    </update>
+
+</mapper>
