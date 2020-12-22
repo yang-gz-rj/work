@@ -3,14 +3,14 @@ package service;
 import dao.ElectPriceDao;
 import dao.entity.ElectPrice;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@Service
 public class ElectPriceService {
 
     private ElectPriceDao electPriceDao;
