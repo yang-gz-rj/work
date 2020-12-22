@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import service.ClientService;
 import util.BaseResponse;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.PrintWriter;
 
 @Controller
@@ -40,18 +38,6 @@ public class ClientController {
         }else{
             req.getRequestDispatcher("/page/login/login.jsp").forward(req,resp);
         }
-    }
-
-    /**
-     * 跳转到用户页面
-     * @param req
-     * @param resp
-     * @throws ServletException
-     * @throws IOException
-     */
-    @RequestMapping("/client")
-    public void client(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/page/client/client.jsp").forward(req,resp);
     }
 
     /**
@@ -133,16 +119,6 @@ public class ClientController {
         pw.write(gson.toJson(br));
         pw.flush();
         pw.close();
-    }
-
-    /**
-     * 跳转到注册页面
-     * @param resp
-     * @throws Exception
-     */
-    @RequestMapping("/regist")
-    public void regist(HttpServletRequest req,HttpServletResponse resp) throws Exception {
-        req.getRequestDispatcher("/page/login/regist.jsp").forward(req,resp);
     }
 
     /**

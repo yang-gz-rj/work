@@ -121,7 +121,7 @@
 </div>
 <script src="/layui/layui.js" charset="UTF-8"></script>
 <script>
-    let currPage = "/client";
+    let currPage = "/page/client/client.jsp";
     // 加载所有模块
     let element,form,layer,$,table,laypage;
 
@@ -202,7 +202,7 @@
                     nextPage = "/public";
                     break;
                 case "用户信息":
-                    nextPage = "/client";
+                    nextPage = "/page/client/client.jsp";
                     break;
                 case "设备信息":
                     nextPage = "/device";
@@ -223,7 +223,7 @@
             if(nextPage != "")
                 if(currPage != nextPage){
                     currPage = nextPage;
-                    if(currPage != "/client"){
+                    if(currPage != "/page/client/client.jsp"){
                         $("#dd-user").attr("style","padding-left: 20%;");
                     }
                     $("#show-frame").load(currPage);

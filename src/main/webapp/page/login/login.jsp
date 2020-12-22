@@ -72,7 +72,7 @@
 
       // 监听注册按钮，点击进入注册页面
       $("#regist").on('click',function (){
-        window.location.href = "/regist";
+        window.location.href = "/page/login/regist.jsp";
       });
 
       // 进行登录预验证

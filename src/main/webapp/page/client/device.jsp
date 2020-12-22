@@ -94,7 +94,7 @@
                 } else if(obj.event === "detail"){
                     layer.open({
                         type: 2
-                        ,content: "/device/detail"
+                        ,content: "/page/client/device_detail.jsp"
                         ,area: ["400px","450px"]
                         ,success: function (layero,index){
                             var body = layer.getChildFrame("body",index);
@@ -119,7 +119,7 @@
                 }else if(obj.event === 'edit'){
                     layer.open({
                         type: 2
-                        ,content: "/device/edit"
+                        ,content: "/page/client/device_edit.jsp"
                         ,area: ["400px","500px"]
                         ,success: function (layero,index){
                             var body = layer.getChildFrame("body",index);
@@ -145,7 +145,7 @@
                 if(obj.event === 'add'){
                     layer.open({
                         type: 2
-                        ,content: "/device/add"
+                        ,content: "/page/client/device_add.jsp"
                         ,area: ["450px","500px"]
                         ,success: function (layero,index){
                             var body = layer.getChildFrame("body",index);

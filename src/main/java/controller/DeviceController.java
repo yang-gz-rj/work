@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import service.DeviceService;
 import util.BaseResponse;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -54,15 +52,6 @@ public class DeviceController {
     }
 
     /**
-     * 跳转到设备添加页面
-     * @return
-     */
-    @RequestMapping("/device/add")
-    public void deviceAdd(HttpServletRequest req,HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/page/client/device_add.jsp").forward(req,resp);
-    }
-
-    /**
      * 尝试添加设备
      * @param req
      * @param resp
@@ -80,16 +69,6 @@ public class DeviceController {
         pw.write(gson.toJson(br));
         pw.flush();
         pw.close();
-    }
-
-
-    /**
-     * 跳转到设备详情页面
-     * @return
-     */
-    @RequestMapping("/device/detail")
-    public void deviceDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/page/client/device_detail.jsp").forward(req,resp);
     }
 
     /**
@@ -149,11 +128,6 @@ public class DeviceController {
         pw.write(gson.toJson(br));
         pw.flush();
         pw.close();
-    }
-
-    @RequestMapping("/device/edit")
-    public void deviceEdit(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        req.getRequestDispatcher("/page/client/device_edit.jsp").forward(req,resp);
     }
 
     @RequestMapping("/device/edit/filter")
