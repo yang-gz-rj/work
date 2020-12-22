@@ -140,4 +140,8 @@ public class WaterBillService {
     public List<WaterBill> getWaterBillByUser(String user, int curr, int limit) {
         return waterBillDao.findByUser(user,(curr-1)*limit,limit);
     }
+
+    public Integer deleteBillByDeviceNumber(String device_number) {
+        return waterBillDao.deleteByDeviceNumber(device_number);
+    }
 }

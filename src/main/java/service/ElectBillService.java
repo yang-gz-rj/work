@@ -140,4 +140,8 @@ public class ElectBillService {
     public List<ElectBill> getElectBillByUser(String user, int curr, int limit) {
         return electBillDao.findByUser(user,(curr-1)*limit,limit);
     }
+
+    public Integer deleteBillByNumber(String device_number) {
+        return electBillDao.deleteByDeviceNumber(device_number);
+    }
 }

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import service.DeviceService;
+import service.ElectBillService;
+import service.WaterBillService;
 import util.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,11 +20,23 @@ import java.util.List;
 public class DeviceController {
 
     private DeviceService deviceService;
+    private WaterBillService waterBillService;
+    private ElectBillService electBillService;
     private final Gson gson = new Gson();
 
     @Autowired
     public void setDeviceService(DeviceService deviceService) {
         this.deviceService = deviceService;
+    }
+
+    @Autowired
+    public void setWaterBillService(WaterBillService waterBillService) {
+        this.waterBillService = waterBillService;
+    }
+
+    @Autowired
+    public void setElectBillService(ElectBillService electBillService) {
+        this.electBillService = electBillService;
     }
 
     /**
@@ -117,13 +131,18 @@ public class DeviceController {
         String device_number = req.getParameter("device_number");
         String type = req.getParameter("type");
         BaseResponse<Integer> br = new BaseResponse<Integer>();
-        br.setData(deviceService.deleteDeviceByNumber(device_number,type));
-        if(br.getData() > 0){
+        //  删除设备表对应的账单
+        if(type.equals("水表")){
+            waterBillService.deleteBillByDeviceNumber(device_number);
+        }else{
+            electBillService.deleteBillByNumber(device_number);
+        }
+        int row = deviceService.deleteDeviceByNumber(device_number,type);
+        if(row > 0){
             br.setCode(200);
         }else{
             br.setCode(300);
         }
-        Gson gson = new Gson();
         PrintWriter pw = resp.getWriter();
         pw.write(gson.toJson(br));
         pw.flush();
